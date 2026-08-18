@@ -1,6 +1,21 @@
 const clientId = process.env.SPOTIFY_CLIENT_ID;
 const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 
+export type Song = {
+    id: string;
+    title: string;
+    albumArt: string | null;
+    artistList: string[]; 
+    explicit: boolean; 
+    releaseDate: string; 
+    albumName: string; 
+    albumType: string; 
+    albumTotalTracks: number; 
+    trackNumber: number; 
+    duration: number; 
+    spotifyUrl: string;
+}
+
 let token: { value: string; expiresAt: number } | null = null;
 
 if (!clientId || !clientSecret) {
@@ -36,4 +51,47 @@ export const getAccessToken = async () => {
         expiresAt: Date.now() + data.expires_in * 1000,
     };
     return token.value;
+}
+
+export const searchSong = async (title: string, artist: string): Promise<Song | null> => {
+    const accessToken = await getAccessToken(); 
+    let query = `track:${title} artist:${artist}`; 
+    // if (year) query += ` year:${year}`; 
+
+    const params = new URLSearchParams({
+        q: query, 
+        type: `track`, 
+        market: `US`,
+        limit: `1`
+}); 
+
+    const response = await fetch(`https://api.spotify.com/v1/search?${params}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        }); 
+
+    if (!response.ok) {
+        throw new Error(`Spotify search failed: ${response.status} - ${await response.text()}`);
+    }
+
+    const data = await response.json(); 
+    const track = data.tracks.items[0];
+
+    if (!track) return null;
+
+    return {
+        id: track.id, 
+        title: track.name,
+        artistList: track.artists.map((artist: { name: string }) => artist.name), 
+        explicit: track.explicit, 
+        releaseDate: track.album.release_date, 
+        albumName: track.album.name, 
+        albumArt: track.album.images[0]?.url ?? null,
+        albumType: track.album.album_type, 
+        albumTotalTracks: track.album.total_tracks, 
+        trackNumber: track.track_number, 
+        duration: track.duration_ms, 
+        spotifyUrl: track.external_urls.spotify,
+    };
 }
