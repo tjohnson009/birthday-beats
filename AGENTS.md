@@ -45,8 +45,13 @@ and `.env.local` stay at the project root.
 - Billboard charts are weekly: match a birthday to the nearest chart date
   **on or before** it (charts are dated Saturdays). Off-by-one prone — test
   with known dates.
-- Spotify's `preview_url` is often null; the YouTube fallback is required,
-  not optional.
+- Spotify's dev-mode API no longer returns `preview_url` (or `popularity`)
+  at all — verified against the live API, Aug 2026. Playback: use the Spotify
+  embed iframe (`https://open.spotify.com/embed/track/{id}`, only needs the
+  track id) as primary, YouTube as fallback.
+- Spotify search: build `q` as `track:<title> artist:<artist>` with plain
+  spaces (via `URLSearchParams`). Literal `+` characters in the query return
+  zero results. Search fuzzy-matches "and"↔"&" fine.
 - YouTube search costs 100 quota units of a 10,000/day budget (~100
   searches/day). Cache resolved results per chart week so repeat lookups
   cost zero API calls.
