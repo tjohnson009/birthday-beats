@@ -33,8 +33,8 @@ The interesting part: **there is no "Billboard API."** Chart history lives in th
 
 Building the date-matching logic surfaced some genuine chart archaeology:
 
-- **Charts weren't always posted on Saturdays, but most were.** The first 178 charts (Aug 1958 – Dec 1961) were dated *Mondays*. Any "find the previous Saturday" math is quietly wrong for three years of history — so the lookup matches against real chart dates instead of assuming weekdays.
-- **There's a hole in the timeline.** Billboard skipped a week switching schedules: no chart exists between **Dec 25, 1961** and **Jan 6, 1962**. Born January 3rd, 1962? Your song comes from nine days before you did. 
+- **Charts weren't always posted on Saturdays, but most were.** The first 178 charts (Aug 1958 – Dec 1961) were dated _Mondays_. Any "find the previous Saturday" math is quietly wrong for three years of history — so the lookup matches against real chart dates instead of assuming weekdays.
+- **There's a hole in the timeline.** Billboard skipped a week switching schedules: no chart exists between **Dec 25, 1961** and **Jan 6, 1962**. Born January 3rd, 1962? Your song comes from nine days before you did.
 - **Charts are dated in the future.** Each week's chart carries next Saturday's date — the dataset always contains a date that hasn't happened yet.
 
 Every one of these is pinned by a unit test.

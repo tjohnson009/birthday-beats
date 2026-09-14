@@ -10,9 +10,9 @@ describe("searchSong function", () => {
         }) as jest.Mock;
     });
 
-    it('runs a test', () => {
-        expect(1+1).toBe(2)
-    })
+    it("runs a test", () => {
+        expect(1 + 1).toBe(2);
+    });
 
     it("returns null when Spotify has no match", async () => {
         const result = await searchSong("Nonexistent Song", "Nobody");
@@ -45,18 +45,17 @@ describe("searchSong function", () => {
     });
 
     it("caches and reuses tokens", async () => {
-        jest.resetModules(); 
-        const { searchSong } = await import("../spotify"); 
-        const fetchMock = global.fetch as jest.Mock; 
-        
+        jest.resetModules();
+        const { searchSong } = await import("../spotify");
+        const fetchMock = global.fetch as jest.Mock;
+
         await searchSong("Kool Aid and Frozen Pizza", "Mac Miller");
-        await searchSong("Kool Aid and Frozen Pizza", "Mac Miller"); 
-        
-        const numTokenCalls = fetchMock.mock.calls.filter(callArgs => {
-            return callArgs[0].toString().includes("accounts.spotify.com"); 
+        await searchSong("Kool Aid and Frozen Pizza", "Mac Miller");
+
+        const numTokenCalls = fetchMock.mock.calls.filter((callArgs) => {
+            return callArgs[0].toString().includes("accounts.spotify.com");
         }).length;
 
-        expect(numTokenCalls).toEqual(1); 
-        
-    })
+        expect(numTokenCalls).toEqual(1);
+    });
 });

@@ -1,4 +1,4 @@
-import fs from "node:fs"; 
+import fs from "node:fs";
 
 type ChartEntry = {
     song: string;
@@ -40,7 +40,7 @@ export const extractNumberOneSongs = (charts: ChartWeek[]) => {
     return numberOneSongs;
 };
 
-const charts = await getBillboardData(); 
-const numberOnes = extractNumberOneSongs(charts); 
+const charts = await getBillboardData();
+const numberOnes = extractNumberOneSongs(charts);
 fs.writeFileSync("data/number-ones.json", JSON.stringify(numberOnes, null, 2));
 console.log(numberOnes.length);
