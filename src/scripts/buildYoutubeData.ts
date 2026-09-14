@@ -12,6 +12,12 @@ type YoutubeVideoInfo = {
     channelName: string, 
 }
 
+type NumberOneEntry = {
+    date: string,
+    song: string,
+    artist: string,
+}
+
 type YoutubeVideosManifest = Record<string, YoutubeVideoInfo | null>;
 
 class QuotaError extends Error {}
@@ -58,7 +64,7 @@ if (fs.existsSync("data/youtube-videos.json")) {
 const numberOnes = JSON.parse(fs.readFileSync("data/number-ones.json", "utf-8")); 
 
 const pivot = new Date("1993-01-01").getTime(); 
-const sortedNumberOnes = numberOnes.sort((a, b) => {
+const sortedNumberOnes = numberOnes.sort((a: NumberOneEntry, b: NumberOneEntry) => {
     return Math.abs(pivot - (new Date(a.date).getTime())) - Math.abs(pivot - (new Date(b.date).getTime())); 
 })
 
