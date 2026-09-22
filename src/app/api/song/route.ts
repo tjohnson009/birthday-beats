@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     const youtubeVideoInfo = lookupYoutubeVideoForSong(numberOne.song, numberOne.artist);
 
     if (!songData) {
-        return NextResponse.json({ message: "Could not find song data." }, { status: 404 });
+        return NextResponse.json({ message: "Could not find song data from Spotify." }, { status: 404 });
     }
 
     return NextResponse.json({
