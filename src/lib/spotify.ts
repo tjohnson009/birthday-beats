@@ -53,9 +53,20 @@ export const getAccessToken = async () => {
     return token.value;
 };
 
+const ARTIST_ALIASES: Record<string, string> = {
+    "Careless Whisper|Wham! Featuring George Michael": "George Michael", 
+    "My Universe|Coldplay x BTS": "Coldplay", 
+};
+
 export const searchSong = async (title: string, artist: string): Promise<Song | null> => {
     const accessToken = await getAccessToken();
-    let query = `track:${title} artist:${artist}`;
+    const aliasedArtist = ARTIST_ALIASES[`${title}|${artist}`] ?? artist;
+    const normalizedTitle = title.replace(/\(\s*(from|theme)\b[^)]*\)/gi, "").split("/")[0].trim();
+    const leadArtist = aliasedArtist
+        .replace(/\(\s*(featuring|feat\.?)\b[^)]*\)/gi, "")
+        .replace(/\s+(featuring|feat\.?|duet with|with|starring)\s+.*$/i, "")
+        .trim();
+    const query = `track:${normalizedTitle} artist:${leadArtist}`;
     // if (year) query += ` year:${year}`;
 
     const params = new URLSearchParams({
@@ -76,7 +87,27 @@ export const searchSong = async (title: string, artist: string): Promise<Song | 
     }
 
     const data = await response.json();
-    const track = data.tracks.items[0];
+    let track = data.tracks.items[0];
+
+    if (!track) {
+        const fallbackParams = new URLSearchParams({
+            q: `${normalizedTitle} ${artist}`,
+            type: `track`,
+            market: `US`,
+            limit: `1`,
+        });
+
+        const fallbackResponse = await fetch(`https://api.spotify.com/v1/search?${fallbackParams}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        if (fallbackResponse.ok) {
+            const fallbackData = await fallbackResponse.json();
+            track = fallbackData.tracks.items[0];
+        }
+    }
 
     if (!track) return null;
 
