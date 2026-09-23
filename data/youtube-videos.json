@@ -1,917 +1,3382 @@
 {
-    "I Will Always Love You|Whitney Houston": {
-        "videoId": "3JWTaaS7LdU",
-        "title": "Whitney Houston - I Will Always Love You (Official 4K Video)",
-        "channelName": "whitneyhoustonVEVO"
-    },
-    "How Do You Talk To An Angel|The Heights": {
-        "videoId": "csATriX8Ed0",
-        "title": "The Heights - How Do You Talk To An Angel",
-        "channelName": "TheHeightsVEVO"
-    },
-    "Informer|Snow": {
-        "videoId": "TSffz_bl6zo",
-        "title": "Snow - Informer (Official Music Video) [4K Remaster]",
-        "channelName": "RHINO"
-    },
-    "End Of The Road (From \"Boomerang\")|Boyz II Men": {
-        "videoId": "zDKO6XYXioc",
-        "title": "Boyz II Men - End Of The Road",
-        "channelName": "BoyzIIMenVEVO"
-    },
-    "A Whole New World (Aladdin's Theme)|Peabo Bryson & Regina Belle": {
-        "videoId": "IiT9V6fGPpw",
-        "title": "Peabo Bryson, Regina Belle - A Whole New World (Aladdin&#39;s Theme) [Lyrics]",
-        "channelName": "Hip Hop/R&B Lyrics"
-    },
-    "Freak Me|Silk": {
-        "videoId": "t6JQhEXPFMw",
-        "title": "Freak Me",
-        "channelName": "Silk - Topic"
-    },
-    "That's The Way Love Goes|Janet Jackson": {
-        "videoId": "2b_KfAGiglc",
-        "title": "Janet Jackson - That&#39;s The Way Love Goes",
-        "channelName": "JanetJacksonVEVO"
-    },
-    "This Used To Be My Playground|Madonna": {
-        "videoId": "RhXDO2a3-sE",
-        "title": "Madonna - This Used To Be My Playground (Official Video)",
-        "channelName": "Madonna"
-    },
-    "Baby Got Back|Sir Mix-A-Lot": {
-        "videoId": "Bhado79yAAQ",
-        "title": "Baby Got Back",
-        "channelName": "Sir Mix-A-Lot - Topic"
-    },
-    "I'll Be There|Mariah Carey": {
-        "videoId": "kDTvGtqbXH0",
-        "title": "Mariah Carey - I&#39;ll Be There (From Mariah Carey (Live))",
-        "channelName": "MariahCareyVEVO"
-    },
-    "Weak|SWV": {
-        "videoId": "976b8TPPFJU",
-        "title": "SWV - Weak (Official HD Video)",
-        "channelName": "SWVVEVO"
-    },
-    "Jump|Kris Kross": {
-        "videoId": "010KyIQjkTk",
-        "title": "Kris Kross - Jump (Official Video)",
-        "channelName": "KrisKrossVEVO"
-    },
-    "Can't Help Falling In Love (From \"Sliver\")|UB40": {
-        "videoId": "vUdloUqZa7w",
-        "title": "UB40 - (I Can&#39;t Help) Falling In Love With You (Remastered 2002)",
-        "channelName": "UB40VEVO"
-    },
-    "Dreamlover|Mariah Carey": {
-        "videoId": "CqBtS6BIP1E",
-        "title": "Mariah Carey - Dreamlover (Official 4K Video)",
-        "channelName": "MariahCareyVEVO"
-    },
-    "Save The Best For Last|Vanessa Williams": {
-        "videoId": "5EdmHSTwmWY",
-        "title": "Vanessa Williams - Save The Best For Last",
-        "channelName": "VanessaWilliamsVEVO"
-    },
-    "To Be With You|Mr. Big": {
-        "videoId": "L6-uJLteKek",
-        "title": "Mr. Big - To Be With You 4K Video",
-        "channelName": "MrBigVEVO"
-    },
-    "I'd Do Anything For Love (But I Won't Do That)|Meat Loaf": {
-        "videoId": "9X_ViIPA-Gc",
-        "title": "Meat Loaf - I&#39;d Do Anything For Love (But I Won&#39;t Do That) (Official Music Video)",
-        "channelName": "MeatLoafVEVO"
-    },
-    "I'm Too Sexy|Right Said Fred": {
-        "videoId": "P5mtclwloEQ",
-        "title": "Right Said Fred - I&#39;m Too Sexy (Original Mix - 2006 Version)",
-        "channelName": "Radial by The Orchard"
-    },
-    "Don't Let The Sun Go Down On Me|George Michael/Elton John": {
-        "videoId": "RsKqMNDoR4o",
-        "title": "George Michael, Elton John - Don&#39;t Let The Sun Go Down On Me (Live)",
-        "channelName": "georgemichaelVEVO"
-    },
-    "All 4 Love|Color Me Badd": {
-        "videoId": "PccRs1HR7VI",
-        "title": "Color Me Badd - All 4 Love",
-        "channelName": "Kim Hyoungjin"
-    },
-    "Again|Janet Jackson": {
-        "videoId": "qUHtwV8wkOU",
-        "title": "Janet Jackson - Again (Official Music Video)",
-        "channelName": "JanetJacksonVEVO"
-    },
-    "Black Or White|Michael Jackson": {
-        "videoId": "F2AitTPI5U0",
-        "title": "Michael Jackson - Black Or White (Official Video - Shortened Version)",
-        "channelName": "michaeljacksonVEVO"
-    },
-    "Hero|Mariah Carey": {
-        "videoId": "0IA3ZvCkRkQ",
-        "title": "Mariah Carey - Hero (Live) (Official HD Video)",
-        "channelName": "MariahCareyVEVO"
-    },
-    "All For Love|Bryan Adams/Rod Stewart/Sting": {
-        "videoId": "ofA3URC1wyk",
-        "title": "Bryan Adams, Rod Stewart, Sting - All For Love (Non-Film Version)",
-        "channelName": "BryanAdamsVEVO"
-    },
-    "Set Adrift On Memory Bliss|P.M. Dawn": {
-        "videoId": "BtK_y1n2ERk",
-        "title": "PM Dawn - Set Adrift On Memory Bliss 1991 (Official Music Video) Remastered",
-        "channelName": "80's 90's Music Video's Remastered @Videos80s"
-    },
-    "When A Man Loves A Woman|Michael Bolton": {
-        "videoId": "MUuNDb-nm5M",
-        "title": "Michael Bolton - When a Man Loves a Woman (Official Video)",
-        "channelName": "MichaelBoltonVEVO"
-    },
-    "The Power Of Love|Celine Dion": {
-        "videoId": "Y8HOfcYWZoo",
-        "title": "Céline Dion - The Power Of Love (Official Remastered HD Video)",
-        "channelName": "CelineDionVEVO"
-    },
-    "Cream|Prince And The N.P.G.": {
-        "videoId": "rrbFQEcpJ3A",
-        "title": "Prince &amp; The New Power Generation - Cream (Official Video)",
-        "channelName": "Prince"
-    },
-    "Romantic|Karyn White": {
-        "videoId": "brRB4I47VQs",
-        "title": "Karyn White - Romantic (Video)",
-        "channelName": "koollatter"
-    },
-    "Emotions|Mariah Carey": {
-        "videoId": "NrJEFrth27Q",
-        "title": "Mariah Carey - Emotions",
-        "channelName": "MariahCareyVEVO"
-    },
-    "The Sign|Ace Of Base": {
-        "videoId": "iqu132vTl5Y",
-        "title": "Ace of Base - The Sign (Official Music Video)",
-        "channelName": "Ace of Base"
-    },
-    "Good Vibrations|Marky Mark & The Funky Bunch Featuring Loleatta Holloway": {
-        "videoId": "_kctwd4w7R0",
-        "title": "Marky Mark And The Funky Bunch - Good Vibrations ft. Loleatta Holloway",
-        "channelName": "MarkyMarkVEVO"
-    },
-    "I Adore Mi Amor|Color Me Badd": {
-        "videoId": "92NdfSeOLA0",
-        "title": "Color Me Badd - I Adore Mi Amor (Official Music Video) | Warner Records",
-        "channelName": "Warner Records"
-    },
-    "Bump N' Grind|R. Kelly": {
-        "videoId": "-U3OUZG_Y1w",
-        "title": "R. Kelly - Bump N&#39; Grind",
-        "channelName": "Music"
-    },
-    "The Promise Of A New Day|Paula Abdul": {
-        "videoId": "NzD6ORX2oU4",
-        "title": "Paula Abdul - The Promise Of A New Day",
-        "channelName": "PaulaAbdulVEVO"
-    },
-    "(Everything I Do) I Do It For You|Bryan Adams": {
-        "videoId": "Y0pdQU87dc8",
-        "title": "Bryan Adams - (Everything I Do) I Do It For You",
-        "channelName": "Bryan Adams"
-    },
-    "I Swear|All-4-One": {
-        "videoId": "cVpvlaKfLQc",
-        "title": "All-4-One - I Swear (Official Music Video)",
-        "channelName": "RHINO"
-    },
-    "Unbelievable|EMF": {
-        "videoId": "sfCLt0kTd5E",
-        "title": "EMF - Unbelievable (Official Music Video) HD",
-        "channelName": "EMF The Band"
-    },
-    "Rush Rush|Paula Abdul": {
-        "videoId": "yqyIaNWP0T0",
-        "title": "Paula Abdul - Rush, Rush",
-        "channelName": "PaulaAbdulVEVO"
-    },
-    "More Than Words|Extreme": {
-        "videoId": "UrIiLvg58SY",
-        "title": "Extreme - More Than Words (Official Music Video)",
-        "channelName": "ExtremeVEVO"
-    },
-    "I Don't Wanna Cry|Mariah Carey": {
-        "videoId": "QfG1qwl-Zho",
-        "title": "Mariah Carey - I Don&#39;t Wanna Cry (Official HD Video)",
-        "channelName": "MariahCareyVEVO"
-    },
-    "Stay (I Missed You) (From \"Reality Bites\")|Lisa Loeb & Nine Stories": {
-        "videoId": "i9HGwRbMiVY",
-        "title": "Lisa Loeb &quot;Stay (I Missed You)&quot; Music Video",
-        "channelName": "Lisa Loeb Official"
-    },
-    "I Like The Way (The Kissing Game)|Hi-Five": {
-        "videoId": "vF3MB0U6DO8",
-        "title": "Hi-Five - I Like the Way (The Kissing Game) (Official Video)",
-        "channelName": "HiFiveVEVO"
-    },
-    "Joyride|Roxette": {
-        "videoId": "xCorJG9mubk",
-        "title": "Roxette - Joyride (Official Video)",
-        "channelName": "Roxette"
-    },
-    "I'll Make Love To You|Boyz II Men": {
-        "videoId": "fV8vB1BB2qc",
-        "title": "Boyz II Men - I&#39;ll Make Love To You (Official Music Video)",
-        "channelName": "BoyzIIMenVEVO"
-    },
-    "Baby Baby|Amy Grant": {
-        "videoId": "vMXuuYnoRdI",
-        "title": "Amy Grant - Baby, Baby",
-        "channelName": "AmyGrantVEVO"
-    },
-    "You're In Love|Wilson Phillips": {
-        "videoId": "XNrJ0gg_8tY",
-        "title": "Wilson Phillips &quot;Go Your Own Way&quot; 2004 -Video",
-        "channelName": "zoggyzoggo"
-    },
-    "I've Been Thinking About You|Londonbeat": {
-        "videoId": "06k-lO4vuic",
-        "title": "Londonbeat - I&#39;ve Been Thinking About You (Music Video) HD Remastered and AI Upscaled",
-        "channelName": "Enhanced Music Videos"
-    },
-    "Coming Out Of The Dark|Gloria Estefan": {
-        "videoId": "QS7qLDizDYo",
-        "title": "Gloria Estefan - Coming out of the Dark",
-        "channelName": "GloriaEstefanVEVO"
-    },
-    "One More Try|Timmy T.": {
-        "videoId": "hcEaUJoo0NE",
-        "title": "Timmy T - One More Try",
-        "channelName": "Videostampfer"
-    },
-    "Someday|Mariah Carey": {
-        "videoId": "4RWfSUWVP2I",
-        "title": "Mariah Carey - Someday (Official HD Video)",
-        "channelName": "MariahCareyVEVO"
-    },
-    "All The Man That I Need|Whitney Houston": {
-        "videoId": "3WH1Ma50QUk",
-        "title": "Whitney Houston - All The Man That I Need (Official HD Video)",
-        "channelName": "whitneyhoustonVEVO"
-    },
-    "Gonna Make You Sweat (Everybody Dance Now)|C+C Music Factory": {
-        "videoId": "LaTGrV58wec",
-        "title": "Gonna Make You Sweat (Everybody Dance Now) (Official HD Video)",
-        "channelName": "CCMusicFactoryVEVO"
-    },
-    "The First Time|Surface": {
-        "videoId": "_Sz2HOAb54w",
-        "title": "Surface - The First Time",
-        "channelName": "SurfaceVEVO"
-    },
-    "On Bended Knee|Boyz II Men": {
-        "videoId": "jSUSFow70no",
-        "title": "Boyz II Men - On Bended Knee",
-        "channelName": "BoyzIIMenVEVO"
-    },
-    "Love Will Never Do (Without You)|Janet Jackson": {
-        "videoId": "n0dqk6Vybeo",
-        "title": "Janet Jackson - Love Will Never Do (Without You)",
-        "channelName": "JanetJacksonVEVO"
-    },
-    "Here Comes The Hotstepper (From \"Ready To Wear\")|Ini Kamoze": {
-        "videoId": "15UffN8eilI",
-        "title": "Ini Kamoze - Here Comes The Hotstepper (Remix) (Official Video)",
-        "channelName": "IniKamozeVEVO"
-    },
-    "Justify My Love|Madonna": {
-        "videoId": "Np_Y740aReI",
-        "title": "Madonna - Justify My Love (Official Video) [HD]",
-        "channelName": "Madonna"
-    },
-    "Because I Love You (The Postman Song)|Stevie B": {
-        "videoId": "Xc1uQI2XmZs",
-        "title": "Stevie B - Because I Love You (The Postman Song) (Official Video)",
-        "channelName": "StevieBVEVO"
-    },
-    "Creep|TLC": {
-        "videoId": "LlZydtG3xqI",
-        "title": "TLC - Creep (Official HD Video)",
-        "channelName": "TLCVEVO"
-    },
-    "I'm Your Baby Tonight|Whitney Houston": {
-        "videoId": "i0oRnyXxIrY",
-        "title": "Whitney Houston - I&#39;m Your Baby Tonight (Official Video)",
-        "channelName": "whitneyhoustonVEVO"
-    },
-    "Love Takes Time|Mariah Carey": {
-        "videoId": "FkDpwF6-QiA",
-        "title": "Mariah Carey - Love Takes Time (Official HD Video)",
-        "channelName": "MariahCareyVEVO"
-    },
-    "Take A Bow|Madonna": {
-        "videoId": "XDeiovnCv1o",
-        "title": "Madonna - Take A Bow (Official Video) [4K]",
-        "channelName": "Madonna"
-    },
-    "Ice Ice Baby|Vanilla Ice": {
-        "videoId": "rog8ou-ZepE",
-        "title": "Vanilla Ice - Ice Ice Baby (Official Music Video)",
-        "channelName": "vanillaiceVEVO"
-    },
-    "Black Cat|Janet Jackson": {
-        "videoId": "qH-rPt1ftSo",
-        "title": "Janet Jackson - Black Cat",
-        "channelName": "JanetJacksonVEVO"
-    },
-    "I Don't Have The Heart|James Ingram": {
-        "videoId": "x65ZPd11gxY",
-        "title": "James Ingram - I Don&#39;t Have The Heart",
-        "channelName": "Drewm7326"
-    },
-    "Praying For Time|George Michael": {
-        "videoId": "goroyZbVdlo",
-        "title": "George Michael - Praying For Time (Official Video)",
-        "channelName": "georgemichaelVEVO"
-    },
-    "Close To You|Maxi Priest": {
-        "videoId": "mlFK2MpKnJU",
-        "title": "Maxi Priest - Close To You (Official Video HD)(Audio HD)(Extended Mix)",
-        "channelName": "El Canal de Santash"
-    },
-    "(Can't Live Without Your) Love And Affection|Nelson": {
-        "videoId": "x1W6-ErrHls",
-        "title": "Nelson - (Can&#39;t Live Without Your) Love And Affection",
-        "channelName": "NelsonVEVO"
-    },
-    "Release Me|Wilson Phillips": {
-        "videoId": "gcNyk54b3ZU",
-        "title": "Release Me &quot;Wilson Phillips&quot; 1990 - Video",
-        "channelName": "zoggyzoggo"
-    },
-    "This Is How We Do It|Montell Jordan": {
-        "videoId": "0hiUuL5uTKc",
-        "title": "Montell Jordan - This Is How We Do It (Official Music Video)",
-        "channelName": "MontellJordanVEVO"
-    },
-    "Blaze Of Glory (From \"Young Guns II\")|Jon Bon Jovi": {
-        "videoId": "MfmYCM4CS8o",
-        "title": "Jon Bon Jovi - Blaze Of Glory (Official Music Video)",
-        "channelName": "JonBonJoviVEVO"
-    },
-    "If Wishes Came True|Sweet Sensation": {
-        "videoId": "pbb_6e6W-rU",
-        "title": "Sweet Sensation - If Wishes Came True (Official Video), Full HD (Digitally Remastered and Upscaled)",
-        "channelName": "Enhanced Music Videos"
-    },
-    "Vision Of Love|Mariah Carey": {
-        "videoId": "tov22NtCMC4",
-        "title": "Mariah Carey - Vision Of Love",
-        "channelName": "MariahCareyVEVO"
-    },
-    "Have You Ever Really Loved A Woman?|Bryan Adams": {
-        "videoId": "diKIYv8tMC8",
-        "title": "Bryan Adams - Have You Ever Really Loved A Woman? (Classic Version)",
-        "channelName": "Bryan Adams"
-    },
-    "She Ain't Worth It|Glenn Medeiros Featuring Bobby Brown": {
-        "videoId": "7-1vYnFHu2U",
-        "title": "Glenn Medeiros - She Ain&#39;t Worth It (Official Music Video)",
-        "channelName": "Reservoir Recordings "
-    },
-    "Step By Step|New Kids On The Block": {
-        "videoId": "ay6GjmiJTPM",
-        "title": "New Kids On The Block - Step By Step (Official Video)",
-        "channelName": "NewKidsVEVO"
-    },
-    "Waterfalls|TLC": {
-        "videoId": "8WEtxJ4-sh4",
-        "title": "TLC - Waterfalls (Official HD Video)",
-        "channelName": "TLCVEVO"
-    },
-    "It Must Have Been Love (From \"Pretty Woman\")|Roxette": {
-        "videoId": "k2C5TjS2sh4",
-        "title": "Roxette - It Must Have Been Love (Official Music Video) (Remastered)",
-        "channelName": "Roxette"
-    },
-    "Hold On|Wilson Phillips": {
-        "videoId": "uIbXvaE39wM",
-        "title": "Wilson Phillips - Hold On (Official Music Video)",
-        "channelName": "WilsonPhillipsVEVO"
-    },
-    "Vogue|Madonna": {
-        "videoId": "GuJQSAiODqI",
-        "title": "Madonna - Vogue (Official Video)",
-        "channelName": "Madonna"
-    },
-    "Nothing Compares 2 U|Sinead O'Connor": {
-        "videoId": "0-EF60neguk",
-        "title": "Sinéad O&#39;Connor - Nothing Compares 2 U (Official Music Video) [HD]",
-        "channelName": "SineadOConnorVEVO"
-    },
-    "Kiss From A Rose|Seal": {
-        "videoId": "hDd2G_V1rzc",
-        "title": "Seal - Kiss From A Rose (Official Video) [HD]",
-        "channelName": "Seal"
-    },
-    "You Are Not Alone|Michael Jackson": {
-        "videoId": "pAyKJAtDNCw",
-        "title": "Michael Jackson - You Are Not Alone (Official Video)",
-        "channelName": "michaeljacksonVEVO"
-    },
-    "Gangsta's Paradise (From \"Dangerous Minds\")|Coolio Featuring L.V.": {
-        "videoId": "fPO76Jlnz6c",
-        "title": "Coolio - Gangsta&#39;s Paradise (feat. L.V.) [Official Music Video]",
-        "channelName": "Tommy Boy"
-    },
-    "I'll Be Your Everything|Tommy Page": {
-        "videoId": "rTki_oqDLqk",
-        "title": "Tommry Page -I&#39;ll Be Your Everything&quot;",
-        "channelName": "ykitten"
-    },
-    "Love Will Lead You Back|Taylor Dayne": {
-        "videoId": "MO6xhLtfwW0",
-        "title": "Taylor Dayne - Love Will Lead You Back (Official HD Video)",
-        "channelName": "TaylorDayneVEVO"
-    },
-    "Fantasy|Mariah Carey": {
-        "videoId": "qq09UkPRdFY",
-        "title": "Mariah Carey - Fantasy (Official 4K Video)",
-        "channelName": "MariahCareyVEVO"
-    },
-    "Black Velvet|Alannah Myles": {
-        "videoId": "tT4d1LQy4es",
-        "title": "Alannah Myles - Black Velvet",
-        "channelName": "AlannahMylesVEVO"
-    },
-    "Escapade|Janet Jackson": {
-        "videoId": "UFX3gQHIroU",
-        "title": "Janet Jackson - Escapade",
-        "channelName": "JanetJacksonVEVO"
-    },
-    "Opposites Attract|Paula Abdul (Duet With The Wild Pair)": {
-        "videoId": "xweiQukBM_k",
-        "title": "Paula Abdul, The Wild Pair - Opposites Attract",
-        "channelName": "PaulaAbdulVEVO"
-    },
-    "Exhale (Shoop Shoop) (From \"Waiting To Exhale\")|Whitney Houston": {
-        "videoId": "wrTuV4Szxzo",
-        "title": "Whitney Houston - Exhale (Shoop Shoop) (Official HD Video)",
-        "channelName": "whitneyhoustonVEVO"
-    },
-    "How Am I Supposed To Live Without You|Michael Bolton": {
-        "videoId": "YFood_bTOX4",
-        "title": "Michael Bolton - How Am I Supposed To Live Without You",
-        "channelName": "MichaelBoltonVEVO"
-    },
-    "One Sweet Day|Mariah Carey & Boyz II Men": {
-        "videoId": "UXxRyNvTPr8",
-        "title": "Mariah Carey, Boyz II Men - One Sweet Day (Official Video)",
-        "channelName": "MariahCareyVEVO"
-    },
-    "Another Day In Paradise|Phil Collins": {
-        "videoId": "Qt2mbGP6vFI",
-        "title": "Phil Collins - Another Day In Paradise (Official Music Video) [HD Upgrade]",
-        "channelName": "Phil Collins"
-    },
-    "We Didn't Start The Fire|Billy Joel": {
-        "videoId": "eFTLKWw542g",
-        "title": "Billy Joel - We Didn&#39;t Start The Fire (Official HD Video)",
-        "channelName": "billyjoelVEVO"
-    },
-    "Blame It On The Rain|Milli Vanilli": {
-        "videoId": "BI5IA8assfk",
-        "title": "Milli Vanilli - Blame It On the Rain (Official Video)",
-        "channelName": "MilliVanilliVEVO"
-    },
-    "When I See You Smile|Bad English": {
-        "videoId": "cu6pclWsxzs",
-        "title": "Bad English - When I See You Smile",
-        "channelName": "BadEnglishVEVO"
-    },
-    "Listen To Your Heart|Roxette": {
-        "videoId": "yCC_b5WHLX0",
-        "title": "Roxette - Listen To Your Heart (Official Music Video)",
-        "channelName": "Roxette"
-    },
-    "Miss You Much|Janet Jackson": {
-        "videoId": "IVF0zcqr9Dg",
-        "title": "Janet Jackson - Miss You Much",
-        "channelName": "JanetJacksonVEVO"
-    },
-    "Because You Loved Me (From \"Up Close & Personal\")|Celine Dion": {
-        "videoId": "gMOovDrWWiI",
-        "title": "Céline Dion - Because You Loved Me (from &quot;These Are Special Times&quot; TV Special)",
-        "channelName": "CelineDionVEVO"
-    },
-    "Girl I'm Gonna Miss You|Milli Vanilli": {
-        "videoId": "ZbUENJ5FjBk",
-        "title": "Milli Vanilli - Girl I&#39;m Gonna Miss You (Videoclip)",
-        "channelName": "MilliVanilliVEVO"
-    },
-    "Don't Wanna Lose You|Gloria Estefan": {
-        "videoId": "J1x1WGtePSE",
-        "title": "Gloria Estefan - Don&#39;t Wanna Lose You (Official Video)",
-        "channelName": "GloriaEstefanVEVO"
-    },
-    "Hangin' Tough|New Kids On The Block": {
-        "videoId": "By86PcLufOU",
-        "title": "New Kids On The Block - Hangin&#39; Tough (Official Video)",
-        "channelName": "NewKidsVEVO"
-    },
-    "Cold Hearted|Paula Abdul": {
-        "videoId": "o7aShcmEksw",
-        "title": "Paula Abdul - Cold Hearted",
-        "channelName": "PaulaAbdulVEVO"
-    },
-    "Always Be My Baby|Mariah Carey": {
-        "videoId": "LfRNRymrv9k",
-        "title": "Mariah Carey - Always Be My Baby (Official Music Video)",
-        "channelName": "MariahCareyVEVO"
-    },
-    "Right Here Waiting|Richard Marx": {
-        "videoId": "S_E2EHVxNAE",
-        "title": "Richard Marx - Right Here Waiting (Official Music Video)",
-        "channelName": "RichardMarxVEVO"
-    },
-    "Tha Crossroads|Bone Thugs-N-Harmony": {
-        "videoId": "VMYAEHE2GrM",
-        "title": "Bone Thugs N Harmony - Crossroads",
-        "channelName": "Bone Thugs-N-Harmony"
-    },
-    "Batdance (From \"Batman\")|Prince": {
-        "videoId": "ulOLYnOthIw",
-        "title": "Prince - Batdance (Official Music Video)",
-        "channelName": "Prince"
-    },
-    "Toy Soldiers|Martika": {
-        "videoId": "LvdLovAaYzM",
-        "title": "Martika - Toy Soldiers",
-        "channelName": "MartikaVEVO"
-    },
-    "If You Don't Know Me By Now|Simply Red": {
-        "videoId": "zTcu7MCtuTs",
-        "title": "Simply Red - If You Don&#39;t Know Me By Now (Official Video)",
-        "channelName": "Simply Red"
-    },
-    "Good Thing|Fine Young Cannibals": {
-        "videoId": "We_9MthGzwk",
-        "title": "Fine Young Cannibals - Good Thing (Official Video)",
-        "channelName": "London Records"
-    },
-    "Baby Don't Forget My Number|Milli Vanilli": {
-        "videoId": "JhyzGDPwmYU",
-        "title": "Milli Vanilli - Baby Don&#39;t Forget My Number",
-        "channelName": "MilliVanilliVEVO"
-    },
-    "Satisfied|Richard Marx": {
-        "videoId": "fzLat4Q_HTE",
-        "title": "Satisfied",
-        "channelName": "Richard Marx - Topic"
-    },
-    "How Do U Want It/California Love|2Pac Featuring K-Ci And JoJo": {
-        "videoId": "PJWpyKvHZAk",
-        "title": "2Pac - How Do U Want It (Official Music Video) ft. K-Ci &amp; JoJo",
-        "channelName": "2PacVEVO"
-    },
-    "I'll Be Loving You (Forever)|New Kids On The Block": {
-        "videoId": "ZT_7UjCVELg",
-        "title": "New Kids On The Block - I&#39;ll Be Loving You (Forever) (Official Video)",
-        "channelName": "NewKidsVEVO"
-    },
-    "Wind Beneath My Wings (From \"Beaches\")|Bette Midler": {
-        "videoId": "0iAzMRKFX3c",
-        "title": "Bette Midler - Wind Beneath My Wings (Official Music Video)",
-        "channelName": "RHINO"
-    },
-    "You're Makin' Me High/Let It Flow|Toni Braxton": {
-        "videoId": "wIgOL21S98o",
-        "title": "Toni Braxton - You&#39;re Makin&#39; Me HIgh (Video Version)",
-        "channelName": "ToniBraxtonVEVO"
-    },
-    "Rock On (From \"Dream A Little Dream\")|Michael Damian": {
-        "videoId": "K2v-DMpgO7o",
-        "title": "Michael Damian Rock On 1989",
-        "channelName": "Michael Damian Official"
-    },
-    "Macarena (Bayside Boys Mix)|Los Del Rio": {
-        "videoId": "zWaymcVmJ-A",
-        "title": "Los Del Rio - Macarena (Bayside Boys Remix)",
-        "channelName": "LosDelRioVEVO"
-    },
-    "Forever Your Girl|Paula Abdul": {
-        "videoId": "0pyxKqdtrH8",
-        "title": "Paula Abdul - Forever Your Girl (Official Music Video)",
-        "channelName": "PaulaAbdulVEVO"
-    },
-    "I'll Be There For You|Bon Jovi": {
-        "videoId": "mh8MIp2FOhc",
-        "title": "Bon Jovi - I&#39;ll Be There For You",
-        "channelName": "BonJoviVEVO"
-    },
-    "Like A Prayer|Madonna": {
-        "videoId": "79fzeNUqQbQ",
-        "title": "Madonna - Like A Prayer (Official Video)",
-        "channelName": "Madonna"
-    },
-    "She Drives Me Crazy|Fine Young Cannibals": {
-        "videoId": "UtvmTu4zAMg",
-        "title": "Fine Young Cannibals - She Drives Me Crazy (Official Video)",
-        "channelName": "London Records"
-    },
-    "The Look|Roxette": {
-        "videoId": "eAByAzEkI1c",
-        "title": "Roxette - The Look (Official Music Video ReMastered)",
-        "channelName": "Roxette"
-    },
-    "Eternal Flame|The Bangles": {
-        "videoId": "PSoOFn3wQV4",
-        "title": "The Bangles - Eternal Flame (Official Video)",
-        "channelName": "TheBanglesVEVO"
-    },
-    "The Living Years|Mike + The Mechanics": {
-        "videoId": "5hr64MxYpgk",
-        "title": "Mike + The Mechanics - The Living Years (Official HD Music Video)",
-        "channelName": "Mike + The Mechanics"
-    },
-    "Lost In Your Eyes|Debbie Gibson": {
-        "videoId": "8Ms3mJFkSeg",
-        "title": "Debbie Gibson - Lost In Your Eyes (Official Music Video)",
-        "channelName": "RHINO"
-    },
-    "Straight Up|Paula Abdul": {
-        "videoId": "El1kgCqD7Xk",
-        "title": "Paula Abdul - Straight Up",
-        "channelName": "PaulaAbdulVEVO"
-    },
-    "No Diggity|BLACKstreet (Featuring Dr. Dre)": {
-        "videoId": "3KL9mRus19o",
-        "title": "Blackstreet - No Diggity (Official Music Video) ft. Dr. Dre, Queen Pen",
-        "channelName": "BlackstreetVEVO"
-    },
-    "When I'm With You|Sheriff": {
-        "videoId": "ucqVyQDoImc",
-        "title": "Sheriff - When I&#39;m With You Official Music Video HD",
-        "channelName": "TwinCities WeddingDJs"
-    },
-    "Two Hearts|Phil Collins": {
-        "videoId": "SidxJz94Svs",
-        "title": "Phil Collins - Two Hearts (Official Music Video)",
-        "channelName": "Phil Collins"
-    },
-    "Un-Break My Heart|Toni Braxton": {
-        "videoId": "p2Rch6WvPJE",
-        "title": "Toni Braxton - Un-Break My Heart (Official HD Video)",
-        "channelName": "ToniBraxtonVEVO"
-    },
-    "My Prerogative|Bobby Brown": {
-        "videoId": "5cDLZqe735k",
-        "title": "Bobby Brown - My Prerogative",
-        "channelName": "BobbyBrownVEVO"
-    },
-    "Every Rose Has Its Thorn|Poison": {
-        "videoId": "j2r2nDhTzO4",
-        "title": "Poison - Every Rose Has Its Thorn (Official Music Video)",
-        "channelName": "poisonVEVO"
-    },
-    "Look Away|Chicago": {
-        "videoId": "2uKLTtVqQpE",
-        "title": "Chicago - Look Away (Official Music Video)",
-        "channelName": "Chicago Band"
-    },
-    "Baby, I Love Your Way/Freebird Medley|Will To Power": {
-        "videoId": "79r_XaUU7yE",
-        "title": "Will to Power - Baby I Love Your Way",
-        "channelName": "WillToPowerVEVO"
-    },
-    "Bad Medicine|Bon Jovi": {
-        "videoId": "eOUtsybozjg",
-        "title": "Bon Jovi - Bad Medicine (Official Music Video)",
-        "channelName": "BonJoviVEVO"
-    },
-    "Wild, Wild West|The Escape Club": {
-        "videoId": "VnrVMyTdHbU",
-        "title": "The Escape Club - Wild Wild West (Official Music Video)",
-        "channelName": "RHINO"
-    },
-    "Wannabe|Spice Girls": {
-        "videoId": "gJLIiF15wjQ",
-        "title": "Spice Girls - Wannabe (Official Music Video)",
-        "channelName": "SpiceGirlsVEVO"
-    },
-    "Kokomo (From\"Cocktail\" )|The Beach Boys": {
-        "videoId": "WXB4LspLQE0",
-        "title": "The Beach Boys - Kokomo [Official Music Video]",
-        "channelName": "PLAYaLOT"
-    },
-    "Groovy Kind Of Love|Phil Collins": {
-        "videoId": "HsC_SARyPzk",
-        "title": "Phil Collins - A Groovy Kind Of Love (Official Music Video)",
-        "channelName": "Phil Collins"
-    },
-    "Red Red Wine|UB40": {
-        "videoId": "zXt56MB-3vc",
-        "title": "UB40 - Red Red Wine (Official Video HD Remastered)",
-        "channelName": "UB40VEVO"
-    },
-    "Can't Nobody Hold Me Down|Puff Daddy (Featuring Mase)": {
-        "videoId": "0zXis84Pi24",
-        "title": "Puff Daddy - Can&#39;t Nobody Hold Me Down (feat. Mase) (Official Music Video) [HD]",
-        "channelName": "Bad Boy Entertainment"
-    },
-    "Love Bites|Def Leppard": {
-        "videoId": "W4XiSFyYRE8",
-        "title": "Def Leppard - Love Bites",
-        "channelName": "DefLeppardVEVO"
-    },
-    "Don't Worry, Be Happy (From \"Cocktail\")|Bobby McFerrin": {
-        "videoId": "d-diB65scQU",
-        "title": "Bobby McFerrin - Don&#39;t Worry Be Happy (Official Music Video)",
-        "channelName": "BobbyMcFerrinVEVO"
-    },
-    "Sweet Child O' Mine|Guns N' Roses": {
-        "videoId": "1w7OgIMMRc4",
-        "title": "Guns N&#39; Roses - Sweet Child O&#39; Mine (Official Music Video)",
-        "channelName": "GunsNRosesVEVO"
-    },
-    "Monkey|George Michael": {
-        "videoId": "kA9NNq_6N-w",
-        "title": "George Michael - Monkey (Official Video)",
-        "channelName": "georgemichaelVEVO"
-    },
-    "Hypnotize|The Notorious B.I.G.": {
-        "videoId": "glEiPXAYE-U",
-        "title": "The Notorious B.I.G. - Hypnotize (Official Music Video) [4K]",
-        "channelName": "The Notorious B.I.G."
-    },
-    "Roll With It|Steve Winwood": {
-        "videoId": "u_vkKozA8OI",
-        "title": "Steve Winwood - Roll With It",
-        "channelName": "SteveWinwoodVEVO"
-    },
-    "MMMBop|Hanson": {
-        "videoId": "NHozn0YXAeE",
-        "title": "Hanson - MMMBop (Official Music Video)",
-        "channelName": "HansonVEVO"
-    },
-    "Hold On To The Nights|Richard Marx": {
-        "videoId": "LBmNTLxclXE",
-        "title": "Richard Marx - Hold On To The Nights",
-        "channelName": "RichardMarxVEVO"
-    },
-    "I'll Be Missing You|Puff Daddy & Faith Evans Featuring 112": {
-        "videoId": "NKMtZm2YuBE",
-        "title": "Puff Daddy [feat. Faith Evans &amp; 112] - I&#39;ll Be Missing You (Official Music Video)",
-        "channelName": "Bad Boy Entertainment"
-    },
-    "The Flame|Cheap Trick": {
-        "videoId": "2u6uXuT9pm4",
-        "title": "Cheap Trick - The Flame (Official Video)",
-        "channelName": "cheaptrickVEVO"
-    },
-    "Dirty Diana|Michael Jackson": {
-        "videoId": "yUi_S6YWjZw",
-        "title": "Michael Jackson - Dirty Diana (Official Video)",
-        "channelName": "michaeljacksonVEVO"
-    },
-    "Foolish Beat|Debbie Gibson": {
-        "videoId": "qf8BoWKeHow",
-        "title": "Debbie Gibson - Foolish Beat (Official Music Video)",
-        "channelName": "RHINO"
-    },
-    "Together Forever|Rick Astley": {
-        "videoId": "yPYZpwSpKmA",
-        "title": "Rick Astley - Together Forever (Official Video) [4K Remaster]",
-        "channelName": "Rick Astley"
-    },
-    "One More Try|George Michael": {
-        "videoId": "bG5N3GC-m20",
-        "title": "George Michael - One More Try (Official Video)",
-        "channelName": "georgemichaelVEVO"
-    },
-    "Anything For You|Gloria Estefan & Miami Sound Machine": {
-        "videoId": "4uLl8aA95zA",
-        "title": "Gloria Estefan &amp; Miami Sound Machine - Anything For You",
-        "channelName": "GloriaEstefanVEVO"
-    },
-    "Wishing Well|Terence Trent D'Arby": {
-        "videoId": "ynIHsHYaig0",
-        "title": "Sananda Maitreya - Wishing Well",
-        "channelName": "SanandaMaitreyaVEVO"
-    },
-    "Mo Money Mo Problems|The Notorious B.I.G. Featuring Puff Daddy & Mase": {
-        "videoId": "gUhRKVIjJtw",
-        "title": "The Notorious B.I.G. - Mo Money Mo Problems (Official Music Video) [4K]",
-        "channelName": "The Notorious B.I.G."
-    },
-    "Where Do Broken Hearts Go|Whitney Houston": {
-        "videoId": "wa3tfVjGCQ8",
-        "title": "Whitney Houston - Where Do Broken Hearts Go (Official Video)",
-        "channelName": "whitneyhoustonVEVO"
-    },
-    "Honey|Mariah Carey": {
-        "videoId": "w3KOowB4k_k",
-        "title": "Mariah Carey - Honey (Official 4K Video)",
-        "channelName": "MariahCareyVEVO"
-    },
-    "Get Outta My Dreams, Get Into My Car|Billy Ocean": {
-        "videoId": "zNgcYGgtf8M",
-        "title": "Billy Ocean - Get Outta My Dreams, Get Into My Car (Official Video)",
-        "channelName": "BillyOceanVEVO"
-    },
-    "Man In The Mirror|Michael Jackson": {
-        "videoId": "PivWY9wn5ps",
-        "title": "Michael Jackson - Man In The Mirror (Official Video)",
-        "channelName": "michaeljacksonVEVO"
-    },
-    "4 Seasons Of Loneliness|Boyz II Men": {
-        "videoId": "fUSOZAgl95A",
-        "title": "Boyz II Men - 4 Seasons Of Loneliness (Official Music Video)",
-        "channelName": "BoyzIIMenVEVO"
-    },
-    "Candle In The Wind 1997/Something About The Way You Look Tonight|Elton John": {
-        "videoId": "B93Tir6l5FA",
-        "title": "Elton John - Something About the Way You Look Tonight",
-        "channelName": "EltonJohnVEVO"
-    },
-    "Never Gonna Give You Up|Rick Astley": {
-        "videoId": "dQw4w9WgXcQ",
-        "title": "Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster)",
-        "channelName": "Rick Astley"
-    },
-    "Father Figure|George Michael": {
-        "videoId": "m_9hfHvQSNo",
-        "title": "George Michael - Father Figure (Official Video)",
-        "channelName": "georgemichaelVEVO"
-    },
-    "Seasons Change|Expose": {
-        "videoId": "Yqk6y5Hmy9s",
-        "title": "Exposé - Seasons Change (Official Video)",
-        "channelName": "ExposeVEVO"
-    },
-    "Could've Been|Tiffany": {
-        "videoId": "sDZzlmGkb18",
-        "title": "Tiffany - Could&#39;ve Been",
-        "channelName": "TiffanyVEVO"
-    },
-    "Need You Tonight|INXS": {
-        "videoId": "F93ywiGMDnQ",
-        "title": "INXS - Need You Tonight (Official Music Video)",
-        "channelName": "INXS Videos"
-    },
-    "The Way You Make Me Feel|Michael Jackson": {
-        "videoId": "HzZ_urpj4As",
-        "title": "Michael Jackson - The Way You Make Me Feel (Official Video)",
-        "channelName": "michaeljacksonVEVO"
-    },
-    "Got My Mind Set On You|George Harrison": {
-        "videoId": "_71w4UA2Oxo",
-        "title": "George Harrison - Got My Mind Set On You (Version II)",
-        "channelName": "GeorgeHarrisonVEVO"
-    },
-    "So Emotional|Whitney Houston": {
-        "videoId": "0YjSHbA6HQQ",
-        "title": "Whitney Houston - So Emotional (Official Video)",
-        "channelName": "whitneyhoustonVEVO"
-    },
-    "Faith|George Michael": {
-        "videoId": "6Cs3Pvmmv0E",
-        "title": "George Michael - Faith (Official Video)",
-        "channelName": "georgemichaelVEVO"
-    },
-    "Truly Madly Deeply|Savage Garden": {
-        "videoId": "WQnAxOQxQIU",
-        "title": "Savage Garden - Truly Madly Deeply (Official Video)",
-        "channelName": "SavageGardenVEVO"
-    },
-    "Heaven Is A Place On Earth|Belinda Carlisle": {
-        "videoId": "NOGEyBeoBGM",
-        "title": "Belinda Carlisle - Heaven Is A Place On Earth (Official Music Video)",
-        "channelName": "BelindaCarlisleVEVO"
-    },
-    "Together Again|Janet": {
-        "videoId": "7SXKHiPQPhk",
-        "title": "Janet Jackson - Together Again",
-        "channelName": "JanetJacksonVEVO"
-    },
-    "(I've Had) The Time Of My Life|Bill Medley & Jennifer Warnes": {
-        "videoId": "4BQLE_RrTSU",
-        "title": "Bill Medley, Jennifer Warnes - (I&#39;ve Had) The Time Of My Life (Official HD Video)",
-        "channelName": "BillMJennWVEVO"
-    },
-    "Mony Mony|Billy Idol": {
-        "videoId": "sYYAv-QW38Q",
-        "title": "Billy Idol - Mony Mony (Live/1987)",
-        "channelName": "BillyIdolVEVO"
-    },
-    "Nice & Slow|Usher": {
-        "videoId": "DIpQ4AZSAf8",
-        "title": "Usher - Nice &amp; Slow (Official HD Video)",
-        "channelName": "UsherVEVO"
-    },
-    "I Think We're Alone Now|Tiffany": {
-        "videoId": "w6Q3mHyzn78",
-        "title": "Tiffany - I Think We&#39;re Alone Now (Official Music Video)",
-        "channelName": "TiffanyVEVO"
-    }
+  "I Will Always Love You|Whitney Houston": {
+    "videoId": "3JWTaaS7LdU",
+    "title": "Whitney Houston - I Will Always Love You (Official 4K Video)",
+    "channelName": "whitneyhoustonVEVO"
+  },
+  "How Do You Talk To An Angel|The Heights": {
+    "videoId": "csATriX8Ed0",
+    "title": "The Heights - How Do You Talk To An Angel",
+    "channelName": "TheHeightsVEVO"
+  },
+  "Informer|Snow": {
+    "videoId": "TSffz_bl6zo",
+    "title": "Snow - Informer (Official Music Video) [4K Remaster]",
+    "channelName": "RHINO"
+  },
+  "End Of The Road (From \"Boomerang\")|Boyz II Men": {
+    "videoId": "zDKO6XYXioc",
+    "title": "Boyz II Men - End Of The Road",
+    "channelName": "BoyzIIMenVEVO"
+  },
+  "A Whole New World (Aladdin's Theme)|Peabo Bryson & Regina Belle": {
+    "videoId": "IiT9V6fGPpw",
+    "title": "Peabo Bryson, Regina Belle - A Whole New World (Aladdin&#39;s Theme) [Lyrics]",
+    "channelName": "Hip Hop/R&B Lyrics"
+  },
+  "Freak Me|Silk": {
+    "videoId": "t6JQhEXPFMw",
+    "title": "Freak Me",
+    "channelName": "Silk - Topic"
+  },
+  "That's The Way Love Goes|Janet Jackson": {
+    "videoId": "2b_KfAGiglc",
+    "title": "Janet Jackson - That&#39;s The Way Love Goes",
+    "channelName": "JanetJacksonVEVO"
+  },
+  "This Used To Be My Playground|Madonna": {
+    "videoId": "RhXDO2a3-sE",
+    "title": "Madonna - This Used To Be My Playground (Official Video)",
+    "channelName": "Madonna"
+  },
+  "Baby Got Back|Sir Mix-A-Lot": {
+    "videoId": "Bhado79yAAQ",
+    "title": "Baby Got Back",
+    "channelName": "Sir Mix-A-Lot - Topic"
+  },
+  "I'll Be There|Mariah Carey": {
+    "videoId": "kDTvGtqbXH0",
+    "title": "Mariah Carey - I&#39;ll Be There (From Mariah Carey (Live))",
+    "channelName": "MariahCareyVEVO"
+  },
+  "Weak|SWV": {
+    "videoId": "976b8TPPFJU",
+    "title": "SWV - Weak (Official HD Video)",
+    "channelName": "SWVVEVO"
+  },
+  "Jump|Kris Kross": {
+    "videoId": "010KyIQjkTk",
+    "title": "Kris Kross - Jump (Official Video)",
+    "channelName": "KrisKrossVEVO"
+  },
+  "Can't Help Falling In Love (From \"Sliver\")|UB40": {
+    "videoId": "vUdloUqZa7w",
+    "title": "UB40 - (I Can&#39;t Help) Falling In Love With You (Remastered 2002)",
+    "channelName": "UB40VEVO"
+  },
+  "Dreamlover|Mariah Carey": {
+    "videoId": "CqBtS6BIP1E",
+    "title": "Mariah Carey - Dreamlover (Official 4K Video)",
+    "channelName": "MariahCareyVEVO"
+  },
+  "Save The Best For Last|Vanessa Williams": {
+    "videoId": "5EdmHSTwmWY",
+    "title": "Vanessa Williams - Save The Best For Last",
+    "channelName": "VanessaWilliamsVEVO"
+  },
+  "To Be With You|Mr. Big": {
+    "videoId": "L6-uJLteKek",
+    "title": "Mr. Big - To Be With You 4K Video",
+    "channelName": "MrBigVEVO"
+  },
+  "I'd Do Anything For Love (But I Won't Do That)|Meat Loaf": {
+    "videoId": "9X_ViIPA-Gc",
+    "title": "Meat Loaf - I&#39;d Do Anything For Love (But I Won&#39;t Do That) (Official Music Video)",
+    "channelName": "MeatLoafVEVO"
+  },
+  "I'm Too Sexy|Right Said Fred": {
+    "videoId": "P5mtclwloEQ",
+    "title": "Right Said Fred - I&#39;m Too Sexy (Original Mix - 2006 Version)",
+    "channelName": "Radial by The Orchard"
+  },
+  "Don't Let The Sun Go Down On Me|George Michael/Elton John": {
+    "videoId": "RsKqMNDoR4o",
+    "title": "George Michael, Elton John - Don&#39;t Let The Sun Go Down On Me (Live)",
+    "channelName": "georgemichaelVEVO"
+  },
+  "All 4 Love|Color Me Badd": {
+    "videoId": "PccRs1HR7VI",
+    "title": "Color Me Badd - All 4 Love",
+    "channelName": "Kim Hyoungjin"
+  },
+  "Again|Janet Jackson": {
+    "videoId": "qUHtwV8wkOU",
+    "title": "Janet Jackson - Again (Official Music Video)",
+    "channelName": "JanetJacksonVEVO"
+  },
+  "Black Or White|Michael Jackson": {
+    "videoId": "F2AitTPI5U0",
+    "title": "Michael Jackson - Black Or White (Official Video - Shortened Version)",
+    "channelName": "michaeljacksonVEVO"
+  },
+  "Hero|Mariah Carey": {
+    "videoId": "0IA3ZvCkRkQ",
+    "title": "Mariah Carey - Hero (Live) (Official HD Video)",
+    "channelName": "MariahCareyVEVO"
+  },
+  "All For Love|Bryan Adams/Rod Stewart/Sting": {
+    "videoId": "ofA3URC1wyk",
+    "title": "Bryan Adams, Rod Stewart, Sting - All For Love (Non-Film Version)",
+    "channelName": "BryanAdamsVEVO"
+  },
+  "Set Adrift On Memory Bliss|P.M. Dawn": {
+    "videoId": "BtK_y1n2ERk",
+    "title": "PM Dawn - Set Adrift On Memory Bliss 1991 (Official Music Video) Remastered",
+    "channelName": "80's 90's Music Video's Remastered @Videos80s"
+  },
+  "When A Man Loves A Woman|Michael Bolton": {
+    "videoId": "MUuNDb-nm5M",
+    "title": "Michael Bolton - When a Man Loves a Woman (Official Video)",
+    "channelName": "MichaelBoltonVEVO"
+  },
+  "The Power Of Love|Celine Dion": {
+    "videoId": "Y8HOfcYWZoo",
+    "title": "Céline Dion - The Power Of Love (Official Remastered HD Video)",
+    "channelName": "CelineDionVEVO"
+  },
+  "Cream|Prince And The N.P.G.": {
+    "videoId": "rrbFQEcpJ3A",
+    "title": "Prince &amp; The New Power Generation - Cream (Official Video)",
+    "channelName": "Prince"
+  },
+  "Romantic|Karyn White": {
+    "videoId": "brRB4I47VQs",
+    "title": "Karyn White - Romantic (Video)",
+    "channelName": "koollatter"
+  },
+  "Emotions|Mariah Carey": {
+    "videoId": "NrJEFrth27Q",
+    "title": "Mariah Carey - Emotions",
+    "channelName": "MariahCareyVEVO"
+  },
+  "The Sign|Ace Of Base": {
+    "videoId": "iqu132vTl5Y",
+    "title": "Ace of Base - The Sign (Official Music Video)",
+    "channelName": "Ace of Base"
+  },
+  "Good Vibrations|Marky Mark & The Funky Bunch Featuring Loleatta Holloway": {
+    "videoId": "_kctwd4w7R0",
+    "title": "Marky Mark And The Funky Bunch - Good Vibrations ft. Loleatta Holloway",
+    "channelName": "MarkyMarkVEVO"
+  },
+  "I Adore Mi Amor|Color Me Badd": {
+    "videoId": "92NdfSeOLA0",
+    "title": "Color Me Badd - I Adore Mi Amor (Official Music Video) | Warner Records",
+    "channelName": "Warner Records"
+  },
+  "Bump N' Grind|R. Kelly": {
+    "videoId": "-U3OUZG_Y1w",
+    "title": "R. Kelly - Bump N&#39; Grind",
+    "channelName": "Music"
+  },
+  "The Promise Of A New Day|Paula Abdul": {
+    "videoId": "NzD6ORX2oU4",
+    "title": "Paula Abdul - The Promise Of A New Day",
+    "channelName": "PaulaAbdulVEVO"
+  },
+  "(Everything I Do) I Do It For You|Bryan Adams": {
+    "videoId": "Y0pdQU87dc8",
+    "title": "Bryan Adams - (Everything I Do) I Do It For You",
+    "channelName": "Bryan Adams"
+  },
+  "I Swear|All-4-One": {
+    "videoId": "cVpvlaKfLQc",
+    "title": "All-4-One - I Swear (Official Music Video)",
+    "channelName": "RHINO"
+  },
+  "Unbelievable|EMF": {
+    "videoId": "sfCLt0kTd5E",
+    "title": "EMF - Unbelievable (Official Music Video) HD",
+    "channelName": "EMF The Band"
+  },
+  "Rush Rush|Paula Abdul": {
+    "videoId": "yqyIaNWP0T0",
+    "title": "Paula Abdul - Rush, Rush",
+    "channelName": "PaulaAbdulVEVO"
+  },
+  "More Than Words|Extreme": {
+    "videoId": "UrIiLvg58SY",
+    "title": "Extreme - More Than Words (Official Music Video)",
+    "channelName": "ExtremeVEVO"
+  },
+  "I Don't Wanna Cry|Mariah Carey": {
+    "videoId": "QfG1qwl-Zho",
+    "title": "Mariah Carey - I Don&#39;t Wanna Cry (Official HD Video)",
+    "channelName": "MariahCareyVEVO"
+  },
+  "Stay (I Missed You) (From \"Reality Bites\")|Lisa Loeb & Nine Stories": {
+    "videoId": "i9HGwRbMiVY",
+    "title": "Lisa Loeb &quot;Stay (I Missed You)&quot; Music Video",
+    "channelName": "Lisa Loeb Official"
+  },
+  "I Like The Way (The Kissing Game)|Hi-Five": {
+    "videoId": "vF3MB0U6DO8",
+    "title": "Hi-Five - I Like the Way (The Kissing Game) (Official Video)",
+    "channelName": "HiFiveVEVO"
+  },
+  "Joyride|Roxette": {
+    "videoId": "xCorJG9mubk",
+    "title": "Roxette - Joyride (Official Video)",
+    "channelName": "Roxette"
+  },
+  "I'll Make Love To You|Boyz II Men": {
+    "videoId": "fV8vB1BB2qc",
+    "title": "Boyz II Men - I&#39;ll Make Love To You (Official Music Video)",
+    "channelName": "BoyzIIMenVEVO"
+  },
+  "Baby Baby|Amy Grant": {
+    "videoId": "vMXuuYnoRdI",
+    "title": "Amy Grant - Baby, Baby",
+    "channelName": "AmyGrantVEVO"
+  },
+  "You're In Love|Wilson Phillips": {
+    "videoId": "XNrJ0gg_8tY",
+    "title": "Wilson Phillips &quot;Go Your Own Way&quot; 2004 -Video",
+    "channelName": "zoggyzoggo"
+  },
+  "I've Been Thinking About You|Londonbeat": {
+    "videoId": "06k-lO4vuic",
+    "title": "Londonbeat - I&#39;ve Been Thinking About You (Music Video) HD Remastered and AI Upscaled",
+    "channelName": "Enhanced Music Videos"
+  },
+  "Coming Out Of The Dark|Gloria Estefan": {
+    "videoId": "QS7qLDizDYo",
+    "title": "Gloria Estefan - Coming out of the Dark",
+    "channelName": "GloriaEstefanVEVO"
+  },
+  "One More Try|Timmy T.": {
+    "videoId": "hcEaUJoo0NE",
+    "title": "Timmy T - One More Try",
+    "channelName": "Videostampfer"
+  },
+  "Someday|Mariah Carey": {
+    "videoId": "4RWfSUWVP2I",
+    "title": "Mariah Carey - Someday (Official HD Video)",
+    "channelName": "MariahCareyVEVO"
+  },
+  "All The Man That I Need|Whitney Houston": {
+    "videoId": "3WH1Ma50QUk",
+    "title": "Whitney Houston - All The Man That I Need (Official HD Video)",
+    "channelName": "whitneyhoustonVEVO"
+  },
+  "Gonna Make You Sweat (Everybody Dance Now)|C+C Music Factory": {
+    "videoId": "LaTGrV58wec",
+    "title": "Gonna Make You Sweat (Everybody Dance Now) (Official HD Video)",
+    "channelName": "CCMusicFactoryVEVO"
+  },
+  "The First Time|Surface": {
+    "videoId": "_Sz2HOAb54w",
+    "title": "Surface - The First Time",
+    "channelName": "SurfaceVEVO"
+  },
+  "On Bended Knee|Boyz II Men": {
+    "videoId": "jSUSFow70no",
+    "title": "Boyz II Men - On Bended Knee",
+    "channelName": "BoyzIIMenVEVO"
+  },
+  "Love Will Never Do (Without You)|Janet Jackson": {
+    "videoId": "n0dqk6Vybeo",
+    "title": "Janet Jackson - Love Will Never Do (Without You)",
+    "channelName": "JanetJacksonVEVO"
+  },
+  "Here Comes The Hotstepper (From \"Ready To Wear\")|Ini Kamoze": {
+    "videoId": "15UffN8eilI",
+    "title": "Ini Kamoze - Here Comes The Hotstepper (Remix) (Official Video)",
+    "channelName": "IniKamozeVEVO"
+  },
+  "Justify My Love|Madonna": {
+    "videoId": "Np_Y740aReI",
+    "title": "Madonna - Justify My Love (Official Video) [HD]",
+    "channelName": "Madonna"
+  },
+  "Because I Love You (The Postman Song)|Stevie B": {
+    "videoId": "Xc1uQI2XmZs",
+    "title": "Stevie B - Because I Love You (The Postman Song) (Official Video)",
+    "channelName": "StevieBVEVO"
+  },
+  "Creep|TLC": {
+    "videoId": "LlZydtG3xqI",
+    "title": "TLC - Creep (Official HD Video)",
+    "channelName": "TLCVEVO"
+  },
+  "I'm Your Baby Tonight|Whitney Houston": {
+    "videoId": "i0oRnyXxIrY",
+    "title": "Whitney Houston - I&#39;m Your Baby Tonight (Official Video)",
+    "channelName": "whitneyhoustonVEVO"
+  },
+  "Love Takes Time|Mariah Carey": {
+    "videoId": "FkDpwF6-QiA",
+    "title": "Mariah Carey - Love Takes Time (Official HD Video)",
+    "channelName": "MariahCareyVEVO"
+  },
+  "Take A Bow|Madonna": {
+    "videoId": "XDeiovnCv1o",
+    "title": "Madonna - Take A Bow (Official Video) [4K]",
+    "channelName": "Madonna"
+  },
+  "Ice Ice Baby|Vanilla Ice": {
+    "videoId": "rog8ou-ZepE",
+    "title": "Vanilla Ice - Ice Ice Baby (Official Music Video)",
+    "channelName": "vanillaiceVEVO"
+  },
+  "Black Cat|Janet Jackson": {
+    "videoId": "qH-rPt1ftSo",
+    "title": "Janet Jackson - Black Cat",
+    "channelName": "JanetJacksonVEVO"
+  },
+  "I Don't Have The Heart|James Ingram": {
+    "videoId": "x65ZPd11gxY",
+    "title": "James Ingram - I Don&#39;t Have The Heart",
+    "channelName": "Drewm7326"
+  },
+  "Praying For Time|George Michael": {
+    "videoId": "goroyZbVdlo",
+    "title": "George Michael - Praying For Time (Official Video)",
+    "channelName": "georgemichaelVEVO"
+  },
+  "Close To You|Maxi Priest": {
+    "videoId": "mlFK2MpKnJU",
+    "title": "Maxi Priest - Close To You (Official Video HD)(Audio HD)(Extended Mix)",
+    "channelName": "El Canal de Santash"
+  },
+  "(Can't Live Without Your) Love And Affection|Nelson": {
+    "videoId": "x1W6-ErrHls",
+    "title": "Nelson - (Can&#39;t Live Without Your) Love And Affection",
+    "channelName": "NelsonVEVO"
+  },
+  "Release Me|Wilson Phillips": {
+    "videoId": "gcNyk54b3ZU",
+    "title": "Release Me &quot;Wilson Phillips&quot; 1990 - Video",
+    "channelName": "zoggyzoggo"
+  },
+  "This Is How We Do It|Montell Jordan": {
+    "videoId": "0hiUuL5uTKc",
+    "title": "Montell Jordan - This Is How We Do It (Official Music Video)",
+    "channelName": "MontellJordanVEVO"
+  },
+  "Blaze Of Glory (From \"Young Guns II\")|Jon Bon Jovi": {
+    "videoId": "MfmYCM4CS8o",
+    "title": "Jon Bon Jovi - Blaze Of Glory (Official Music Video)",
+    "channelName": "JonBonJoviVEVO"
+  },
+  "If Wishes Came True|Sweet Sensation": {
+    "videoId": "pbb_6e6W-rU",
+    "title": "Sweet Sensation - If Wishes Came True (Official Video), Full HD (Digitally Remastered and Upscaled)",
+    "channelName": "Enhanced Music Videos"
+  },
+  "Vision Of Love|Mariah Carey": {
+    "videoId": "tov22NtCMC4",
+    "title": "Mariah Carey - Vision Of Love",
+    "channelName": "MariahCareyVEVO"
+  },
+  "Have You Ever Really Loved A Woman?|Bryan Adams": {
+    "videoId": "diKIYv8tMC8",
+    "title": "Bryan Adams - Have You Ever Really Loved A Woman? (Classic Version)",
+    "channelName": "Bryan Adams"
+  },
+  "She Ain't Worth It|Glenn Medeiros Featuring Bobby Brown": {
+    "videoId": "7-1vYnFHu2U",
+    "title": "Glenn Medeiros - She Ain&#39;t Worth It (Official Music Video)",
+    "channelName": "Reservoir Recordings "
+  },
+  "Step By Step|New Kids On The Block": {
+    "videoId": "ay6GjmiJTPM",
+    "title": "New Kids On The Block - Step By Step (Official Video)",
+    "channelName": "NewKidsVEVO"
+  },
+  "Waterfalls|TLC": {
+    "videoId": "8WEtxJ4-sh4",
+    "title": "TLC - Waterfalls (Official HD Video)",
+    "channelName": "TLCVEVO"
+  },
+  "It Must Have Been Love (From \"Pretty Woman\")|Roxette": {
+    "videoId": "k2C5TjS2sh4",
+    "title": "Roxette - It Must Have Been Love (Official Music Video) (Remastered)",
+    "channelName": "Roxette"
+  },
+  "Hold On|Wilson Phillips": {
+    "videoId": "uIbXvaE39wM",
+    "title": "Wilson Phillips - Hold On (Official Music Video)",
+    "channelName": "WilsonPhillipsVEVO"
+  },
+  "Vogue|Madonna": {
+    "videoId": "GuJQSAiODqI",
+    "title": "Madonna - Vogue (Official Video)",
+    "channelName": "Madonna"
+  },
+  "Nothing Compares 2 U|Sinead O'Connor": {
+    "videoId": "0-EF60neguk",
+    "title": "Sinéad O&#39;Connor - Nothing Compares 2 U (Official Music Video) [HD]",
+    "channelName": "SineadOConnorVEVO"
+  },
+  "Kiss From A Rose|Seal": {
+    "videoId": "hDd2G_V1rzc",
+    "title": "Seal - Kiss From A Rose (Official Video) [HD]",
+    "channelName": "Seal"
+  },
+  "You Are Not Alone|Michael Jackson": {
+    "videoId": "pAyKJAtDNCw",
+    "title": "Michael Jackson - You Are Not Alone (Official Video)",
+    "channelName": "michaeljacksonVEVO"
+  },
+  "Gangsta's Paradise (From \"Dangerous Minds\")|Coolio Featuring L.V.": {
+    "videoId": "fPO76Jlnz6c",
+    "title": "Coolio - Gangsta&#39;s Paradise (feat. L.V.) [Official Music Video]",
+    "channelName": "Tommy Boy"
+  },
+  "I'll Be Your Everything|Tommy Page": {
+    "videoId": "rTki_oqDLqk",
+    "title": "Tommry Page -I&#39;ll Be Your Everything&quot;",
+    "channelName": "ykitten"
+  },
+  "Love Will Lead You Back|Taylor Dayne": {
+    "videoId": "MO6xhLtfwW0",
+    "title": "Taylor Dayne - Love Will Lead You Back (Official HD Video)",
+    "channelName": "TaylorDayneVEVO"
+  },
+  "Fantasy|Mariah Carey": {
+    "videoId": "qq09UkPRdFY",
+    "title": "Mariah Carey - Fantasy (Official 4K Video)",
+    "channelName": "MariahCareyVEVO"
+  },
+  "Black Velvet|Alannah Myles": {
+    "videoId": "tT4d1LQy4es",
+    "title": "Alannah Myles - Black Velvet",
+    "channelName": "AlannahMylesVEVO"
+  },
+  "Escapade|Janet Jackson": {
+    "videoId": "UFX3gQHIroU",
+    "title": "Janet Jackson - Escapade",
+    "channelName": "JanetJacksonVEVO"
+  },
+  "Opposites Attract|Paula Abdul (Duet With The Wild Pair)": {
+    "videoId": "xweiQukBM_k",
+    "title": "Paula Abdul, The Wild Pair - Opposites Attract",
+    "channelName": "PaulaAbdulVEVO"
+  },
+  "Exhale (Shoop Shoop) (From \"Waiting To Exhale\")|Whitney Houston": {
+    "videoId": "wrTuV4Szxzo",
+    "title": "Whitney Houston - Exhale (Shoop Shoop) (Official HD Video)",
+    "channelName": "whitneyhoustonVEVO"
+  },
+  "How Am I Supposed To Live Without You|Michael Bolton": {
+    "videoId": "YFood_bTOX4",
+    "title": "Michael Bolton - How Am I Supposed To Live Without You",
+    "channelName": "MichaelBoltonVEVO"
+  },
+  "One Sweet Day|Mariah Carey & Boyz II Men": {
+    "videoId": "UXxRyNvTPr8",
+    "title": "Mariah Carey, Boyz II Men - One Sweet Day (Official Video)",
+    "channelName": "MariahCareyVEVO"
+  },
+  "Another Day In Paradise|Phil Collins": {
+    "videoId": "Qt2mbGP6vFI",
+    "title": "Phil Collins - Another Day In Paradise (Official Music Video) [HD Upgrade]",
+    "channelName": "Phil Collins"
+  },
+  "We Didn't Start The Fire|Billy Joel": {
+    "videoId": "eFTLKWw542g",
+    "title": "Billy Joel - We Didn&#39;t Start The Fire (Official HD Video)",
+    "channelName": "billyjoelVEVO"
+  },
+  "Blame It On The Rain|Milli Vanilli": {
+    "videoId": "BI5IA8assfk",
+    "title": "Milli Vanilli - Blame It On the Rain (Official Video)",
+    "channelName": "MilliVanilliVEVO"
+  },
+  "When I See You Smile|Bad English": {
+    "videoId": "cu6pclWsxzs",
+    "title": "Bad English - When I See You Smile",
+    "channelName": "BadEnglishVEVO"
+  },
+  "Listen To Your Heart|Roxette": {
+    "videoId": "yCC_b5WHLX0",
+    "title": "Roxette - Listen To Your Heart (Official Music Video)",
+    "channelName": "Roxette"
+  },
+  "Miss You Much|Janet Jackson": {
+    "videoId": "IVF0zcqr9Dg",
+    "title": "Janet Jackson - Miss You Much",
+    "channelName": "JanetJacksonVEVO"
+  },
+  "Because You Loved Me (From \"Up Close & Personal\")|Celine Dion": {
+    "videoId": "gMOovDrWWiI",
+    "title": "Céline Dion - Because You Loved Me (from &quot;These Are Special Times&quot; TV Special)",
+    "channelName": "CelineDionVEVO"
+  },
+  "Girl I'm Gonna Miss You|Milli Vanilli": {
+    "videoId": "ZbUENJ5FjBk",
+    "title": "Milli Vanilli - Girl I&#39;m Gonna Miss You (Videoclip)",
+    "channelName": "MilliVanilliVEVO"
+  },
+  "Don't Wanna Lose You|Gloria Estefan": {
+    "videoId": "J1x1WGtePSE",
+    "title": "Gloria Estefan - Don&#39;t Wanna Lose You (Official Video)",
+    "channelName": "GloriaEstefanVEVO"
+  },
+  "Hangin' Tough|New Kids On The Block": {
+    "videoId": "By86PcLufOU",
+    "title": "New Kids On The Block - Hangin&#39; Tough (Official Video)",
+    "channelName": "NewKidsVEVO"
+  },
+  "Cold Hearted|Paula Abdul": {
+    "videoId": "o7aShcmEksw",
+    "title": "Paula Abdul - Cold Hearted",
+    "channelName": "PaulaAbdulVEVO"
+  },
+  "Always Be My Baby|Mariah Carey": {
+    "videoId": "LfRNRymrv9k",
+    "title": "Mariah Carey - Always Be My Baby (Official Music Video)",
+    "channelName": "MariahCareyVEVO"
+  },
+  "Right Here Waiting|Richard Marx": {
+    "videoId": "S_E2EHVxNAE",
+    "title": "Richard Marx - Right Here Waiting (Official Music Video)",
+    "channelName": "RichardMarxVEVO"
+  },
+  "Tha Crossroads|Bone Thugs-N-Harmony": {
+    "videoId": "VMYAEHE2GrM",
+    "title": "Bone Thugs N Harmony - Crossroads",
+    "channelName": "Bone Thugs-N-Harmony"
+  },
+  "Batdance (From \"Batman\")|Prince": {
+    "videoId": "ulOLYnOthIw",
+    "title": "Prince - Batdance (Official Music Video)",
+    "channelName": "Prince"
+  },
+  "Toy Soldiers|Martika": {
+    "videoId": "LvdLovAaYzM",
+    "title": "Martika - Toy Soldiers",
+    "channelName": "MartikaVEVO"
+  },
+  "If You Don't Know Me By Now|Simply Red": {
+    "videoId": "zTcu7MCtuTs",
+    "title": "Simply Red - If You Don&#39;t Know Me By Now (Official Video)",
+    "channelName": "Simply Red"
+  },
+  "Good Thing|Fine Young Cannibals": {
+    "videoId": "We_9MthGzwk",
+    "title": "Fine Young Cannibals - Good Thing (Official Video)",
+    "channelName": "London Records"
+  },
+  "Baby Don't Forget My Number|Milli Vanilli": {
+    "videoId": "JhyzGDPwmYU",
+    "title": "Milli Vanilli - Baby Don&#39;t Forget My Number",
+    "channelName": "MilliVanilliVEVO"
+  },
+  "Satisfied|Richard Marx": {
+    "videoId": "fzLat4Q_HTE",
+    "title": "Satisfied",
+    "channelName": "Richard Marx - Topic"
+  },
+  "How Do U Want It/California Love|2Pac Featuring K-Ci And JoJo": {
+    "videoId": "PJWpyKvHZAk",
+    "title": "2Pac - How Do U Want It (Official Music Video) ft. K-Ci &amp; JoJo",
+    "channelName": "2PacVEVO"
+  },
+  "I'll Be Loving You (Forever)|New Kids On The Block": {
+    "videoId": "ZT_7UjCVELg",
+    "title": "New Kids On The Block - I&#39;ll Be Loving You (Forever) (Official Video)",
+    "channelName": "NewKidsVEVO"
+  },
+  "Wind Beneath My Wings (From \"Beaches\")|Bette Midler": {
+    "videoId": "0iAzMRKFX3c",
+    "title": "Bette Midler - Wind Beneath My Wings (Official Music Video)",
+    "channelName": "RHINO"
+  },
+  "You're Makin' Me High/Let It Flow|Toni Braxton": {
+    "videoId": "wIgOL21S98o",
+    "title": "Toni Braxton - You&#39;re Makin&#39; Me HIgh (Video Version)",
+    "channelName": "ToniBraxtonVEVO"
+  },
+  "Rock On (From \"Dream A Little Dream\")|Michael Damian": {
+    "videoId": "K2v-DMpgO7o",
+    "title": "Michael Damian Rock On 1989",
+    "channelName": "Michael Damian Official"
+  },
+  "Macarena (Bayside Boys Mix)|Los Del Rio": {
+    "videoId": "zWaymcVmJ-A",
+    "title": "Los Del Rio - Macarena (Bayside Boys Remix)",
+    "channelName": "LosDelRioVEVO"
+  },
+  "Forever Your Girl|Paula Abdul": {
+    "videoId": "0pyxKqdtrH8",
+    "title": "Paula Abdul - Forever Your Girl (Official Music Video)",
+    "channelName": "PaulaAbdulVEVO"
+  },
+  "I'll Be There For You|Bon Jovi": {
+    "videoId": "mh8MIp2FOhc",
+    "title": "Bon Jovi - I&#39;ll Be There For You",
+    "channelName": "BonJoviVEVO"
+  },
+  "Like A Prayer|Madonna": {
+    "videoId": "79fzeNUqQbQ",
+    "title": "Madonna - Like A Prayer (Official Video)",
+    "channelName": "Madonna"
+  },
+  "She Drives Me Crazy|Fine Young Cannibals": {
+    "videoId": "UtvmTu4zAMg",
+    "title": "Fine Young Cannibals - She Drives Me Crazy (Official Video)",
+    "channelName": "London Records"
+  },
+  "The Look|Roxette": {
+    "videoId": "eAByAzEkI1c",
+    "title": "Roxette - The Look (Official Music Video ReMastered)",
+    "channelName": "Roxette"
+  },
+  "Eternal Flame|The Bangles": {
+    "videoId": "PSoOFn3wQV4",
+    "title": "The Bangles - Eternal Flame (Official Video)",
+    "channelName": "TheBanglesVEVO"
+  },
+  "The Living Years|Mike + The Mechanics": {
+    "videoId": "5hr64MxYpgk",
+    "title": "Mike + The Mechanics - The Living Years (Official HD Music Video)",
+    "channelName": "Mike + The Mechanics"
+  },
+  "Lost In Your Eyes|Debbie Gibson": {
+    "videoId": "8Ms3mJFkSeg",
+    "title": "Debbie Gibson - Lost In Your Eyes (Official Music Video)",
+    "channelName": "RHINO"
+  },
+  "Straight Up|Paula Abdul": {
+    "videoId": "El1kgCqD7Xk",
+    "title": "Paula Abdul - Straight Up",
+    "channelName": "PaulaAbdulVEVO"
+  },
+  "No Diggity|BLACKstreet (Featuring Dr. Dre)": {
+    "videoId": "3KL9mRus19o",
+    "title": "Blackstreet - No Diggity (Official Music Video) ft. Dr. Dre, Queen Pen",
+    "channelName": "BlackstreetVEVO"
+  },
+  "When I'm With You|Sheriff": {
+    "videoId": "ucqVyQDoImc",
+    "title": "Sheriff - When I&#39;m With You Official Music Video HD",
+    "channelName": "TwinCities WeddingDJs"
+  },
+  "Two Hearts|Phil Collins": {
+    "videoId": "SidxJz94Svs",
+    "title": "Phil Collins - Two Hearts (Official Music Video)",
+    "channelName": "Phil Collins"
+  },
+  "Un-Break My Heart|Toni Braxton": {
+    "videoId": "p2Rch6WvPJE",
+    "title": "Toni Braxton - Un-Break My Heart (Official HD Video)",
+    "channelName": "ToniBraxtonVEVO"
+  },
+  "My Prerogative|Bobby Brown": {
+    "videoId": "5cDLZqe735k",
+    "title": "Bobby Brown - My Prerogative",
+    "channelName": "BobbyBrownVEVO"
+  },
+  "Every Rose Has Its Thorn|Poison": {
+    "videoId": "j2r2nDhTzO4",
+    "title": "Poison - Every Rose Has Its Thorn (Official Music Video)",
+    "channelName": "poisonVEVO"
+  },
+  "Look Away|Chicago": {
+    "videoId": "2uKLTtVqQpE",
+    "title": "Chicago - Look Away (Official Music Video)",
+    "channelName": "Chicago Band"
+  },
+  "Baby, I Love Your Way/Freebird Medley|Will To Power": {
+    "videoId": "79r_XaUU7yE",
+    "title": "Will to Power - Baby I Love Your Way",
+    "channelName": "WillToPowerVEVO"
+  },
+  "Bad Medicine|Bon Jovi": {
+    "videoId": "eOUtsybozjg",
+    "title": "Bon Jovi - Bad Medicine (Official Music Video)",
+    "channelName": "BonJoviVEVO"
+  },
+  "Wild, Wild West|The Escape Club": {
+    "videoId": "VnrVMyTdHbU",
+    "title": "The Escape Club - Wild Wild West (Official Music Video)",
+    "channelName": "RHINO"
+  },
+  "Wannabe|Spice Girls": {
+    "videoId": "gJLIiF15wjQ",
+    "title": "Spice Girls - Wannabe (Official Music Video)",
+    "channelName": "SpiceGirlsVEVO"
+  },
+  "Kokomo (From\"Cocktail\" )|The Beach Boys": {
+    "videoId": "WXB4LspLQE0",
+    "title": "The Beach Boys - Kokomo [Official Music Video]",
+    "channelName": "PLAYaLOT"
+  },
+  "Groovy Kind Of Love|Phil Collins": {
+    "videoId": "HsC_SARyPzk",
+    "title": "Phil Collins - A Groovy Kind Of Love (Official Music Video)",
+    "channelName": "Phil Collins"
+  },
+  "Red Red Wine|UB40": {
+    "videoId": "zXt56MB-3vc",
+    "title": "UB40 - Red Red Wine (Official Video HD Remastered)",
+    "channelName": "UB40VEVO"
+  },
+  "Can't Nobody Hold Me Down|Puff Daddy (Featuring Mase)": {
+    "videoId": "0zXis84Pi24",
+    "title": "Puff Daddy - Can&#39;t Nobody Hold Me Down (feat. Mase) (Official Music Video) [HD]",
+    "channelName": "Bad Boy Entertainment"
+  },
+  "Love Bites|Def Leppard": {
+    "videoId": "W4XiSFyYRE8",
+    "title": "Def Leppard - Love Bites",
+    "channelName": "DefLeppardVEVO"
+  },
+  "Don't Worry, Be Happy (From \"Cocktail\")|Bobby McFerrin": {
+    "videoId": "d-diB65scQU",
+    "title": "Bobby McFerrin - Don&#39;t Worry Be Happy (Official Music Video)",
+    "channelName": "BobbyMcFerrinVEVO"
+  },
+  "Sweet Child O' Mine|Guns N' Roses": {
+    "videoId": "1w7OgIMMRc4",
+    "title": "Guns N&#39; Roses - Sweet Child O&#39; Mine (Official Music Video)",
+    "channelName": "GunsNRosesVEVO"
+  },
+  "Monkey|George Michael": {
+    "videoId": "kA9NNq_6N-w",
+    "title": "George Michael - Monkey (Official Video)",
+    "channelName": "georgemichaelVEVO"
+  },
+  "Hypnotize|The Notorious B.I.G.": {
+    "videoId": "glEiPXAYE-U",
+    "title": "The Notorious B.I.G. - Hypnotize (Official Music Video) [4K]",
+    "channelName": "The Notorious B.I.G."
+  },
+  "Roll With It|Steve Winwood": {
+    "videoId": "u_vkKozA8OI",
+    "title": "Steve Winwood - Roll With It",
+    "channelName": "SteveWinwoodVEVO"
+  },
+  "MMMBop|Hanson": {
+    "videoId": "NHozn0YXAeE",
+    "title": "Hanson - MMMBop (Official Music Video)",
+    "channelName": "HansonVEVO"
+  },
+  "Hold On To The Nights|Richard Marx": {
+    "videoId": "LBmNTLxclXE",
+    "title": "Richard Marx - Hold On To The Nights",
+    "channelName": "RichardMarxVEVO"
+  },
+  "I'll Be Missing You|Puff Daddy & Faith Evans Featuring 112": {
+    "videoId": "NKMtZm2YuBE",
+    "title": "Puff Daddy [feat. Faith Evans &amp; 112] - I&#39;ll Be Missing You (Official Music Video)",
+    "channelName": "Bad Boy Entertainment"
+  },
+  "The Flame|Cheap Trick": {
+    "videoId": "2u6uXuT9pm4",
+    "title": "Cheap Trick - The Flame (Official Video)",
+    "channelName": "cheaptrickVEVO"
+  },
+  "Dirty Diana|Michael Jackson": {
+    "videoId": "yUi_S6YWjZw",
+    "title": "Michael Jackson - Dirty Diana (Official Video)",
+    "channelName": "michaeljacksonVEVO"
+  },
+  "Foolish Beat|Debbie Gibson": {
+    "videoId": "qf8BoWKeHow",
+    "title": "Debbie Gibson - Foolish Beat (Official Music Video)",
+    "channelName": "RHINO"
+  },
+  "Together Forever|Rick Astley": {
+    "videoId": "yPYZpwSpKmA",
+    "title": "Rick Astley - Together Forever (Official Video) [4K Remaster]",
+    "channelName": "Rick Astley"
+  },
+  "One More Try|George Michael": {
+    "videoId": "bG5N3GC-m20",
+    "title": "George Michael - One More Try (Official Video)",
+    "channelName": "georgemichaelVEVO"
+  },
+  "Anything For You|Gloria Estefan & Miami Sound Machine": {
+    "videoId": "4uLl8aA95zA",
+    "title": "Gloria Estefan &amp; Miami Sound Machine - Anything For You",
+    "channelName": "GloriaEstefanVEVO"
+  },
+  "Wishing Well|Terence Trent D'Arby": {
+    "videoId": "ynIHsHYaig0",
+    "title": "Sananda Maitreya - Wishing Well",
+    "channelName": "SanandaMaitreyaVEVO"
+  },
+  "Mo Money Mo Problems|The Notorious B.I.G. Featuring Puff Daddy & Mase": {
+    "videoId": "gUhRKVIjJtw",
+    "title": "The Notorious B.I.G. - Mo Money Mo Problems (Official Music Video) [4K]",
+    "channelName": "The Notorious B.I.G."
+  },
+  "Where Do Broken Hearts Go|Whitney Houston": {
+    "videoId": "wa3tfVjGCQ8",
+    "title": "Whitney Houston - Where Do Broken Hearts Go (Official Video)",
+    "channelName": "whitneyhoustonVEVO"
+  },
+  "Honey|Mariah Carey": {
+    "videoId": "w3KOowB4k_k",
+    "title": "Mariah Carey - Honey (Official 4K Video)",
+    "channelName": "MariahCareyVEVO"
+  },
+  "Get Outta My Dreams, Get Into My Car|Billy Ocean": {
+    "videoId": "zNgcYGgtf8M",
+    "title": "Billy Ocean - Get Outta My Dreams, Get Into My Car (Official Video)",
+    "channelName": "BillyOceanVEVO"
+  },
+  "Man In The Mirror|Michael Jackson": {
+    "videoId": "PivWY9wn5ps",
+    "title": "Michael Jackson - Man In The Mirror (Official Video)",
+    "channelName": "michaeljacksonVEVO"
+  },
+  "4 Seasons Of Loneliness|Boyz II Men": {
+    "videoId": "fUSOZAgl95A",
+    "title": "Boyz II Men - 4 Seasons Of Loneliness (Official Music Video)",
+    "channelName": "BoyzIIMenVEVO"
+  },
+  "Candle In The Wind 1997/Something About The Way You Look Tonight|Elton John": {
+    "videoId": "B93Tir6l5FA",
+    "title": "Elton John - Something About the Way You Look Tonight",
+    "channelName": "EltonJohnVEVO"
+  },
+  "Never Gonna Give You Up|Rick Astley": {
+    "videoId": "dQw4w9WgXcQ",
+    "title": "Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster)",
+    "channelName": "Rick Astley"
+  },
+  "Father Figure|George Michael": {
+    "videoId": "m_9hfHvQSNo",
+    "title": "George Michael - Father Figure (Official Video)",
+    "channelName": "georgemichaelVEVO"
+  },
+  "Seasons Change|Expose": {
+    "videoId": "Yqk6y5Hmy9s",
+    "title": "Exposé - Seasons Change (Official Video)",
+    "channelName": "ExposeVEVO"
+  },
+  "Could've Been|Tiffany": {
+    "videoId": "sDZzlmGkb18",
+    "title": "Tiffany - Could&#39;ve Been",
+    "channelName": "TiffanyVEVO"
+  },
+  "Need You Tonight|INXS": {
+    "videoId": "F93ywiGMDnQ",
+    "title": "INXS - Need You Tonight (Official Music Video)",
+    "channelName": "INXS Videos"
+  },
+  "The Way You Make Me Feel|Michael Jackson": {
+    "videoId": "HzZ_urpj4As",
+    "title": "Michael Jackson - The Way You Make Me Feel (Official Video)",
+    "channelName": "michaeljacksonVEVO"
+  },
+  "Got My Mind Set On You|George Harrison": {
+    "videoId": "_71w4UA2Oxo",
+    "title": "George Harrison - Got My Mind Set On You (Version II)",
+    "channelName": "GeorgeHarrisonVEVO"
+  },
+  "So Emotional|Whitney Houston": {
+    "videoId": "0YjSHbA6HQQ",
+    "title": "Whitney Houston - So Emotional (Official Video)",
+    "channelName": "whitneyhoustonVEVO"
+  },
+  "Faith|George Michael": {
+    "videoId": "6Cs3Pvmmv0E",
+    "title": "George Michael - Faith (Official Video)",
+    "channelName": "georgemichaelVEVO"
+  },
+  "Truly Madly Deeply|Savage Garden": {
+    "videoId": "WQnAxOQxQIU",
+    "title": "Savage Garden - Truly Madly Deeply (Official Video)",
+    "channelName": "SavageGardenVEVO"
+  },
+  "Heaven Is A Place On Earth|Belinda Carlisle": {
+    "videoId": "NOGEyBeoBGM",
+    "title": "Belinda Carlisle - Heaven Is A Place On Earth (Official Music Video)",
+    "channelName": "BelindaCarlisleVEVO"
+  },
+  "Together Again|Janet": {
+    "videoId": "7SXKHiPQPhk",
+    "title": "Janet Jackson - Together Again",
+    "channelName": "JanetJacksonVEVO"
+  },
+  "(I've Had) The Time Of My Life|Bill Medley & Jennifer Warnes": {
+    "videoId": "4BQLE_RrTSU",
+    "title": "Bill Medley, Jennifer Warnes - (I&#39;ve Had) The Time Of My Life (Official HD Video)",
+    "channelName": "BillMJennWVEVO"
+  },
+  "Mony Mony|Billy Idol": {
+    "videoId": "sYYAv-QW38Q",
+    "title": "Billy Idol - Mony Mony (Live/1987)",
+    "channelName": "BillyIdolVEVO"
+  },
+  "Nice & Slow|Usher": {
+    "videoId": "DIpQ4AZSAf8",
+    "title": "Usher - Nice &amp; Slow (Official HD Video)",
+    "channelName": "UsherVEVO"
+  },
+  "I Think We're Alone Now|Tiffany": {
+    "videoId": "w6Q3mHyzn78",
+    "title": "Tiffany - I Think We&#39;re Alone Now (Official Music Video)",
+    "channelName": "TiffanyVEVO"
+  },
+  "My Heart Will Go On|Celine Dion": {
+    "videoId": "9bFHsd3o1w0",
+    "title": "Céline Dion - My Heart Will Go On (Official 25th Anniversary Alternate Music Video)",
+    "channelName": "CelineDionVEVO"
+  },
+  "Bad|Michael Jackson": {
+    "videoId": "Sd4SJVsTulc",
+    "title": "Michael Jackson - Bad (Official Video)",
+    "channelName": "michaeljacksonVEVO"
+  },
+  "Gettin' Jiggy Wit It|Will Smith": {
+    "videoId": "3JcmQONgXJM",
+    "title": "Will Smith - Gettin&#39; Jiggy Wit It",
+    "channelName": "WillSmithVEVO"
+  },
+  "Lost In Emotion|Lisa Lisa And Cult Jam": {
+    "videoId": "If8by9Df4wM",
+    "title": "Lisa Lisa &amp; Cult Jam - Lost In Emotion (Video)",
+    "channelName": "LisaLisaCultJamVEVO"
+  },
+  "Here I Go Again|Whitesnake": {
+    "videoId": "WyF8RHM1OCg",
+    "title": "Whitesnake - Here I Go Again &#39;87 (Official Music Video)",
+    "channelName": "Whitesnake TV"
+  },
+  "Didn't We Almost Have It All|Whitney Houston": {
+    "videoId": "i_4PlM85NJo",
+    "title": "Whitney Houston - Didn&#39;t We Almost Have It All (Official Live Video)",
+    "channelName": "whitneyhoustonVEVO"
+  },
+  "All My Life|K-Ci & JoJo": {
+    "videoId": "DXvMT_mVbqw",
+    "title": "K-Ci &amp; JoJo - All My Life (Official Music Video)",
+    "channelName": "KCiAndJoJoVEVO"
+  },
+  "I Just Can't Stop Loving You|Michael Jackson With Siedah Garrett": {
+    "videoId": "PHZ1Bii7Uwk",
+    "title": "Michael Jackson - I Just Can&#39;t Stop Loving You [OFFICIAL VIDEO]",
+    "channelName": "MA3OOL4None"
+  },
+  "La Bamba|Los Lobos": {
+    "videoId": "nLAWPrCUQQ0",
+    "title": "Los Lobos - La Bamba (Original Videoclip)",
+    "channelName": "djmambito2"
+  },
+  "Too Close|Next": {
+    "videoId": "kwEZRPkAAu8",
+    "title": "Next - Too Close (Official Music Video)",
+    "channelName": "NextVEVO"
+  },
+  "Who's That Girl|Madonna": {
+    "videoId": "r0qDBYiOBrc",
+    "title": "Madonna - Who&#39;s That Girl (Official Video)",
+    "channelName": "Madonna"
+  },
+  "I Still Haven't Found What I'm Looking For|U2": {
+    "videoId": "e3-5YC_oHjE",
+    "title": "U2 - I Still Haven&#39;t Found What I&#39;m Looking For (Official Music Video)",
+    "channelName": "U2VEVO"
+  },
+  "My All|Mariah Carey": {
+    "videoId": "mIhI23gBBPQ",
+    "title": "Mariah Carey - My All (Official HD Video)",
+    "channelName": "MariahCareyVEVO"
+  },
+  "Shakedown (From \"Beverly Hills Cop II\")|Bob Seger": {
+    "videoId": "B8hL12fVHbA",
+    "title": "Bob Seger - Shakedown (From &quot;Beverly Hills Cop II&quot;)",
+    "channelName": "BobSegerVEVO"
+  },
+  "The Boy Is Mine|Brandy & Monica": {
+    "videoId": "qSIOp_K5GMw",
+    "title": "Brandy &amp; Monica - The Boy Is Mine (Official Video)",
+    "channelName": "Brandy Videos"
+  },
+  "Alone|Heart": {
+    "videoId": "1Cw1ng75KP0",
+    "title": "Heart - Alone",
+    "channelName": "HeartVEVO"
+  },
+  "I Wanna Dance With Somebody (Who Loves Me)|Whitney Houston": {
+    "videoId": "eH3giaIzONA",
+    "title": "Whitney Houston - I Wanna Dance With Somebody (Who Loves Me) (Official 4K Video)",
+    "channelName": "whitneyhoustonVEVO"
+  },
+  "Head To Toe|Lisa Lisa And Cult Jam": {
+    "videoId": "51Iq8JmmfxY",
+    "title": "Lisa Lisa &amp; Cult Jam - Head To Toe",
+    "channelName": "LisaLisaCultJamVEVO"
+  },
+  "Always|Atlantic Starr": {
+    "videoId": "rxXPV144DOc",
+    "title": "Atlantic Starr - Always (Official Music Video)",
+    "channelName": "Faizkay"
+  },
+  "You Keep Me Hangin' On|Kim Wilde": {
+    "videoId": "cFivv99t3-Q",
+    "title": "Kim Wilde - You Keep Me Hangin&#39; On 1986 (Official Music Video)  Remastered @Videos80s",
+    "channelName": "80's 90's Music Video's Remastered @Videos80s"
+  },
+  "With Or Without You|U2": {
+    "videoId": "ujNeHIo7oTE",
+    "title": "U2 - With Or Without You (Official Music Video)",
+    "channelName": "U2VEVO"
+  },
+  "(I Just) Died In Your Arms|Cutting Crew": {
+    "videoId": "6dOwHzCHfgA",
+    "title": "Cutting Crew - (I Just) Died In Your Arms (Official Music Video)",
+    "channelName": "CuttingCrewVEVO"
+  },
+  "I Don't Want To Miss A Thing|Aerosmith": {
+    "videoId": "JkK8g6FMEXE",
+    "title": "Aerosmith - I Don&#39;t Want to Miss a Thing (Official HD Video)",
+    "channelName": "AerosmithVEVO"
+  },
+  "I Knew You Were Waiting (For Me)|Aretha Franklin & George Michael": {
+    "videoId": "fDxzQJaA228",
+    "title": "George Michael, Aretha Franklin - I Knew You Were Waiting (For Me) (Official Video)",
+    "channelName": "georgemichaelVEVO"
+  },
+  "Nothing's Gonna Stop Us Now|Starship": {
+    "videoId": "3wxyN3z9PL4",
+    "title": "Starship - Nothing&#39;s Gonna Stop Us Now (Official Music Video) [HD]",
+    "channelName": "RHINO"
+  },
+  "The First Night|Monica": {
+    "videoId": "ImynIRpbQLE",
+    "title": "Monica - The First Night (Official Video)",
+    "channelName": "MonicaVEVO"
+  },
+  "Lean On Me|Club Nouveau": {
+    "videoId": "kbyjaUJWWmk",
+    "title": "Club Nouveau - Lean On Me (Official 4K Music Video)",
+    "channelName": "Tommy Boy"
+  },
+  "One Week|Barenaked Ladies": {
+    "videoId": "fC_q9KPczAg",
+    "title": "Barenaked Ladies - One Week (Official Music Video)",
+    "channelName": "Barenaked Ladies (official)"
+  },
+  "Jacob's Ladder|Huey Lewis & The News": {
+    "videoId": "atiJkXBEJks",
+    "title": "Jacob&#39;s Ladder",
+    "channelName": "Huey Lewis & The News - Topic"
+  },
+  "Livin' On A Prayer|Bon Jovi": {
+    "videoId": "lDK9QqIzhwk",
+    "title": "Bon Jovi - Livin&#39; On A Prayer",
+    "channelName": "BonJoviVEVO"
+  },
+  "Doo Wop (That Thing)|Lauryn Hill": {
+    "videoId": "T6QKqFPRZSA",
+    "title": "Lauryn Hill - Doo Wop (That Thing) (Official HD Video)",
+    "channelName": "laurynhillvevo"
+  },
+  "Open Your Heart|Madonna": {
+    "videoId": "snsTmi9N9Gs",
+    "title": "Madonna - Open Your Heart (Official Video) [HD]",
+    "channelName": "Madonna"
+  },
+  "Lately|Divine": {
+    "videoId": "lwoB4aloYac",
+    "title": "Divine – Lately – Music Video",
+    "channelName": "StitchVideoz-2-Productions"
+  },
+  "At This Moment|Billy Vera & The Beaters": {
+    "videoId": "NEhpREi_WoE",
+    "title": "Billy Vera - At This Moment [LYRICS] HQ",
+    "channelName": "ShoutFactoryMusic"
+  },
+  "I'm Your Angel|R. Kelly & Celine Dion": {
+    "videoId": "49zWC2VVCs0",
+    "title": "Céline Dion feat R Kelly - I&#39;m Your Angel (Official Remastered Video) (4K)",
+    "channelName": "Sami Can Aktaş"
+  },
+  "Shake You Down|Gregory Abbott": {
+    "videoId": "Uc8wmLul3uw",
+    "title": "Gregory Abbott - Shake You Down",
+    "channelName": "GregoryAbbottVEVO"
+  },
+  "Walk Like An Egyptian|The Bangles": {
+    "videoId": "Cv6tuzHUuuk",
+    "title": "The Bangles - Walk Like an Egyptian (Official Video)",
+    "channelName": "TheBanglesVEVO"
+  },
+  "Have You Ever?|Brandy": {
+    "videoId": "Xkj1An6Wnec",
+    "title": "Brandy - Have You Ever (Official Video)",
+    "channelName": "Brandy Videos"
+  },
+  "The Way It Is|Bruce Hornsby & The Range": {
+    "videoId": "cOeKidp-iWo",
+    "title": "Bruce Hornsby &amp; The Range - The Way It Is (Video Version)",
+    "channelName": "BruceHornsbyVEVO"
+  },
+  "The Next Time I Fall|Peter Cetera With Amy Grant": {
+    "videoId": "c-ENYuomYzA",
+    "title": "Peter Cetera, Amy Grant - The Next Time I Fall (Official Music Video)",
+    "channelName": "RHINO"
+  },
+  "...Baby One More Time|Britney Spears": {
+    "videoId": "C-u5WLJ9Yk4",
+    "title": "Britney Spears - ...Baby One More Time (Official Video)",
+    "channelName": "BritneySpearsVEVO"
+  },
+  "You Give Love A Bad Name|Bon Jovi": {
+    "videoId": "KrZHPOeOxQQ",
+    "title": "Bon Jovi - You Give Love A Bad Name",
+    "channelName": "BonJoviVEVO"
+  },
+  "Human|The Human League": {
+    "videoId": "s1ysoohV_zA",
+    "title": "The Human League - Human",
+    "channelName": "TheHumanLeagueVEVO"
+  },
+  "Angel Of Mine|Monica": {
+    "videoId": "3eOuK-pYhy4",
+    "title": "Monica - Angel Of Mine (Official Music Video)",
+    "channelName": "MonicaVEVO"
+  },
+  "Amanda|Boston": {
+    "videoId": "lVRoAsCy_sc",
+    "title": "Boston - Amanda",
+    "channelName": "Просто Прохожий"
+  },
+  "True Colors|Cyndi Lauper": {
+    "videoId": "LPn0KFlbqX8",
+    "title": "Cyndi Lauper - True Colors (Official HD Video)",
+    "channelName": "CyndiLauperVEVO"
+  },
+  "Believe|Cher": {
+    "videoId": "nZXRV4MezEw",
+    "title": "Cher - Believe (Official Music Video) [4K Remaster]",
+    "channelName": "Cher"
+  },
+  "When I Think Of You|Janet Jackson": {
+    "videoId": "EaleKN9GQ54",
+    "title": "Janet Jackson - When I Think Of You",
+    "channelName": "JanetJacksonVEVO"
+  },
+  "Stuck With You|Huey Lewis & The News": {
+    "videoId": "J08ZwySCoJ8",
+    "title": "Huey Lewis &amp; The News - Stuck With You",
+    "channelName": "HueyLewisTheNewsVEVO"
+  },
+  "No Scrubs|TLC": {
+    "videoId": "FrLequ6dUdM",
+    "title": "TLC - No Scrubs (Official HD Video)",
+    "channelName": "TLCVEVO"
+  },
+  "Take My Breath Away (Love Theme From \"Top Gun\")|Berlin": {
+    "videoId": "Bx51eegLTY8",
+    "title": "Berlin - Take My Breath Away (Official Video - Top Gun)",
+    "channelName": "BerlinVEVO"
+  },
+  "Venus|Bananarama": {
+    "videoId": "d4-1ASpdT1Y",
+    "title": "Bananarama - Venus (Official Video)",
+    "channelName": "London Records"
+  },
+  "Higher Love|Steve Winwood": {
+    "videoId": "k9olaIio3l8",
+    "title": "Steve Winwood - Higher Love (Official Music Video)",
+    "channelName": "SteveWinwoodVEVO"
+  },
+  "Livin' La Vida Loca|Ricky Martin": {
+    "videoId": "p47fEXGabaY",
+    "title": "Ricky Martin - Livin&#39; La Vida Loca (Official HD Video)",
+    "channelName": "RickyMartinVEVO"
+  },
+  "Papa Don't Preach|Madonna": {
+    "videoId": "G333Is7VPOg",
+    "title": "Madonna - Papa Don&#39;t Preach (Official Video) [HD]",
+    "channelName": "Madonna"
+  },
+  "Glory Of Love (Theme From \"The Karate Kid Part II\")|Peter Cetera": {
+    "videoId": "yQHhqDRn4_c",
+    "title": "peter cetera - glory of love (Video Official) HD",
+    "channelName": "Lili Ci"
+  },
+  "Sledgehammer|Peter Gabriel": {
+    "videoId": "g93mz_eZ5N4",
+    "title": "Peter Gabriel - Sledgehammer",
+    "channelName": "Peter Gabriel"
+  },
+  "If You Had My Love|Jennifer Lopez": {
+    "videoId": "lYfkl-HXfuU",
+    "title": "Jennifer Lopez - If You Had My Love (Official Video)",
+    "channelName": "JenniferLopezVEVO"
+  },
+  "Invisible Touch|Genesis": {
+    "videoId": "jpmiZ7zsHXY",
+    "title": "Genesis - Invisible Touch (Official Music Video)",
+    "channelName": "Genesis"
+  },
+  "Holding Back The Years|Simply Red": {
+    "videoId": "yG07WSu7Q9w",
+    "title": "Simply Red - Holding Back The Years (Official 4K Remaster)",
+    "channelName": "Simply Red"
+  },
+  "There'll Be Sad Songs (To Make You Cry)|Billy Ocean": {
+    "videoId": "KLjpJZbxkAU",
+    "title": "Billy Ocean - There&#39;ll Be Sad Songs (To Make You Cry) (Official Video)",
+    "channelName": "BillyOceanVEVO"
+  },
+  "On My Own|Patti LaBelle & Michael McDonald": {
+    "videoId": "KsH63qJlIMM",
+    "title": "Patti LaBelle - On My Own ft. MICHAEL MCDONALD",
+    "channelName": "PattiLaBelleVEVO"
+  },
+  "Bills, Bills, Bills|Destiny's Child": {
+    "videoId": "NiF6-0UTqtc",
+    "title": "Destiny&#39;s Child - Bills, Bills, Bills",
+    "channelName": "DestinysChildVEVO"
+  },
+  "Wild Wild West|Will Smith Featuring Dru Hill & Kool Mo Dee": {
+    "videoId": "_zXKtfKnfT8",
+    "title": "Will Smith - Wild Wild West ft. Dru Hill, Kool Mo Dee",
+    "channelName": "WillSmithVEVO"
+  },
+  "Live To Tell|Madonna": {
+    "videoId": "IzAO9A9GjgI",
+    "title": "Madonna - Live To Tell (Official Video)",
+    "channelName": "Madonna"
+  },
+  "Genie In A Bottle|Christina Aguilera": {
+    "videoId": "kIDWgqDBNXA",
+    "title": "Christina Aguilera - Genie In A Bottle (Official Video)",
+    "channelName": "CAguileraVEVO"
+  },
+  "Greatest Love Of All|Whitney Houston": {
+    "videoId": "IYzlVDlE72w",
+    "title": "Whitney Houston - Greatest Love Of All (Official 4K Video)",
+    "channelName": "whitneyhoustonVEVO"
+  },
+  "West End Girls|Pet Shop Boys": {
+    "videoId": "p3j2NYZ8FKs",
+    "title": "Pet Shop Boys - West End Girls (Official Video) [HD REMASTERED]",
+    "channelName": "PetShopBoys Parlophone"
+  },
+  "Addicted To Love|Robert Palmer": {
+    "videoId": "XcATvu5f9vE",
+    "title": "Robert Palmer - Addicted To Love (Official Music Video)",
+    "channelName": "RobertPalmerVEVO"
+  },
+  "Bailamos|Enrique Iglesias": {
+    "videoId": "5sye_VxmNZA",
+    "title": "Enrique Iglesias - Bailamos",
+    "channelName": "EnriqueIglesiasVEVO"
+  },
+  "Kiss|Prince And The Revolution": {
+    "videoId": "H9tEvfIsDyo",
+    "title": "Prince and the Revolution - Kiss (Official Music Video)",
+    "channelName": "Prince"
+  },
+  "Unpretty|TLC": {
+    "videoId": "g2gy1Evb1Kg",
+    "title": "TLC - Unpretty (Official HD Video)",
+    "channelName": "TLCVEVO"
+  },
+  "Rock Me Amadeus|Falco": {
+    "videoId": "y-H895vrIU8",
+    "title": "Falco - Rock Me Amadeus (Official 4k Music Video)",
+    "channelName": "FalcoVEVO"
+  },
+  "Heartbreaker|Mariah Carey Featuring Jay-Z": {
+    "videoId": "kMCGvtlL4fw",
+    "title": "Mariah Carey, JAŸ-Z - Heartbreaker (Official HD Video)",
+    "channelName": "MariahCareyVEVO"
+  },
+  "These Dreams|Heart": {
+    "videoId": "41P8UxneDJE",
+    "title": "Heart - These Dreams",
+    "channelName": "HeartVEVO"
+  },
+  "Sara|Starship": {
+    "videoId": "32ScTb6_KHg",
+    "title": "Starship - Sara (Official Music Video) [HD]",
+    "channelName": "RHINO"
+  },
+  "Smooth|Santana Featuring Rob Thomas": {
+    "videoId": "6Whgn_iE5uc",
+    "title": "Santana - Smooth (Official Video) ft. Rob Thomas",
+    "channelName": "SantanaVEVO"
+  },
+  "Kyrie|Mr. Mister": {
+    "videoId": "9NDjt4FzFWY",
+    "title": "Mr. Mister - Kyrie (Official Video)",
+    "channelName": "MrMisterVEVO"
+  },
+  "How Will I Know|Whitney Houston": {
+    "videoId": "m3-hY-hlhBg",
+    "title": "Whitney Houston - How Will I Know (Official HD Video)",
+    "channelName": "whitneyhoustonVEVO"
+  },
+  "That's What Friends Are For|Dionne & Friends Featuring Elton John, Gladys Knight And Stevie Wonder": {
+    "videoId": "HyTpu6BmE88",
+    "title": "That&#39;s What Friends Are For (Official Video)",
+    "channelName": "DionneWarwickVEVO"
+  },
+  "Say You, Say Me|Lionel Richie": {
+    "videoId": "we0mk_J0zyc",
+    "title": "lionel richie-say you say me",
+    "channelName": "ayshalady"
+  },
+  "What A Girl Wants|Christina Aguilera": {
+    "videoId": "hpspGHeLOPE",
+    "title": "Christina Aguilera - What A Girl Wants (Official Video)",
+    "channelName": "CAguileraVEVO"
+  },
+  "Broken Wings|Mr. Mister": {
+    "videoId": "nKhN1t_7PEY",
+    "title": "Mr. Mister - Broken Wings (Official Video)",
+    "channelName": "MrMisterVEVO"
+  },
+  "I Knew I Loved You|Savage Garden": {
+    "videoId": "jjnmICxvoVY",
+    "title": "Savage Garden - I Knew I Loved You (Official Video)",
+    "channelName": "SavageGardenVEVO"
+  },
+  "Separate Lives|Phil Collins and Marilyn Martin": {
+    "videoId": "vmMinSOWKQk",
+    "title": "Phil Collins feat. Marilyn Martin - Separate Lives (Official Music Video)",
+    "channelName": "Phil Collins"
+  },
+  "We Built This City|Starship": {
+    "videoId": "K1b8AhIsSYQ",
+    "title": "Starship - We Built This City (Official Music Video) [HD]",
+    "channelName": "RHINO"
+  },
+  "Thank God I Found You|Mariah Carey Featuring Joe & 98 Degrees": {
+    "videoId": "7KVxjQUCyn0",
+    "title": "Mariah Carey, Joe, 98 Degrees - Thank God I Found You (Official HD Video)",
+    "channelName": "MariahCareyVEVO"
+  },
+  "Miami Vice Theme|Jan Hammer": {
+    "videoId": "6nPTZqnIfFM",
+    "title": "Jan Hammer - Miami Vice Theme [OFFICIAL VIDEO]",
+    "channelName": "Jan Hammer"
+  },
+  "Part-Time Lover|Stevie Wonder": {
+    "videoId": "MpDM6ygsb20",
+    "title": "Part-Time Lover",
+    "channelName": "Stevie Wonder - Topic"
+  },
+  "Amazed|Lonestar": {
+    "videoId": "x-skFgrV59A",
+    "title": "Lonestar - Amazed (Official Music Video)",
+    "channelName": "LonestarVEVO"
+  },
+  "Saving All My Love For You|Whitney Houston": {
+    "videoId": "ewxmv2tyeRs",
+    "title": "Whitney Houston - Saving All My Love For You (Official HD Video)",
+    "channelName": "whitneyhoustonVEVO"
+  },
+  "Take On Me|a-ha": {
+    "videoId": "djV11Xbc914",
+    "title": "a-ha - Take On Me (Official Video) [4K]",
+    "channelName": "a-ha"
+  },
+  "Say My Name|Destiny's Child": {
+    "videoId": "sQgd6MccwZc",
+    "title": "Destiny&#39;s Child - Say My Name (Official Video)",
+    "channelName": "DestinysChildVEVO"
+  },
+  "Oh Sheila|Ready For The World": {
+    "videoId": "wbL2lMn34Oo",
+    "title": "Ready For The World - Oh Sheila (Official Music Video)",
+    "channelName": "ReadyForTheWorldVEVO"
+  },
+  "Money For Nothing|Dire Straits": {
+    "videoId": "wTP2RUD_cL0",
+    "title": "Dire Straits - Money For Nothing (Official Music Video)",
+    "channelName": "DireStraitsVEVO"
+  },
+  "Maria Maria|Santana Featuring The Product G&B": {
+    "videoId": "nPLV7lGbmT4",
+    "title": "Santana - Maria Maria (Official Video) ft. The Product G&amp;B",
+    "channelName": "SantanaVEVO"
+  },
+  "St. Elmo's Fire (Man In Motion)|John Parr": {
+    "videoId": "dx7vNdAb5e4",
+    "title": "John Parr - St. Elmo&#39;s Fire (Man In Motion) (Official Music Video)",
+    "channelName": "RHINO"
+  },
+  "The Power Of Love|Huey Lewis & The News": {
+    "videoId": "wBl2QGAIx1s",
+    "title": "Huey Lewis &amp; The News - The Power Of Love (Official Music Video)",
+    "channelName": "HueyLewisTheNewsVEVO"
+  },
+  "Shout|Tears For Fears": {
+    "videoId": "Ye7FKc1JQe4",
+    "title": "Tears For Fears - Shout (Official Music Video)",
+    "channelName": "TearsForFearsVEVO"
+  },
+  "Everytime You Go Away|Paul Young": {
+    "videoId": "nfk6sCzRTbM",
+    "title": "Paul Young - Everytime You Go Away (Official Video)",
+    "channelName": "PaulYoungVEVO"
+  },
+  "A View To A Kill|Duran Duran": {
+    "videoId": "Fp4CR2HcHLQ",
+    "title": "Duran Duran - A View To A Kill",
+    "channelName": "DuranDuranVEVO"
+  },
+  "Try Again|Aaliyah": {
+    "videoId": "qTA0RuZoIxM",
+    "title": "Aaliyah -Try Again (Original Video)",
+    "channelName": "Blackground Records 2.0"
+  },
+  "Be With You|Enrique Iglesias": {
+    "videoId": "yYedTpODkx8",
+    "title": "Enrique Iglesias - Be With You",
+    "channelName": "EnriqueIglesiasVEVO"
+  },
+  "Sussudio|Phil Collins": {
+    "videoId": "r0qBaBb1Y-U",
+    "title": "Phil Collins - Sussudio (Official Music Video) [HD Upgrade]",
+    "channelName": "Phil Collins"
+  },
+  "Heaven|Bryan Adams": {
+    "videoId": "3eT464L1YRA",
+    "title": "Bryan Adams - Heaven (Official Music Video)",
+    "channelName": "Bryan Adams"
+  },
+  "Everything You Want|Vertical Horizon": {
+    "videoId": "rZoD8JEFjAE",
+    "title": "Vertical Horizon - Everything You Want (Official Video)",
+    "channelName": "VerticalHorizonVEVO"
+  },
+  "Everybody Wants To Rule The World|Tears For Fears": {
+    "videoId": "aGCdLKXNF3w",
+    "title": "Tears For Fears - Everybody Wants To Rule The World (Official Music Video)",
+    "channelName": "TearsForFearsVEVO"
+  },
+  "Bent|matchbox twenty": {
+    "videoId": "969RAKkYESU",
+    "title": "Matchbox Twenty - Bent (Official Video)",
+    "channelName": "Matchbox Twenty"
+  },
+  "It's Gonna Be Me|'N Sync": {
+    "videoId": "GQMlWwIXg3M",
+    "title": "*NSYNC - It&#39;s Gonna Be Me (Official Video)",
+    "channelName": "NSYNCVEVO"
+  },
+  "Everything She Wants|Wham!": {
+    "videoId": "Yf_Lwe6p-Cg",
+    "title": "Wham! - Everything She Wants (Official Video)",
+    "channelName": "WhamVEVO"
+  },
+  "Incomplete|Sisqo": {
+    "videoId": "Z6qqS9mbdY4",
+    "title": "Sisqo - Incomplete",
+    "channelName": "Emperor"
+  },
+  "Don't You (Forget About Me)|Simple Minds": {
+    "videoId": "CdqoNKCCt7A",
+    "title": "Simple Minds - Don&#39;t You (Forget About Me)",
+    "channelName": "SimpleMindsVEVO"
+  },
+  "Crazy For You|Madonna": {
+    "videoId": "DHutZXREZ0E",
+    "title": "Madonna - Crazy For You (Official Video)",
+    "channelName": "Madonna"
+  },
+  "Doesn't Really Matter|Janet": {
+    "videoId": "ZGo4WebNIjM",
+    "title": "Janet Jackson - Doesn&#39;t Really Matter",
+    "channelName": "JanetJacksonVEVO"
+  },
+  "We Are The World|USA For Africa": {
+    "videoId": "9AjkUyX0rVw",
+    "title": "U.S.A. For Africa - We Are the World",
+    "channelName": "USAforAfricaVEVO"
+  },
+  "Music|Madonna": {
+    "videoId": "Sdz2oW0NMFk",
+    "title": "Madonna - Music (Official Video)",
+    "channelName": "Madonna"
+  },
+  "One More Night|Phil Collins": {
+    "videoId": "zKVq-P3z5Vg",
+    "title": "Phil Collins - One More Night (Official Music Video) [HD Upgrade]",
+    "channelName": "Phil Collins"
+  },
+  "Can't Fight This Feeling|REO Speedwagon": {
+    "videoId": "zpOULjyy-n8",
+    "title": "REO Speedwagon - Can&#39;t Fight This Feeling (Official HD Video)",
+    "channelName": "RSpwagonVEVO"
+  },
+  "Come On Over Baby (All I Want Is You)|Christina Aguilera": {
+    "videoId": "0RQDIJ2CvbA",
+    "title": "Christina Aguilera - Come On Over (All I Want Is You) (Official Video)",
+    "channelName": "CAguileraVEVO"
+  },
+  "Careless Whisper|Wham! Featuring George Michael": {
+    "videoId": "izGwDsrQ1eQ",
+    "title": "George Michael - Careless Whisper (Official Video)",
+    "channelName": "georgemichaelVEVO"
+  },
+  "With Arms Wide Open|Creed": {
+    "videoId": "99j0zLuNhi8",
+    "title": "Creed - With Arms Wide Open (Official HD Music Video)",
+    "channelName": "CreedVEVO"
+  },
+  "Independent Women Part I|Destiny's Child": {
+    "videoId": "0lPQZni7I18",
+    "title": "Destiny&#39;s Child - Independent Women Part I (Official HD Video)",
+    "channelName": "DestinysChildVEVO"
+  },
+  "I Want To Know What Love Is|Foreigner": {
+    "videoId": "r3Pr1_v7hsw",
+    "title": "Foreigner - I Want To Know What Love Is (Official Music Video)",
+    "channelName": "RHINO"
+  },
+  "Like A Virgin|Madonna": {
+    "videoId": "s__rX_WL100",
+    "title": "Madonna - Like A Virgin (Official Video)",
+    "channelName": "Madonna"
+  },
+  "Out Of Touch|Daryl Hall John Oates": {
+    "videoId": "D00M2KZH1J0",
+    "title": "Daryl Hall &amp; John Oates - Out Of Touch (Official HD Video)",
+    "channelName": "hallandoatesVEVO"
+  },
+  "Wake Me Up Before You Go-Go|Wham!": {
+    "videoId": "pIgZ7gMze7A",
+    "title": "Wham! - Wake Me Up Before You Go-Go (Official Video)",
+    "channelName": "WhamVEVO"
+  },
+  "It Wasn't Me|Shaggy Feat. Ricardo \"RikRok\" Ducent": {
+    "videoId": "sTMgX1PDGAE",
+    "title": "It Wasn&#39;t Me",
+    "channelName": "Shaggy - Topic"
+  },
+  "Ms. Jackson|OutKast": {
+    "videoId": "MYxAiK6VnXw",
+    "title": "Outkast - Ms. Jackson (Official HD Video)",
+    "channelName": "OutkastVEVO"
+  },
+  "Caribbean Queen (No More Love On The Run)|Billy Ocean": {
+    "videoId": "uxX2gA18grk",
+    "title": "Billy Ocean - Caribbean Queen (No More Love on the Run) (Official HD Video)",
+    "channelName": "BillyOceanVEVO"
+  },
+  "Stutter|Joe Featuring Mystikal": {
+    "videoId": "eGY_Qqr2Lm0",
+    "title": "Joe - Stutter (Official Video - Remix)",
+    "channelName": "JoeVEVO"
+  },
+  "I Just Called To Say I Love You|Stevie Wonder": {
+    "videoId": "1bGOgY1CmiU",
+    "title": "Stevie Wonder I Just Called To Say I Love You",
+    "channelName": "no"
+  },
+  "Butterfly|Crazy Town": {
+    "videoId": "6FEDrU85FLE",
+    "title": "Crazy Town - Butterfly (Official Video)",
+    "channelName": "CrazyTownVEVO"
+  },
+  "Let's Go Crazy|Prince And The Revolution": {
+    "videoId": "aXJhDltzYVQ",
+    "title": "Prince and the Revolution - Let&#39;s Go Crazy (Official Music Video)",
+    "channelName": "Prince"
+  },
+  "Angel|Shaggy Featuring Rayvon": {
+    "videoId": "XWJrPzAUzAs",
+    "title": "Shaggy - Angel ft. Rayvon",
+    "channelName": "ShaggyVEVO"
+  },
+  "Missing You|John Waite": {
+    "videoId": "k9e157Ner90",
+    "title": "John Waite - Missing You",
+    "channelName": "JohnWaiteVEVO"
+  },
+  "All For You|Janet": {
+    "videoId": "J551f-TyqjY",
+    "title": "Janet Jackson - All For You (Official Music Video)",
+    "channelName": "JanetJacksonVEVO"
+  },
+  "What's Love Got To Do With It|Tina Turner": {
+    "videoId": "oGpFcHTxjZs",
+    "title": "Tina Turner - What&#39;s Love Got To Do With It (Official Video) [HD]",
+    "channelName": "Tina Turner Videos"
+  },
+  "Ghostbusters|Ray Parker Jr.": {
+    "videoId": "Fe93CLbHjxQ",
+    "title": "Ray Parker Jr. - Ghostbusters (Official HD Video)",
+    "channelName": "RayParkerJuniorVEVO"
+  },
+  "When Doves Cry|Prince": {
+    "videoId": "UG3VcCAlUgE",
+    "title": "Prince and the Revolution - When Doves Cry (Official Music Video)",
+    "channelName": "Prince"
+  },
+  "Lady Marmalade|Christina Aguilera, Lil' Kim, Mya & P!nk": {
+    "videoId": "RQa7SvVCdZk",
+    "title": "Christina Aguilera, Lil&#39; Kim, Mya, P!nk - Lady Marmalade",
+    "channelName": "CAguileraVEVO"
+  },
+  "The Reflex|Duran Duran": {
+    "videoId": "J5ebkj9x5Ko",
+    "title": "Duran Duran - The Reflex (Official Music Video)",
+    "channelName": "DuranDuranVEVO"
+  },
+  "U Remind Me|Usher": {
+    "videoId": "Bxau9B3jOHM",
+    "title": "Usher - U Remind Me (Official Video)",
+    "channelName": "UsherVEVO"
+  },
+  "Time After Time|Cyndi Lauper": {
+    "videoId": "VdQY7BusJNU",
+    "title": "Cyndi Lauper - Time After Time (Official HD Video)",
+    "channelName": "CyndiLauperVEVO"
+  },
+  "Let's Hear It For The Boy|Deniece Williams": {
+    "videoId": "gI7YHZVc7mM",
+    "title": "Deniece Williams - Let&#39;s Hear It for the Boy (Official Video)",
+    "channelName": "DenieceWilliamsVEVO"
+  },
+  "Bootylicious|Destiny's Child": {
+    "videoId": "IyYnnUcgeMc",
+    "title": "Destiny&#39;s Child - Bootylicious",
+    "channelName": "DestinysChildVEVO"
+  },
+  "Hello|Lionel Richie": {
+    "videoId": "mHONNcZbwDY",
+    "title": "Lionel Richie - Hello (Official Music Video)",
+    "channelName": "LionelRichieVEVO"
+  },
+  "Fallin'|Alicia Keys": {
+    "videoId": "Urdlvw0SSEc",
+    "title": "Alicia Keys - Fallin&#39; (Official HD Video)",
+    "channelName": "aliciakeysVEVO"
+  },
+  "Against All Odds (Take A Look At Me Now)|Phil Collins": {
+    "videoId": "SWSQS06i7-w",
+    "title": "Phil Collins Against All Odds (Official Music Video 1984)",
+    "channelName": "TheRipples70"
+  },
+  "I'm Real|Jennifer Lopez Featuring Ja Rule": {
+    "videoId": "Sjx9oSJDAVQ",
+    "title": "Jennifer Lopez - I&#39;m Real (Remix) ft. Ja Rule",
+    "channelName": "JenniferLopezVEVO"
+  },
+  "Footloose|Kenny Loggins": {
+    "videoId": "ltrMfT4Qz5Y",
+    "title": "Kenny Loggins - Footloose (Official Video)",
+    "channelName": "KennyLogginsVEVO"
+  },
+  "Jump|Van Halen": {
+    "videoId": "SwYN7mTi6HM",
+    "title": "Van Halen - Jump (Official Music Video) [HD]",
+    "channelName": "Van Halen"
+  },
+  "Family Affair|Mary J. Blige": {
+    "videoId": "znlFu_lemsU",
+    "title": "Mary J. Blige - Family Affair (Official Music Video)",
+    "channelName": "MaryJBligeVEVO"
+  },
+  "Karma Chameleon|Culture Club": {
+    "videoId": "JmcA9LIIXWw",
+    "title": "Culture Club - Karma Chameleon (Official Music Video)",
+    "channelName": "CultureClubVEVO"
+  },
+  "Owner Of A Lonely Heart|Yes": {
+    "videoId": "SVOuYquXuuc",
+    "title": "YES - Owner of a Lonely Heart (Official Music Video)",
+    "channelName": "yesofficial"
+  },
+  "U Got It Bad|Usher": {
+    "videoId": "o3IWTfcks4k",
+    "title": "Usher - U Got It Bad (Official Video)",
+    "channelName": "UsherVEVO"
+  },
+  "Say Say Say|Paul McCartney And Michael Jackson": {
+    "videoId": "lheddfD-Jy4",
+    "title": "Paul McCartney, Michael Jackson - Say Say Say",
+    "channelName": "PaulMcCartneyVEVO"
+  },
+  "How You Remind Me|Nickelback": {
+    "videoId": "Aiay8I5IPB8",
+    "title": "Nickelback - How You Remind Me [OFFICIAL VIDEO]",
+    "channelName": "Roadrunner Records"
+  },
+  "All Night Long (All Night)|Lionel Richie": {
+    "videoId": "nqAvFx3NxUM",
+    "title": "Lionel Richie - All Night Long (All Night)",
+    "channelName": "LionelRichieVEVO"
+  },
+  "Always On Time|Ja Rule Featuring Ashanti": {
+    "videoId": "0tcDXJfAFVw",
+    "title": "Ja Rule - Always On Time ft. Ashanti",
+    "channelName": "JaRuleVEVO"
+  },
+  "Islands In The Stream|Kenny Rogers Duet With Dolly Parton": {
+    "videoId": "UaNGtgYwSsU",
+    "title": "Dolly Parton, Kenny Rogers - Islands In the Stream (Official Audio)",
+    "channelName": "DollyPartonVEVO"
+  },
+  "Ain't It Funny|Jennifer Lopez Featuring Ja Rule": {
+    "videoId": "tr-H8dR0HLo",
+    "title": "Jennifer Lopez - Ain&#39;t It Funny ft. Ja Rule, Caddillac Tah",
+    "channelName": "JenniferLopezVEVO"
+  },
+  "Total Eclipse Of The Heart|Bonnie Tyler": {
+    "videoId": "lcOxhH8N3Bo",
+    "title": "Bonnie Tyler - Total Eclipse of the Heart (Turn Around) (Official Video)",
+    "channelName": "bonnietylerVEVO"
+  },
+  "Tell Her About It|Billy Joel": {
+    "videoId": "p0pM5dm--yQ",
+    "title": "Billy Joel - Tell Her About It (Official Video)",
+    "channelName": "billyjoelVEVO"
+  },
+  "Maniac|Michael Sembello": {
+    "videoId": "324it5DKoXU",
+    "title": "Michael Sembello - Maniac (1983) (Official Video)",
+    "channelName": "ClassicVideos80s"
+  },
+  "Foolish|Ashanti": {
+    "videoId": "gUPrnu3BEU8",
+    "title": "Ashanti - Foolish",
+    "channelName": "AshantiVEVO"
+  },
+  "Sweet Dreams (Are Made Of This)|Eurythmics": {
+    "videoId": "qeMFqkcPYcg",
+    "title": "Eurythmics, Annie Lennox, Dave Stewart - Sweet Dreams (Are Made Of This) (Official Video)",
+    "channelName": "EurythmicsVEVO"
+  },
+  "Every Breath You Take|The Police": {
+    "videoId": "OMOGaugKpzs",
+    "title": "The Police - Every Breath You Take (Official Music Video)",
+    "channelName": "ThePoliceVEVO"
+  },
+  "Hot In Herre|Nelly": {
+    "videoId": "GeZZr_p6vB8",
+    "title": "Nelly - Hot In Herre (Official Music Video)",
+    "channelName": "NellyVEVO"
+  },
+  "Flashdance...What A Feeling|Irene Cara": {
+    "videoId": "ILWSp0m9G2U",
+    "title": "Irene Cara  - Flashdance What A Feeling (Official Music Video)",
+    "channelName": "UnidiscMusic"
+  },
+  "Let's Dance|David Bowie": {
+    "videoId": "VbD_kBJc_gI",
+    "title": "David Bowie - Let&#39;s Dance (Official Video) [HD]",
+    "channelName": "David Bowie"
+  },
+  "Dilemma|Nelly Featuring Kelly Rowland": {
+    "videoId": "8WYHDfJDPDc",
+    "title": "Nelly - Dilemma (Official Music Video) ft. Kelly Rowland",
+    "channelName": "NellyVEVO"
+  },
+  "Beat It|Michael Jackson": {
+    "videoId": "oRdxUFDoQe0",
+    "title": "Michael Jackson - Beat It (Official 4K Video)",
+    "channelName": "michaeljacksonVEVO"
+  },
+  "Come On Eileen|Dexys Midnight Runners": {
+    "videoId": "6BODDyZRF6A",
+    "title": "Dexys Midnight Runners, Kevin Rowland - Come On Eileen (1982 Version)",
+    "channelName": "DexysMidnightRunVEVO"
+  },
+  "Billie Jean|Michael Jackson": {
+    "videoId": "Zi_XLOBDo_Y",
+    "title": "Michael Jackson - Billie Jean (Official Video)",
+    "channelName": "michaeljacksonVEVO"
+  },
+  "A Moment Like This|Kelly Clarkson": {
+    "videoId": "S7b8ADhadJU",
+    "title": "Kelly Clarkson - A Moment Like This (Official Video)",
+    "channelName": "kellyclarksonVEVO"
+  },
+  "Baby, Come To Me|Patti Austin A Duet With James Ingram": {
+    "videoId": "mHyxPIh3c5w",
+    "title": "Patti Austin &amp; James Ingram - Baby, Come To Me • TopPop",
+    "channelName": "TopPop"
+  },
+  "Lose Yourself|Eminem": {
+    "videoId": "xFYQQPAOz7Y",
+    "title": "Eminem - Lose Yourself",
+    "channelName": "EminemMusic"
+  },
+  "Down Under|Men At Work": {
+    "videoId": "XfR9iY5y94s",
+    "title": "Men At Work - Down Under (Official HD Video)",
+    "channelName": "MenAtWorkVEVO"
+  },
+  "Africa|Toto": {
+    "videoId": "FTQbiNvZqaY",
+    "title": "Toto - Africa (Official HD Video)",
+    "channelName": "TotoVEVO"
+  },
+  "Maneater|Daryl Hall John Oates": {
+    "videoId": "yRYFKcMa_Ek",
+    "title": "Daryl Hall &amp; John Oates - Maneater (Official Video)",
+    "channelName": "hallandoatesVEVO"
+  },
+  "Mickey|Toni Basil": {
+    "videoId": "gTZz3dqxB84",
+    "title": "Toni Basil - Mickey (Official Music Video), Full HD (Digitally Remastered and Upscaled)",
+    "channelName": "Enhanced Music Videos"
+  },
+  "Truly|Lionel Richie": {
+    "videoId": "kX-uh1MqAI4",
+    "title": "Truly",
+    "channelName": "Lionel Richie - Topic"
+  },
+  "Bump, Bump, Bump|B2K & P. Diddy": {
+    "videoId": "CgiX53hjAPc",
+    "title": "B2K, P. Diddy - Bump, Bump, Bump (Official Music Video)",
+    "channelName": "B2KVEVO"
+  },
+  "All I Have|Jennifer Lopez Featuring LL Cool J": {
+    "videoId": "yeSJ2YdhG5k",
+    "title": "Jennifer Lopez - All I Have (Official HD Video) ft. LL Cool J",
+    "channelName": "JenniferLopezVEVO"
+  },
+  "Up Where We Belong|Joe Cocker And Jennifer Warnes": {
+    "videoId": "bjrOcrisGyI",
+    "title": "Up Where We Belong : Joe Cocker &amp; Jennifer Warnes",
+    "channelName": "fkwk101"
+  },
+  "Who Can It Be Now?|Men At Work": {
+    "videoId": "SECVGN4Bsgg",
+    "title": "Men At Work - Who Can It Be Now? (Official Video)",
+    "channelName": "MenAtWorkVEVO"
+  },
+  "In Da Club|50 Cent": {
+    "videoId": "5qm8PH4xAss",
+    "title": "50 Cent - In Da Club (Official Music Video)",
+    "channelName": "50CentVEVO"
+  },
+  "Jack & Diane|John Cougar": {
+    "videoId": "h04CH9YZcpI",
+    "title": "John Mellencamp - Jack &amp; Diane (Official Music Video)",
+    "channelName": "JohnMellencampVEVO"
+  },
+  "Abracadabra|The Steve Miller Band": {
+    "videoId": "tY8B0uQpwZs",
+    "title": "Steve Miller Band - Abracadabra (Official Music Video)",
+    "channelName": "SteveMillerBandVEVO"
+  },
+  "Hard To Say I'm Sorry|Chicago": {
+    "videoId": "1A0MPWseJIE",
+    "title": "Chicago - Hard To Say I&#39;m Sorry (Official Music Video)",
+    "channelName": "RHINO"
+  },
+  "Eye Of The Tiger|Survivor": {
+    "videoId": "btPJPFnesV4",
+    "title": "Survivor - Eye Of The Tiger (Official HD Video)",
+    "channelName": "SurvivorVEVO"
+  },
+  "Get Busy|Sean Paul": {
+    "videoId": "oPQ3o14ksaM",
+    "title": "Sean Paul - Get Busy/Like Glue (Official Video)",
+    "channelName": "Atlantic Records"
+  },
+  "21 Questions|50 Cent Featuring Nate Dogg": {
+    "videoId": "cDMhlvbOFaM",
+    "title": "50 Cent - 21 Questions (Official Music Video) ft. Nate Dogg",
+    "channelName": "50CentVEVO"
+  },
+  "Don't You Want Me|The Human League": {
+    "videoId": "uPudE8nDog0",
+    "title": "The Human League - Don&#39;t You Want Me (Official Music Video)",
+    "channelName": "TheHumanLeagueVEVO"
+  },
+  "This Is The Night|Clay Aiken": {
+    "videoId": "Xi9G5-JNlnw",
+    "title": "Clay Aiken - This Is The Night Music Video",
+    "channelName": "clackattack5230"
+  },
+  "Ebony And Ivory|Paul McCartney And Stevie Wonder": {
+    "videoId": "fXAlfh6QKQs",
+    "title": "Ebony and Ivory (1982) | Paul McCartney &amp; Stevie Wonder",
+    "channelName": "Reelblack One"
+  },
+  "Crazy In Love|Beyonce Featuring Jay Z": {
+    "videoId": "ViwtNLUqkMY",
+    "title": "Beyoncé - Crazy In Love ft. JAY Z",
+    "channelName": "BeyoncéVEVO"
+  },
+  "Chariots Of Fire - Titles|Vangelis": {
+    "videoId": "8a-HfNE3EIo",
+    "title": "Vangelis - Chariots Of Fire",
+    "channelName": "VangelisVEVO"
+  },
+  "I Love Rock 'N Roll|Joan Jett & The Blackhearts": {
+    "videoId": "aO3ip1gN1vg",
+    "title": "Joan Jett and the Blackhearts - I Love Rock &#39;N Roll (Lyrics)",
+    "channelName": "7clouds"
+  },
+  "Shake Ya Tailfeather|Nelly, P. Diddy & Murphy Lee": {
+    "videoId": "bG7DBO0k5lA",
+    "title": "P. Diddy [feat. Nelly &amp; Murphy Lee] - Shake Ya Tailfeather (Official Music Video)",
+    "channelName": "Bad Boy Entertainment"
+  },
+  "Baby Boy|Beyonce Featuring Sean Paul": {
+    "videoId": "8ucz_pm3LX8",
+    "title": "Beyoncé - Baby Boy ft. Sean Paul",
+    "channelName": "BeyoncéVEVO"
+  },
+  "Centerfold|The J. Geils Band": {
+    "videoId": "BqDjMZKf-wg",
+    "title": "The J. Geils Band - Centerfold (Official Music Video)",
+    "channelName": "JGeilsBandVEVO"
+  },
+  "I Can't Go For That (No Can Do)|Daryl Hall John Oates": {
+    "videoId": "ccenFp_3kq8",
+    "title": "Daryl Hall &amp; John Oates - I Can&#39;t Go For That (No Can Do) (Official Video)",
+    "channelName": "hallandoatesVEVO"
+  },
+  "Stand Up|Ludacris Featuring Shawnna": {
+    "videoId": "pZG7IK99OvI",
+    "title": "Ludacris - Stand Up (Official Music Video) ft. Shawnna",
+    "channelName": "LudacrisVEVO"
+  },
+  "Physical|Olivia Newton-John": {
+    "videoId": "vWz9VN40nCA",
+    "title": "Olivia Newton-John - Physical (Official Music Video)",
+    "channelName": "OliviaNewtonJohnVEVO"
+  },
+  "Hey Ya!|OutKast": {
+    "videoId": "PWgvGjAhvIw",
+    "title": "Outkast - Hey Ya! (Official HD Video)",
+    "channelName": "OutkastVEVO"
+  },
+  "The Way You Move|OutKast Featuring Sleepy Brown": {
+    "videoId": "xI5NQ-0Ubfs",
+    "title": "Outkast - The Way You Move (Official HD Video) ft. Sleepy Brown",
+    "channelName": "OutkastVEVO"
+  },
+  "Private Eyes|Daryl Hall John Oates": {
+    "videoId": "JsntlJZ9h1U",
+    "title": "Daryl Hall &amp; John Oates - Private Eyes (Official HD Video)",
+    "channelName": "hallandoatesVEVO"
+  },
+  "Slow Jamz|Twista Featuring Kanye West & Jamie Foxx": {
+    "videoId": "WH0sPf4Hcjo",
+    "title": "Twista feat Kanye West &amp; Jamie Foxx= Slow Jamz Official Video",
+    "channelName": "Station"
+  },
+  "Yeah!|Usher Featuring Lil Jon & Ludacris": {
+    "videoId": "GxBSyx85Kp8",
+    "title": "Usher - Yeah! (Official Video) ft. Lil Jon, Ludacris",
+    "channelName": "UsherVEVO"
+  },
+  "Arthur's Theme (Best That You Can Do)|Christopher Cross": {
+    "videoId": "wJ6zs2WSCjk",
+    "title": "Christopher Cross - Arthur&#39;s Theme (Best That You Can Do) (Official Music Video) [Remastered HD]",
+    "channelName": "Christopher Cross"
+  },
+  "Endless Love|Diana Ross & Lionel Richie": {
+    "videoId": "NDNlYho3A2Y",
+    "title": "Diana Ross and Lionel Richie - Endless Love (Live at the Academy Awards)",
+    "channelName": "DianaRossTV"
+  },
+  "Burn|Usher": {
+    "videoId": "t5XNWFw5HVw",
+    "title": "Usher - Burn (Official Video)",
+    "channelName": "UsherVEVO"
+  },
+  "Jessie's Girl|Rick Springfield": {
+    "videoId": "qYkbTyHXwbs",
+    "title": "Rick Springfield - Jessie&#39;s Girl (Official Video)",
+    "channelName": "RickSpringfieldVEVO"
+  },
+  "The One That You Love|Air Supply": {
+    "videoId": "nY31ZH6hAFI",
+    "title": "Air Supply - The One That You Love (Official Video)",
+    "channelName": "AirSupplyVEVO"
+  },
+  "Bette Davis Eyes|Kim Carnes": {
+    "videoId": "EPOIS5taqA8",
+    "title": "Kim Carnes - Bette Davis Eyes",
+    "channelName": "KimCarnesVEVO"
+  },
+  "I Believe|Fantasia": {
+    "videoId": "q3Hn-Wm2aIM",
+    "title": "Fantasia - I Believe [Lyrics]",
+    "channelName": "TeamErikaVanPelt"
+  },
+  "Medley|Stars On 45": {
+    "videoId": "5bGQ1-Gmoso",
+    "title": "Stars On 45 - Stars On 45 (Video)",
+    "channelName": "Red Bullet"
+  },
+  "Confessions Part II|Usher": {
+    "videoId": "5Sy19X0xxrM",
+    "title": "Usher - Confessions, Pt. II",
+    "channelName": "UsherVEVO"
+  },
+  "Slow Motion|Juvenile Featuring Soulja Slim": {
+    "videoId": "-0llNuv3L4k",
+    "title": "Juvenile - Slow Motion ft. Soulja Slim",
+    "channelName": "JuvenileVEVO"
+  },
+  "Lean Back|Terror Squad": {
+    "videoId": "ajmI1P3r1w4",
+    "title": "Terror Squad - Lean Back (Official Music Video) ft. Fat Joe, Remy Ma",
+    "channelName": "TerrorSquadVEVO"
+  },
+  "Morning Train (Nine To Five)|Sheena Easton": {
+    "videoId": "-dNtJZe9A5Q",
+    "title": "Morning Train (Nine to Five) [Edit]",
+    "channelName": "Sheena Easton - Topic"
+  },
+  "Kiss On My List|Daryl Hall John Oates": {
+    "videoId": "lsHld-iArOc",
+    "title": "Daryl Hall &amp; John Oates - Kiss On My List (Official Video)",
+    "channelName": "hallandoatesVEVO"
+  },
+  "Goodies|Ciara Featuring Petey Pablo": {
+    "videoId": "YtC92pzp5vw",
+    "title": "Ciara - Goodies ft. Petey Pablo (Official Video) ft. Petey Pablo",
+    "channelName": "CiaraVEVO"
+  },
+  "Rapture|Blondie": {
+    "videoId": "pHCdS7O248g",
+    "title": "Blondie - Rapture (Official Music Video)",
+    "channelName": "BlondieVEVO"
+  },
+  "Keep On Loving You|REO Speedwagon": {
+    "videoId": "wJzNZ1c5C9c",
+    "title": "REO Speedwagon - Keep on Loving You (Video Version)",
+    "channelName": "RSpwagonVEVO"
+  },
+  "9 To 5|Dolly Parton": {
+    "videoId": "UbxUSsFXYo4",
+    "title": "Dolly Parton - 9 To 5 (Official Video)",
+    "channelName": "DollyPartonVEVO"
+  },
+  "I Love A Rainy Night|Eddie Rabbitt": {
+    "videoId": "NWoL65SexB4",
+    "title": "I Love a Rainy Night (2009 Remaster)",
+    "channelName": "Eddie Rabbitt - Topic"
+  },
+  "My Boo|Usher And Alicia Keys": {
+    "videoId": "fPgf2meEX1w",
+    "title": "Usher, Alicia Keys - My Boo (Official Video)",
+    "channelName": "UsherVEVO"
+  },
+  "Celebration|Kool & The Gang": {
+    "videoId": "3GwjfUFyY6M",
+    "title": "Kool &amp; The Gang - Celebration",
+    "channelName": "KoolAndTheGangVEVO"
+  },
+  "The Tide Is High|Blondie": {
+    "videoId": "fAb8Q9X2xAc",
+    "title": "Blondie - The Tide Is High",
+    "channelName": "BlondieVEVO"
+  },
+  "(Just Like) Starting Over|John Lennon": {
+    "videoId": "dfbAAiL5ec8",
+    "title": "(Just Like) Starting Over (Ultimate Mix)",
+    "channelName": "John Lennon - Topic"
+  },
+  "Drop It Like It's Hot|Snoop Dogg Featuring Pharrell": {
+    "videoId": "GtUVQei3nX4",
+    "title": "Snoop Dogg - Drop It Like It&#39;s Hot (Official Music Video) ft. Pharrell Williams",
+    "channelName": "SnoopDoggVEVO"
+  },
+  "Let Me Love You|Mario": {
+    "videoId": "H64QG4UsrGI",
+    "title": "Mario - Let Me Love You (Official Video)",
+    "channelName": "MarioVEVO"
+  },
+  "Lady|Kenny Rogers": {
+    "videoId": "IArxapKwXLM",
+    "title": "Kenny Rogers - Lady",
+    "channelName": "OLD TAPES"
+  },
+  "Woman In Love|Barbra Streisand": {
+    "videoId": "hQLGCX8D-1Y",
+    "title": "Barbra Streisand - Woman in Love (Official Audio)",
+    "channelName": "barbrastreisandVEVO"
+  },
+  "Candy Shop|50 Cent Featuring Olivia": {
+    "videoId": "SRcnnId15BA",
+    "title": "50 Cent - Candy Shop (Official Music Video) ft. Olivia",
+    "channelName": "50CentVEVO"
+  },
+  "Another One Bites The Dust|Queen": {
+    "videoId": "rY0WxgSXdEE",
+    "title": "Queen - Another One Bites the Dust (Official Video Remastered)",
+    "channelName": "Queen Official"
+  },
+  "Upside Down|Diana Ross": {
+    "videoId": "Po0BbGMSX4g",
+    "title": "Diana Ross - Upside Down (Official Video)",
+    "channelName": "DianaRossTV"
+  },
+  "Sailing|Christopher Cross": {
+    "videoId": "9PnXcP8ZI7M",
+    "title": "Christopher Cross - Sailing (Official Music Video) [Remastered HD]",
+    "channelName": "Christopher Cross"
+  },
+  "Hollaback Girl|Gwen Stefani": {
+    "videoId": "Kgjkth6BRRY",
+    "title": "Gwen Stefani - Hollaback Girl (Official Music Video)",
+    "channelName": "GwenStefaniVEVO"
+  },
+  "Magic|Olivia Newton-John": {
+    "videoId": "l37pDbFNcT0",
+    "title": "Olivia Newton - John - Magic (Official 4K Video)",
+    "channelName": "Olivia Newton- John"
+  },
+  "We Belong Together|Mariah Carey": {
+    "videoId": "0habxsuXW4g",
+    "title": "Mariah Carey - We Belong Together (Official Music Video)",
+    "channelName": "MariahCareyVEVO"
+  },
+  "It's Still Rock And Roll To Me|Billy Joel": {
+    "videoId": "5eAQa4MOGkE",
+    "title": "Billy Joel - It&#39;s Still Rock And Roll To Me (Official HD Video)",
+    "channelName": "billyjoelVEVO"
+  },
+  "Coming Up (Live At Glasgow)|Paul McCartney And Wings": {
+    "videoId": "g5nzLQ63c9E",
+    "title": "Paul McCartney - Coming Up (Official Music Video)",
+    "channelName": "PaulMcCartneyVEVO"
+  },
+  "Inside Your Heaven|Carrie Underwood": {
+    "videoId": "OptOGu3Nl5M",
+    "title": "Inside Your Heaven (Bonus Track)",
+    "channelName": "Carrie Underwood - Topic"
+  },
+  "Funkytown|Lipps, Inc.": {
+    "videoId": "u-XqzY5y8uA",
+    "title": "Lipps Inc. - Funkytown (4K Video)",
+    "channelName": "Lipps Inc."
+  },
+  "Call Me|Blondie": {
+    "videoId": "StKVS0eI85I",
+    "title": "Blondie - Call me",
+    "channelName": "BlondieVEVO"
+  },
+  "Gold Digger|Kanye West Featuring Jamie Foxx": {
+    "videoId": "6vwNcNOTVzY",
+    "title": "Kanye West - Gold Digger ft. Jamie Foxx",
+    "channelName": "KanyeWestVEVO"
+  },
+  "Another Brick In The Wall (Part II)|Pink Floyd": {
+    "videoId": "qs35t2xFqdU",
+    "title": "Pink Floyd - Another Brick in the Wall Official Music Video (Lyrics In Description)",
+    "channelName": "xGunsSaysBAANGx"
+  },
+  "Crazy Little Thing Called Love|Queen": {
+    "videoId": "zO6D_BAuYCI",
+    "title": "Queen - Crazy Little Thing Called Love (Official Video)",
+    "channelName": "Queen Official"
+  },
+  "Do That To Me One More Time|Captain & Tennille": {
+    "videoId": "ry4ngf766N0",
+    "title": "Captain &amp; Tennille - Do that to me one more time (The Video)",
+    "channelName": "wjhmosaenglish03"
+  },
+  "Rock With You|Michael Jackson": {
+    "videoId": "5X-Mrc2l1d0",
+    "title": "Michael Jackson - Rock With You (Official Video - Upscaled)",
+    "channelName": "michaeljacksonVEVO"
+  },
+  "Run It!|Chris Brown": {
+    "videoId": "w6QGe-pXgdI",
+    "title": "Chris Brown - Run It! (Official HD Video) ft. Juelz Santana",
+    "channelName": "ChrisBrownVEVO"
+  },
+  "Escape (The Pina Colada Song)|Rupert Holmes": {
+    "videoId": "YGAeI5KODLA",
+    "title": "RUPERT HOLMES - Escape (The Pina Colada Song) (1980)",
+    "channelName": "ClassicVideos80s"
+  },
+  "Please Don't Go|KC And The Sunshine Band": {
+    "videoId": "PwrVePMx6t0",
+    "title": "KC &amp; The Sunshine Band - Please Don&#39;t Go (1979) • TopPop",
+    "channelName": "TopPop"
+  },
+  "Don't Forget About Us|Mariah Carey": {
+    "videoId": "8tZkzL4j3BU",
+    "title": "Mariah Carey - Don&#39;t Forget About Us (Official Music Video)",
+    "channelName": "MariahCareyVEVO"
+  },
+  "Laffy Taffy|D4L": {
+    "videoId": "4eVxoIL_Nq0",
+    "title": "D4L - Laffy Taffy (Official Video)",
+    "channelName": "Atlantic Records"
+  },
+  "Babe|Styx": {
+    "videoId": "yaVyQS1T7TY",
+    "title": "Styx - Babe (Official Video)",
+    "channelName": "StyxVEVO"
+  },
+  "Grillz|Nelly Featuring Paul Wall, Ali & Gipp": {
+    "videoId": "8fijggq5R6w",
+    "title": "Nelly - Grillz ft. Paul Wall, Ali &amp; Gipp",
+    "channelName": "NellyVEVO"
+  },
+  "No More Tears (Enough Is Enough)|Barbra Streisand/Donna Summer": {
+    "videoId": "AwiR88o_zOA",
+    "title": "Barbra Streisand and Donna Summer-No More Tears [Enough is Enough]-video Edit",
+    "channelName": "mark marcia jenkins"
+  },
+  "Check On It|Beyonce Featuring Slim Thug": {
+    "videoId": "Q1dUDzBdnmI",
+    "title": "Beyoncé - Check On It (Official Video) ft. Bun B, Slim Thug",
+    "channelName": "BeyoncéVEVO"
+  },
+  "Still|Commodores": {
+    "videoId": "0LUG7tXujmw",
+    "title": "STILL by The Commodores/ Lionel Richie (with lyrics)",
+    "channelName": "DyanDevito"
+  },
+  "Heartache Tonight|Eagles": {
+    "videoId": "Swe2vw4k8TI",
+    "title": "Heartache Tonight (2013 Remaster)",
+    "channelName": "Eagles - Topic"
+  },
+  "Pop Muzik|M": {
+    "videoId": "gPoiv0sZ4s4",
+    "title": "M - Pop Muzik (Official HD Video)",
+    "channelName": "Robin Scott - M"
+  },
+  "Rise|Herb Alpert": {
+    "videoId": "q7O3eYJptTc",
+    "title": "Herb Alpert - Rise",
+    "channelName": "Herb Alpert"
+  },
+  "You're Beautiful|James Blunt": {
+    "videoId": "oofSnsGkops",
+    "title": "James Blunt - You&#39;re Beautiful (Official Music Video) [4K]",
+    "channelName": "James Blunt"
+  },
+  "So Sick|Ne-Yo": {
+    "videoId": "IxszlJppRQI",
+    "title": "Ne-Yo - So Sick [Official Video]",
+    "channelName": "NeYoVEVO"
+  },
+  "Don't Stop 'til You Get Enough|Michael Jackson": {
+    "videoId": "yURRmWtbTbo",
+    "title": "Michael Jackson - Don&#39;t Stop &#39;Til You Get Enough (Official Video - Upscaled)",
+    "channelName": "michaeljacksonVEVO"
+  },
+  "Sad Eyes|Robert John": {
+    "videoId": "JsyQ06YZVQc",
+    "title": "ROBERT JOHN - &quot;SAD EYES&quot;   1979",
+    "channelName": "GreatPerformers1"
+  },
+  "Temperature|Sean Paul": {
+    "videoId": "dW2MmuA1nI4",
+    "title": "Sean Paul - Temperature (Official Video)",
+    "channelName": "VP Records"
+  },
+  "My Sharona|The Knack": {
+    "videoId": "bbr60I0u2Ng",
+    "title": "The Knack - My Sharona",
+    "channelName": "TheKnackVEVO"
+  },
+  "Bad Day|Daniel Powter": {
+    "videoId": "gH476CxJxfg",
+    "title": "Daniel Powter - Bad Day (Official Music Video) [HD]",
+    "channelName": "Daniel Powter"
+  },
+  "SOS|Rihanna": {
+    "videoId": "IXmF4GbA86E",
+    "title": "Rihanna - SOS (Official Music Video)",
+    "channelName": "RihannaVEVO"
+  },
+  "Good Times|Chic": {
+    "videoId": "7j7rcSutYAQ",
+    "title": "Good Times - Chic - HQ/HD",
+    "channelName": "Juan Classic Disco"
+  },
+  "Bad Girls|Donna Summer": {
+    "videoId": "Bucljr7jX3I",
+    "title": "Donna Summer - Bad Girls (Official Music Video)",
+    "channelName": "Streetwalker"
+  },
+  "Ridin'|Chamillionaire Featuring Krayzie Bone": {
+    "videoId": "CtwJvgPJ9xw",
+    "title": "Chamillionaire - Ridin&#39; (Official Music Video) ft. Krayzie Bone",
+    "channelName": "ChamillionaireVEVO"
+  },
+  "Hips Don't Lie|Shakira Featuring Wyclef Jean": {
+    "videoId": "DUT5rEU6pqM",
+    "title": "Shakira - Hips Don&#39;t Lie (featuring Wyclef Jean) (Official 4K Video) ft. Wyclef Jean",
+    "channelName": "shakiraVEVO"
+  },
+  "Ring My Bell|Anita Ward": {
+    "videoId": "Dp11DjaUc5A",
+    "title": "Ring My Bell - Anita Ward (1979) HD",
+    "channelName": "PS César"
+  },
+  "Do I Make You Proud|Taylor Hicks": {
+    "videoId": "NwCu6dF5_Gk",
+    "title": "Do I Make You Proud?",
+    "channelName": "AliceinTaylorland"
+  },
+  "Promiscuous|Nelly Furtado Featuring Timbaland": {
+    "videoId": "0J3vgcE5i2o",
+    "title": "Nelly Furtado - Promiscuous (Official Music Video) ft. Timbaland",
+    "channelName": "NellyFurtadoVEVO"
+  },
+  "Hot Stuff|Donna Summer": {
+    "videoId": "KhcaPNuaJNU",
+    "title": "Donna  Summer   --    Hot   Stuff  Video  HQ",
+    "channelName": "Mystic Plug Records II"
+  },
+  "Love You Inside Out|Bee Gees": {
+    "videoId": "SouY1MKclZ4",
+    "title": "The Bee Gees - Love You inside Out",
+    "channelName": "SpirithasentFlown"
+  },
+  "Reunited|Peaches & Herb": {
+    "videoId": "aMh3utpqfaY",
+    "title": "Peaches &amp; Herb - Reunited (1978)",
+    "channelName": "DiscoBar80"
+  },
+  "London Bridge|Fergie": {
+    "videoId": "WD33ii01kXI",
+    "title": "Fergie - London Bridge (Oh Snap) (Official Music Video)",
+    "channelName": "FergieVEVO"
+  },
+  "Heart Of Glass|Blondie": {
+    "videoId": "WGU_4-5RaxU",
+    "title": "Blondie - Heart Of Glass",
+    "channelName": "BlondieVEVO"
+  },
+  "SexyBack|Justin Timberlake": {
+    "videoId": "3gOHvDP_vCs",
+    "title": "Justin Timberlake - SexyBack (Official Video) ft. Timbaland",
+    "channelName": "justintimberlakeVEVO"
+  },
+  "Knock On Wood|Amii Stewart": {
+    "videoId": "XKuJUxGntRI",
+    "title": "Amii Stewart - Knock On Wood (Official HD Video)",
+    "channelName": "Amii Stewart (Official)"
+  },
+  "What A Fool Believes|The Doobie Brothers": {
+    "videoId": "qKYQNtF11eg",
+    "title": "The Doobie Brothers - What A Fool Believes (Official Music Video) [HD]",
+    "channelName": "The Doobie Brothers"
+  },
+  "I Will Survive|Gloria Gaynor": {
+    "videoId": "6dYWe1c3OyU",
+    "title": "Gloria Gaynor - I Will Survive",
+    "channelName": "GloriaGaynorVEVO"
+  },
+  "Tragedy|Bee Gees": {
+    "videoId": "I248-SyRDnU",
+    "title": "Bee Gees - Tragedy (Official Music Video)",
+    "channelName": "BeeGeesVEVO"
+  },
+  "Money Maker|Ludacris Featuring Pharrell": {
+    "videoId": "T9Op2YQ7yyU",
+    "title": "Ludacris - Money Maker (Official Music Video) ft. Pharrell",
+    "channelName": "LudacrisVEVO"
+  },
+  "Da Ya Think I'm Sexy?|Rod Stewart": {
+    "videoId": "Hphwfq1wLJs",
+    "title": "Rod Stewart - Da Ya Think I&#39;m Sexy? (Official HD Remastered Video)",
+    "channelName": "Rod Stewart"
+  },
+  "My Love|Justin Timberlake Featuring T.I.": {
+    "videoId": "xjpe7EGyiw8",
+    "title": "Justin Timberlake - Let Me Talk To You/My Love ft. T.I.",
+    "channelName": "justintimberlakeVEVO"
+  },
+  "Le Freak|Chic": {
+    "videoId": "aXgSHL7efKg",
+    "title": "CHIC - Le Freak (Official Music Video)",
+    "channelName": "RHINO"
+  },
+  "I Wanna Love You|Akon Featuring Snoop Dogg": {
+    "videoId": "GJzF7H2e3Tw",
+    "title": "Akon - I Wanna Love You ft. Snoop Dogg",
+    "channelName": "AkonVEVO"
+  },
+  "Irreplaceable|Beyonce": {
+    "videoId": "2EwViQxSJJQ",
+    "title": "Beyoncé - Irreplaceable",
+    "channelName": "BeyoncéVEVO"
+  },
+  "Too Much Heaven|Bee Gees": {
+    "videoId": "i6iBAuwBODA",
+    "title": "Bee Gees - Too Much Heaven",
+    "channelName": "BeeGeesVEVO"
+  },
+  "You Don't Bring Me Flowers|Barbra Streisand & Neil Diamond": {
+    "videoId": "Z3yu2c-0_w4",
+    "title": "Neil Diamond &amp; Barbra Streisand - You Don&#39;t Bring Me Flowers Anymore",
+    "channelName": "top40music"
+  },
+  "MacArthur Park|Donna Summer": {
+    "videoId": "c5_F4f3PWps",
+    "title": "Donna Summer - MacArthur Park (Official Video)",
+    "channelName": "Brandon Campbell"
+  },
+  "Say It Right|Nelly Furtado": {
+    "videoId": "6JnGBs88sL0",
+    "title": "Nelly Furtado - Say It Right (Official Music Video)",
+    "channelName": "NellyFurtadoVEVO"
+  },
+  "You Needed Me|Anne Murray": {
+    "videoId": "WinyxA0_OLw",
+    "title": "Anne Murray: You Needed Me (1996)",
+    "channelName": "happysun"
+  },
+  "What Goes Around...Comes Around|Justin Timberlake": {
+    "videoId": "TOrnUquxtwA",
+    "title": "What Goes Around...Comes Around (Official Video)",
+    "channelName": "justintimberlakeVEVO"
+  },
+  "Hot Child In The City|Nick Gilder": {
+    "videoId": "6s2zm_crkVc",
+    "title": "Nick Gilder - Hot Child In The City • TopPop",
+    "channelName": "TopPop"
+  },
+  "This Is Why I'm Hot|Mims": {
+    "videoId": "TwyE3WJ4AWo",
+    "title": "Mims - This Is Why I&#39;m Hot (Official Music Video)",
+    "channelName": "MIMSVEVO"
+  },
+  "Kiss You All Over|Exile": {
+    "videoId": "OpaCXtahXxk",
+    "title": "Exile - Kiss You All Over • TopPop",
+    "channelName": "TopPop"
+  },
+  "Glamorous|Fergie Featuring Ludacris": {
+    "videoId": "q0SyUgw98tE",
+    "title": "Fergie - Glamorous ft. Ludacris",
+    "channelName": "FergieVEVO"
+  },
+  "Don't Matter|Akon": {
+    "videoId": "JWA5hJl4Dv0",
+    "title": "Akon - Don&#39;t Matter (Official Music Video)",
+    "channelName": "AkonVEVO"
+  },
+  "Boogie Oogie Oogie|A Taste Of Honey": {
+    "videoId": "gzwQSXe_Dro",
+    "title": "NEW * Boogie Oogie Oogie - A Taste Of Honey 4K {Stereo} 1978",
+    "channelName": "Smurfstools Oldies Music Time Machine"
+  },
+  "Give It To Me|Timbaland Featuring Nelly Furtado & Justin Timberlake": {
+    "videoId": "RgoiSJ23cSc",
+    "title": "Timbaland - Give It To Me (Official Music Video) ft. Nelly Furtado, Justin Timberlake",
+    "channelName": "TimbalandVEVO"
+  },
+  "Grease|Frankie Valli": {
+    "videoId": "aOpnnrS4ags",
+    "title": "Frankie Valli - Grease (Top Of The Pops September 14th, 1978)",
+    "channelName": "Frankie Valli and the Four Seasons"
+  },
+  "Girlfriend|Avril Lavigne": {
+    "videoId": "Bg59q4puhmg",
+    "title": "Avril Lavigne - Girlfriend (Official Video)",
+    "channelName": "AvrilLavigneVEVO"
+  },
+  "Makes Me Wonder|Maroon 5": {
+    "videoId": "sAebYQgy4n4",
+    "title": "Maroon 5 - Makes Me Wonder (Official Music Video)",
+    "channelName": "Maroon5VEVO"
+  },
+  "Three Times A Lady|Commodores": {
+    "videoId": "B4dl6JSf-bc",
+    "title": "Commodores - Three Times A Lady [Live]",
+    "channelName": "TheSoulKings"
+  },
+  "Buy U A Drank (Shawty Snappin')|T-Pain Featuring Yung Joc": {
+    "videoId": "dBrRBZy8OTs",
+    "title": "T-Pain - Buy U A Drank (Shawty Snappin&#39;) (Official HD Video) ft. Yung Joc",
+    "channelName": "TPainVEVO"
+  },
+  "Miss You|The Rolling Stones": {
+    "videoId": "hic-dnps6MU",
+    "title": "The Rolling Stones - Miss You - OFFICIAL PROMO",
+    "channelName": "The Rolling Stones"
+  },
+  "Shadow Dancing|Andy Gibb": {
+    "videoId": "PZxA3FVUwvk",
+    "title": "Shadow dancing   Andy Gibb",
+    "channelName": "JR2CLASSICSDISCO"
+  },
+  "Umbrella|Rihanna Featuring Jay-Z": {
+    "videoId": "CvBfHwUxHIk",
+    "title": "Rihanna - Umbrella (Orange Version) (Official Music Video) ft. JAŸ-Z",
+    "channelName": "RihannaVEVO"
+  },
+  "You're The One That I Want|John Travolta & Olivia Newton-John": {
+    "videoId": "WvOWox2o5cU",
+    "title": "Olivia Newton-John + John Travolta - You&#39;re the One That I Want.MPG",
+    "channelName": "mogalm"
+  },
+  "Hey There Delilah|Plain White T's": {
+    "videoId": "gPP9vasunAI",
+    "title": "Plain White T&#39;s - &quot;Hey There Delilah&quot; (Official Lyric Video)",
+    "channelName": "Plain White Ts"
+  },
+  "Too Much, Too Little, Too Late|Johnny Mathis/Deniece Williams": {
+    "videoId": "p8LAABODiZE",
+    "title": "Johnny Mathis -   Deniece Williams -   Too Much, Too Little, Too Late.",
+    "channelName": "James Jacob"
+  },
+  "With A Little Luck|Wings": {
+    "videoId": "2k_4qvMU6kQ",
+    "title": "Paul McCartney &amp; Wings - With A Little Luck (Official Music Video, Remastered)",
+    "channelName": "Kitsu Beatles"
+  },
+  "Beautiful Girls|Sean Kingston": {
+    "videoId": "MrTz5xjmso4",
+    "title": "Sean Kingston - Beautiful Girls (Official HD Video)",
+    "channelName": "seankingstonVEVO"
+  },
+  "If I Can't Have You|Yvonne Elliman": {
+    "videoId": "CZVUzho-nok",
+    "title": "Yvonne  Elliman  --   If  I  Can´t  Have  You   [[  Official  Video  ]]  HD",
+    "channelName": "Mystic Plug Records II"
+  },
+  "Night Fever|Bee Gees": {
+    "videoId": "SkypZuY6ZvA",
+    "title": "Bee Gees - Night Fever",
+    "channelName": "BeeGeesVEVO"
+  },
+  "Big Girls Don't Cry|Fergie": {
+    "videoId": "E6sqA9QtV5I",
+    "title": "Fergie - Big Girls Don&#39;t Cry (Personal) (Extended Version)",
+    "channelName": "FergieVEVO"
+  },
+  "Crank That (Soulja Boy)|Soulja Boy Tell'em": {
+    "videoId": "8UFIYGkROII",
+    "title": "Soulja Boy Tell&#39;em - Crank That (Soulja Boy) (Official Music Video)",
+    "channelName": "SouljaBoyTellemVEVO"
+  },
+  "Stronger|Kanye West": {
+    "videoId": "PsO6ZnUZI0g",
+    "title": "Kanye West - Stronger",
+    "channelName": "KanyeWestVEVO"
+  },
+  "(Love Is) Thicker Than Water|Andy Gibb": {
+    "videoId": "MOGt_bXUHQA",
+    "title": "Andy Gibb - Love Is Thicker Than Water • TopPop",
+    "channelName": "TopPop"
+  },
+  "Stayin' Alive|Bee Gees": {
+    "videoId": "fNFzfwLM72c",
+    "title": "Bee Gees - Stayin&#39; Alive (Official Music Video)",
+    "channelName": "BeeGeesVEVO"
+  },
+  "Kiss Kiss|Chris Brown Featuring T-Pain": {
+    "videoId": "eNII9PDlFJ0",
+    "title": "Chris Brown - Kiss Kiss (Feat. T-Pain) (Official HD Video) ft. T-Pain",
+    "channelName": "ChrisBrownVEVO"
+  },
+  "No One|Alicia Keys": {
+    "videoId": "rywUS-ohqeE",
+    "title": "Alicia Keys - No One (Official Music Video)",
+    "channelName": "aliciakeysVEVO"
+  },
+  "Baby Come Back|Player": {
+    "videoId": "NmEyGiaqm7k",
+    "title": "Player - Baby Come Back",
+    "channelName": "PlayerVEVO"
+  },
+  "How Deep Is Your Love|Bee Gees": {
+    "videoId": "XpqqjU7u5Yc",
+    "title": "Bee Gees - How Deep Is Your Love (Official Video)",
+    "channelName": "beegees"
+  },
+  "Low|Flo Rida Featuring T-Pain": {
+    "videoId": "U2waT9TxPU0",
+    "title": "Flo Rida - Low (feat. T-Pain) [Official Video]",
+    "channelName": "Flo Rida Videos"
+  },
+  "You Light Up My Life|Debby Boone": {
+    "videoId": "UAH-pbsN1Xw",
+    "title": "DEBBY BOONE - You Light Up My Life (1977)",
+    "channelName": "Classic Sounds 70s"
+  },
+  "Love In This Club|Usher Featuring Young Jeezy": {
+    "videoId": "cB5e0zHRzHc",
+    "title": "Usher - Love in This Club (Official Video) ft. Young Jeezy",
+    "channelName": "UsherVEVO"
+  },
+  "Star Wars Theme/Cantina Band|Meco": {
+    "videoId": "73B-0sUhBZQ",
+    "title": "Star Wars Theme/Cantina Band",
+    "channelName": "Meco - Topic"
+  },
+  "Bleeding Love|Leona Lewis": {
+    "videoId": "Vzo-EL_62fQ",
+    "title": "Leona Lewis - Bleeding Love (US Version - Official Video)",
+    "channelName": "leonalewisVEVO"
+  },
+  "Best Of My Love|The Emotions": {
+    "videoId": "62jZldkMC_o",
+    "title": "THE EMOTIONS - Best Of My Love (1977)",
+    "channelName": "Classic Sounds 70s"
+  },
+  "Touch My Body|Mariah Carey": {
+    "videoId": "9b8erWuBA44",
+    "title": "Mariah Carey - Touch My Body (Official Music Video)",
+    "channelName": "MariahCareyVEVO"
+  },
+  "I Just Want To Be Your Everything|Andy Gibb": {
+    "videoId": "tA6L8-lxaA8",
+    "title": "Andy Gibb - I Just Want to Be Your Everything",
+    "channelName": "Rewind Music Group"
+  },
+  "Lollipop|Lil Wayne Featuring Static Major": {
+    "videoId": "2IH8tNQAzSs",
+    "title": "Lil Wayne - Lollipop (Official Music Video) ft. Static",
+    "channelName": "LilWayneVEVO"
+  },
+  "Take A Bow|Rihanna": {
+    "videoId": "J3UjJ4wKLkg",
+    "title": "Rihanna - Take A Bow",
+    "channelName": "RihannaVEVO"
+  },
+  "Looks Like We Made It|Barry Manilow": {
+    "videoId": "C47GV5xFkTg",
+    "title": "Looks Like We Made It",
+    "channelName": "Barry Manilow - Topic"
+  },
+  "Da Doo Ron Ron|Shaun Cassidy": {
+    "videoId": "y1XNkEb0OyA",
+    "title": "Shaun Cassidy - “Da Doo Ron Ron” and being held at gunpoint by Phil Spector - City Winery Boston",
+    "channelName": "The Beat Goes On"
+  },
+  "Undercover Angel|Alan O'Day": {
+    "videoId": "G-xRMw0NyW0",
+    "title": "Alan O&#39;Day -1977- Undercover Angel",
+    "channelName": "KOUJI328I"
+  },
+  "Viva La Vida|Coldplay": {
+    "videoId": "dvgZkm1xWPE",
+    "title": "Coldplay - Viva La Vida (Official Video)",
+    "channelName": "Coldplay"
+  },
+  "Gonna Fly Now|Bill Conti": {
+    "videoId": "MR6FXpaECY8",
+    "title": "Bill Conti - Gonna fly now (Rocky) HD",
+    "channelName": "drako2012"
+  },
+  "I Kissed A Girl|Katy Perry": {
+    "videoId": "tAp9BKosZXs",
+    "title": "Katy Perry - I Kissed A Girl (Official Music Video)",
+    "channelName": "KatyPerryVEVO"
+  },
+  "Got To Give It Up (Pt. I)|Marvin Gaye": {
+    "videoId": "LHjABt8r1vI",
+    "title": "MARVIN GAYE - GOT TO GIVE IT UP Pts 1&amp;2. TV PERFORMANCE 1977",
+    "channelName": "MOSMOOTHJAZZ"
+  },
+  "Dreams|Fleetwood Mac": {
+    "videoId": "Y3ywicffOj4",
+    "title": "Fleetwood Mac - Dreams (Official Music Video) [4K]",
+    "channelName": "Fleetwood Mac"
+  },
+  "I'm Your Boogie Man|KC And The Sunshine Band": {
+    "videoId": "_Ee3C2m3OXE",
+    "title": "KC and the Sunshine Band - I&#39;m Your Boogie Man [TopPop].VOB",
+    "channelName": "gottawatchthis66"
+  },
+  "Sir Duke|Stevie Wonder": {
+    "videoId": "hmKshpLXnxE",
+    "title": "Stevie Wonder - Sir Duke",
+    "channelName": "elyg12"
+  },
+  "When I Need You|Leo Sayer": {
+    "videoId": "obC0MFHWJ0A",
+    "title": "Leo Sayer - When I Need You (Official HD Music Video)",
+    "channelName": "Leo Sayer"
+  },
+  "Disturbia|Rihanna": {
+    "videoId": "E1mU6h4Xdxc",
+    "title": "Rihanna - Disturbia",
+    "channelName": "RihannaVEVO"
+  },
+  "Hotel California|Eagles": {
+    "videoId": "BciS5krYL80",
+    "title": "Hotel California (2013 Remaster)",
+    "channelName": "Eagles - Topic"
+  },
+  "Southern Nights|Glen Campbell": {
+    "videoId": "jYTfV5o2ZMY",
+    "title": "Glen Campbell - Southern Nights (Official Audio)",
+    "channelName": "GlenCampbellVEVO"
+  },
+  "Whatever You Like|T.I.": {
+    "videoId": "Kgdr2uytpDI",
+    "title": "T.I. - Whatever You Like (Official Video)",
+    "channelName": "Atlantic Records"
+  },
+  "Don't Leave Me This Way|Thelma Houston": {
+    "videoId": "8sAbzZjXLy8",
+    "title": "Thelma Houston - Don&#39;t Leave Me This Way (Long Version) • TopPop",
+    "channelName": "TopPop"
+  },
+  "Don't Give Up On Us|David Soul": {
+    "videoId": "YY8APrYU2Gs",
+    "title": "David Soul - Don&#39;t Give Up On Us",
+    "channelName": "LesterTheNightfly2"
+  },
+  "Dancing Queen|ABBA": {
+    "videoId": "xFrGuyw1V8s",
+    "title": "ABBA - Dancing Queen (Official Music Video)",
+    "channelName": "AbbaVEVO"
+  },
+  "So What|P!nk": {
+    "videoId": "FJfFZqTlWrQ",
+    "title": "P!nk - So What (Official Video)",
+    "channelName": "PinkVEVO"
+  },
+  "Rich Girl|Daryl Hall John Oates": {
+    "videoId": "MJsloJmMbis",
+    "title": "Daryl Hall &amp; John Oates - Rich Girl • TopPop",
+    "channelName": "TopPop"
+  },
+  "Evergreen (Love Theme From \"A Star Is Born\")|Barbra Streisand": {
+    "videoId": "udLeOOy6em4",
+    "title": "“Evergreen” from A Star Is Born” (1976)",
+    "channelName": "Barbra Streisand"
+  },
+  "Live Your Life|T.I. Featuring Rihanna": {
+    "videoId": "koVHN6eO4Xg",
+    "title": "T.I. - Live Your Life ft. Rihanna [Official Video]",
+    "channelName": "T.I."
+  },
+  "Womanizer|Britney Spears": {
+    "videoId": "rMqayQ-U74s",
+    "title": "Britney Spears - Womanizer (Director&#39;s Cut) (Official HD Video)",
+    "channelName": "BritneySpearsVEVO"
+  },
+  "New Kid In Town|Eagles": {
+    "videoId": "-Pa5nqYXEnY",
+    "title": "New Kid in Town (2013 Remaster)",
+    "channelName": "Eagles - Topic"
+  },
+  "Blinded By The Light|Manfred Mann's Earth Band": {
+    "videoId": "Rpq35wyDi7I",
+    "title": "Blinded by the Light ~ Manfred Mann&#39;s Earth Band with lyrics",
+    "channelName": "joohop"
+  },
+  "Torn Between Two Lovers|Mary Macgregor": {
+    "videoId": "0URFfZx9otI",
+    "title": "Torn Between Two Lovers - Mary MacGregor (1976) HD",
+    "channelName": "PS César"
+  },
+  "Car Wash|Rose Royce": {
+    "videoId": "PkxaunLybuM",
+    "title": "Rose Royce - Car Wash",
+    "channelName": "BakNDaDay"
+  },
+  "I Wish|Stevie Wonder": {
+    "videoId": "hYKYka-PNt0",
+    "title": "Stevie Wonder - I Wish (the original version)",
+    "channelName": "Lukefilter"
+  },
+  "Single Ladies (Put A Ring On It)|Beyonce": {
+    "videoId": "4m1EFMoRFvY",
+    "title": "Beyoncé - Single Ladies (Put a Ring on It) (Video Version)",
+    "channelName": "BeyoncéVEVO"
+  },
+  "You Make Me Feel Like Dancing|Leo Sayer": {
+    "videoId": "VDlvPD9qCao",
+    "title": "Leo Sayer - You Make Me Feel Like Dancing (Official HD Music Video)",
+    "channelName": "Leo Sayer"
+  },
+  "You Don't Have To Be A Star (To Be In My Show)|Marilyn McCoo & Billy Davis Jr.": {
+    "videoId": "cev9HGuQwCg",
+    "title": "Marilyn McCoo, Billy Davis Jr. - You Don&#39;t Have to Be a Star (To Be In My Show) (Audio)",
+    "channelName": "LegacyRecordingsVEVO"
+  },
+  "Tonight's The Night (Gonna Be Alright)|Rod Stewart": {
+    "videoId": "IZr6AE-u2UM",
+    "title": "Rod Stewart – Tonight&#39;s The Night (Gonna Be Alright) (Official Video)",
+    "channelName": "Rod Stewart"
+  },
+  "Just Dance|Lady Gaga Featuring Colby O'Donis": {
+    "videoId": "2Abk1jAONjw",
+    "title": "Lady Gaga - Just Dance (Official Music Video) ft. Colby O&#39;Donis",
+    "channelName": "LadyGagaVEVO"
+  },
+  "My Life Would Suck Without You|Kelly Clarkson": {
+    "videoId": "cRM70Jw7F4M",
+    "title": "Kelly Clarkson - My Life Would Suck Without You (Official Video)",
+    "channelName": "kellyclarksonVEVO"
+  },
+  "Crack A Bottle|Eminem, Dr. Dre & 50 Cent": {
+    "videoId": "_wN3wl473M0",
+    "title": "Eminem, Dr. Dre, &amp; 50 Cent - Crack A Bottle (Official Music Video)",
+    "channelName": "EminemVEVO"
+  },
+  "Rock'n Me|Steve Miller": {
+    "videoId": "0GEuMWkZqF8",
+    "title": "Steve Miller Band – Rock’n Me – Music Video",
+    "channelName": "StitchVideoz-2-Productions"
+  },
+  "Right Round|Flo Rida": {
+    "videoId": "CcCw1ggftuQ",
+    "title": "Flo Rida - Right Round (feat. Ke$ha) [Official Video]",
+    "channelName": "Flo Rida"
+  },
+  "If You Leave Me Now|Chicago": {
+    "videoId": "5bG6zpJ9GNY",
+    "title": "If You Leave Me Now - Chicago (1976) HD Musikladen",
+    "channelName": "PS César"
+  },
+  "Disco Duck (Part I)|Rick Dees & His Cast Of Idiots": {
+    "videoId": "ynWhozyOoZQ",
+    "title": "Rick Dees and his Cast of Idiots - Disco Duck  TOTP ( 1976 )",
+    "channelName": "TheVideoJukeBox3"
+  },
+  "A Fifth Of Beethoven|Walter Murphy & The Big Apple Band": {
+    "videoId": "m-ZRg31XSo0",
+    "title": "NEW 📀 A Fifth Of Beethoven - Walter Murphy &amp; The Big Apple Band {Stereo} Summer 1976",
+    "channelName": "Smurfstools Oldies Music Time Machine"
+  },
+  "Play That Funky Music|Wild Cherry": {
+    "videoId": "BHcYFxU4fMo",
+    "title": "Wild Cherry - Play That Funky Music (Official Video)",
+    "channelName": "WildCherryVEVO"
+  },
+  "Poker Face|Lady Gaga": {
+    "videoId": "bESGLojNYSo",
+    "title": "Lady Gaga - Poker Face (Official Music Video)",
+    "channelName": "LadyGagaVEVO"
+  },
+  "Boom Boom Pow|The Black Eyed Peas": {
+    "videoId": "4m48GqaOz90",
+    "title": "The Black Eyed Peas - Boom Boom Pow (Official Music Video)",
+    "channelName": "BlackEyedPeasVEVO"
+  },
+  "(Shake, Shake, Shake) Shake Your Booty|KC And The Sunshine Band": {
+    "videoId": "x8no2UG-oZ0",
+    "title": "KC and the Sunshine Band (Shake, Shake, Shake) Shake Your Booty DOLLY PARTON 1976 HQ",
+    "channelName": "MielR"
+  },
+  "You Should Be Dancing|Bee Gees": {
+    "videoId": "1sqE6P3XyiQ",
+    "title": "You Should Be Dancing",
+    "channelName": "Bee Gees - Topic"
+  },
+  "Don't Go Breaking My Heart|Elton John & Kiki Dee": {
+    "videoId": "z0qW9P-uYfM",
+    "title": "Elton John, Kiki Dee - Don&#39;t Go Breaking My Heart (with Kiki Dee)",
+    "channelName": "EltonJohnVEVO"
+  },
+  "Kiss And Say Goodbye|The Manhattans": {
+    "videoId": "wtjro7_R3-4",
+    "title": "The Manhattans - Kiss and Say Goodbye (Official Video)",
+    "channelName": "TheManhattansVEVO"
+  },
+  "Afternoon Delight|Starland Vocal Band": {
+    "videoId": "7JtCA0esyOU",
+    "title": "Starland Vocal Band - Afternoon Delight (1976) (Official Video)",
+    "channelName": "Classic Sounds 70s"
+  },
+  "Silly Love Songs|Wings": {
+    "videoId": "ap87QgZKTNw",
+    "title": "Wings - Silly Love Songs (Official Music Video)",
+    "channelName": "PAUL McCARTNEY"
+  },
+  "I Gotta Feeling|The Black Eyed Peas": {
+    "videoId": "uSD4vsh1zDA",
+    "title": "The Black Eyed Peas - I Gotta Feeling (Official Music Video)",
+    "channelName": "BlackEyedPeasVEVO"
+  },
+  "Love Hangover|Diana Ross": {
+    "videoId": "yOzO_4NS8NI",
+    "title": "Diana Ross - Love Hangover",
+    "channelName": "koollatter"
+  },
+  "Boogie Fever|The Sylvers": {
+    "videoId": "YHKCHvpYq_8",
+    "title": "The Sylvers - Boogie Fever (Midnight Special 1976)",
+    "channelName": "thepaak786"
+  },
+  "Welcome Back|John Sebastian": {
+    "videoId": "IhzzAUaOzsk",
+    "title": "Welcome Back - John Sebastian",
+    "channelName": "numberonesongs333"
+  },
+  "Let Your Love Flow|Bellamy Brothers": {
+    "videoId": "Gft_kG9cfJg",
+    "title": "Let your love flow - The Bellamy Brothers (1976) HD",
+    "channelName": "PS César"
+  },
+  "Disco Lady|Johnnie Taylor": {
+    "videoId": "e2s0nVk0B9o",
+    "title": "Disco Lady",
+    "channelName": "Johnnie Taylor - Topic"
+  },
+  "December, 1963 (Oh, What a Night)|The 4 Seasons": {
+    "videoId": "mTUhnIY3oRM",
+    "title": "Frankie Valli &amp; The Four Seasons - December, 1963 (Oh, What a Night) (Official Music Video)",
+    "channelName": "RHINO"
+  },
+  "Down|Jay Sean Featuring Lil Wayne": {
+    "videoId": "oUbpGmR1-QM",
+    "title": "Jay Sean - Down ft. Lil Wayne (Official Music Video) ft. Lil Wayne",
+    "channelName": "JaySeanVEVO"
+  },
+  "3|Britney Spears": {
+    "videoId": "oTs6oQx1WJY",
+    "title": "Britney Spears - 3 (Official HD Video)",
+    "channelName": "BritneySpearsVEVO"
+  },
+  "Love Machine (Part 1)|The Miracles": {
+    "videoId": "3Q8_-fuVDFg",
+    "title": "The MIRACLES  (I&#39;m just a) LOVE MACHINE HQ video",
+    "channelName": "Jack “Grandfunkmeister” Honky"
+  },
+  "Theme From S.W.A.T.|Rhythm Heritage": {
+    "videoId": "LHDg96-ZN_U",
+    "title": "Theme From S.W.A.T.-Rhythm Heritage",
+    "channelName": "youngofasho2"
+  },
+  "Fireflies|Owl City": {
+    "videoId": "psuRGfAaju4",
+    "title": "Owl City - Fireflies (Official Music Video)",
+    "channelName": "OwlCityVEVO"
+  },
+  "50 Ways To Leave Your Lover|Paul Simon": {
+    "videoId": "ABXtWqmArUU",
+    "title": "Paul Simon - 50 Ways to Leave Your Lover (Official Audio)",
+    "channelName": "PaulSimonVEVO"
+  },
+  "Whatcha Say|Jason Derulo": {
+    "videoId": "pBI3lc18k8Q",
+    "title": "Jason Derulo - Whatcha Say [Official Music Video]",
+    "channelName": "Jason Derulo"
+  },
+  "Empire State Of Mind|Jay-Z + Alicia Keys": {
+    "videoId": "vk6014HuxcE",
+    "title": "JAŸ-Z - Empire State Of Mind ft. Alicia Keys",
+    "channelName": "JayZVEVO"
+  },
+  "Love Rollercoaster|Ohio Players": {
+    "videoId": "I7lLwXSqf_M",
+    "title": "The Midnight Special - Ohio Players - Love Rollercoaster (1975) - (4K)",
+    "channelName": "VideoXL"
+  },
+  "Theme From Mahogany (Do You Know Where You're Going To)|Diana Ross": {
+    "videoId": "VOH6SzDX3l4",
+    "title": "Theme From Mahogany  (Do You Know Where You&#39;re Going To)",
+    "channelName": "SH000FLY"
+  },
+  "I Write The Songs|Barry Manilow": {
+    "videoId": "vHIdHIWfnl4",
+    "title": "Barry Manilow I write the songs",
+    "channelName": "Steven Styven"
+  },
+  "Convoy|C.W. McCall": {
+    "videoId": "Sd5ZLJWQmss",
+    "title": "C.W. McCall - Convoy",
+    "channelName": "Alamo YTC Germany"
+  },
+  "Saturday Night|Bay City Rollers": {
+    "videoId": "7BKKaKT_dtM",
+    "title": "Bay City Rollers - Saturday Night (1976) • TopPop",
+    "channelName": "TopPop"
+  },
+  "TiK ToK|Ke$ha": {
+    "videoId": "iP6XpLQM2Cs",
+    "title": "Ke$ha - TiK ToK (Official HD Video)",
+    "channelName": "keshaVEVO"
+  },
+  "Let's Do It Again|The Staple Singers": {
+    "videoId": "NIS4P8xbPtg",
+    "title": "Staple Singers - Let&#39;s Do It Again",
+    "channelName": "bluemood69"
+  },
+  "That's The Way (I Like It)|KC And The Sunshine Band": {
+    "videoId": "yupPvZF6oBw",
+    "title": "That&#39;s the Way (I Like It)",
+    "channelName": "KC and the Sunshine Band - Topic"
+  },
+  "Fly, Robin, Fly|Silver Convention": {
+    "videoId": "wC_kCnm3GYQ",
+    "title": "Silver Convention - Fly Robin Fly (1975) • TopPop",
+    "channelName": "TopPop"
+  },
+  "Island Girl|Elton John": {
+    "videoId": "ywJ1MD4-Cns",
+    "title": "ELTON JOHN ISLAND GIRL",
+    "channelName": "MYCVO"
+  },
+  "Imma Be|The Black Eyed Peas": {
+    "videoId": "kdAj-dBNCi4",
+    "title": "The Black Eyed Peas - Imma Be (Official Music Video)",
+    "channelName": "BlackEyedPeasVEVO"
+  },
+  "Bad Blood|Neil Sedaka": {
+    "videoId": "-xqEiN73WGQ",
+    "title": "NEIL SEDAKA at the Midnight Special : BAD BLOOD",
+    "channelName": "desperado0001"
+  },
+  "Break Your Heart|Taio Cruz Featuring Ludacris": {
+    "videoId": "y_SI2EDM6Lo",
+    "title": "Taio Cruz - Break Your Heart (Official Video) ft. Ludacris",
+    "channelName": "TaioCruzVEVO"
+  },
+  "Rude Boy|Rihanna": {
+    "videoId": "e82VE8UtW8A",
+    "title": "Rihanna - Rude Boy",
+    "channelName": "RihannaVEVO"
+  },
+  "Fame|David Bowie": {
+    "videoId": "_Up1s8z7jH8",
+    "title": "David Bowie - Fame 90 (Official Video)",
+    "channelName": "David Bowie"
+  },
+  "I'm Sorry|John Denver": {
+    "videoId": "a66byCCV8Vo",
+    "title": "John Denver - I&#39;m Sorry (from The Wildlife Concert)",
+    "channelName": "JohnDenverVEVO"
+  },
+  "Rhinestone Cowboy|Glen Campbell": {
+    "videoId": "8kAU3B9Pi_U",
+    "title": "Glen Campbell - Rhinestone Cowboy",
+    "channelName": "GlenCampbellVEVO"
+  },
+  "Nothin' On You|B.o.B Featuring Bruno Mars": {
+    "videoId": "8PTDv_szmL0",
+    "title": "B.o.B - Nothin&#39; On You (feat. Bruno Mars) [Official Video]",
+    "channelName": "B.o.B"
+  },
+  "Get Down Tonight|KC And The Sunshine Band": {
+    "videoId": "BXIBEW5MLuU",
+    "title": "Get Down Tonight",
+    "channelName": "KC and the Sunshine Band - Topic"
+  },
+  "Fallin' In Love|Hamilton, Joe Frank & Reynolds": {
+    "videoId": "m37NCua1uUk",
+    "title": "Fallin&#39; in Love",
+    "channelName": "Hamilton, Joe Frank & Reynolds - Topic"
+  },
+  "OMG|Usher Featuring will.i.am": {
+    "videoId": "1RnPB76mjxI",
+    "title": "Usher - OMG ft. will.i.am",
+    "channelName": "UsherVEVO"
+  },
+  "Jive Talkin'|Bee Gees": {
+    "videoId": "oALKAh_bL5g",
+    "title": "Bee Gees - Jive Talkin&#39;",
+    "channelName": "BeeGeesVEVO"
+  },
+  "Not Afraid|Eminem": {
+    "videoId": "j5-yKhDd64s",
+    "title": "Eminem - Not Afraid",
+    "channelName": "EminemVEVO"
+  },
+  "One Of These Nights|Eagles": {
+    "videoId": "Tszq-LVyuN8",
+    "title": "Eagles - One of These Nights (Live 1977) (Official Video) [4K]",
+    "channelName": "Eagles"
+  },
+  "The Hustle|Van McCoy & The Soul City Symphony": {
+    "videoId": "SFzMs2SN--s",
+    "title": "Van McCoy - The Hustle (Official Music Video) [HD]",
+    "channelName": "Reservoir Recordings "
+  },
+  "Listen To What The Man Said|Wings": {
+    "videoId": "bjz1S4lVQo4",
+    "title": "Paul McCartney &amp; Wings - Listen To What The Man Said (Visualiser)",
+    "channelName": "PaulMcCartneyVEVO"
+  },
+  "California Gurls|Katy Perry Featuring Snoop Dogg": {
+    "videoId": "F57P9C4SAW4",
+    "title": "Katy Perry - California Gurls (Official Music Video) ft. Snoop Dogg",
+    "channelName": "KatyPerryVEVO"
+  },
+  "Love Will Keep Us Together|The Captain & Tennille": {
+    "videoId": "_QNEf9oGw8o",
+    "title": "CAPTAIN &amp; TENNILLE ❖ love will keep us together (official video)",
+    "channelName": "samuel matthews"
+  },
+  "Sister Golden Hair|America": {
+    "videoId": "4gibSb1_GGw",
+    "title": "America - Sister Golden Hair (Official Audio)",
+    "channelName": "RHINO"
+  },
+  "Thank God I'm A Country Boy|John Denver": {
+    "videoId": "UOjQwyVbJl4",
+    "title": "John Denver - Thank God I&#39;m A Country Boy (From &quot;Around The World Live&quot; DVD)",
+    "channelName": "Mercury Studios"
+  },
+  "Love The Way You Lie|Eminem Featuring Rihanna": {
+    "videoId": "uelHwf8o7_U",
+    "title": "Eminem - Love The Way You Lie ft. Rihanna",
+    "channelName": "EminemVEVO"
+  },
+  "Before The Next Teardrop Falls|Freddy Fender": {
+    "videoId": "VRdWEpCF5L4",
+    "title": "Before The Next Teardrop Falls",
+    "channelName": "Freddy Fender - Topic"
+  },
+  "Shining Star|Earth, Wind & Fire": {
+    "videoId": "Zu9a29UR2dU",
+    "title": "Earth, Wind &amp; Fire - Shining Star (Official Audio)",
+    "channelName": "EarthWindandFireVEVO"
+  },
+  "He Don't Love You (Like I Love You)|Tony Orlando & Dawn": {
+    "videoId": "l3GG2RsdpX4",
+    "title": "Tony Orlando &amp; Dawn: He Don&#39;t Love You Like I Love You (1975) (My &quot;Stereo Studio Sound&quot; Re-Edit)",
+    "channelName": "ilviolino1"
+  },
+  "(Hey Won't You Play) Another Somebody Done Somebody Wrong Song|B.J. Thomas": {
+    "videoId": "TDXW_WglzOI",
+    "title": "[Hey Won&#39;t You Play] Another Somebody Done Somebody Wrong Song",
+    "channelName": "B.J. Thomas - Topic"
+  },
+  "Philadelphia Freedom|The Elton John Band": {
+    "videoId": "A-Icb_0EchQ",
+    "title": "NEW * Philadelphia Freedom - Elton John {Stereo} 1975",
+    "channelName": "Smurfstools Oldies Music Time Machine"
+  },
+  "Teenage Dream|Katy Perry": {
+    "videoId": "98WtmW-lfeE",
+    "title": "Katy Perry - Teenage Dream (Official Music Video)",
+    "channelName": "KatyPerryVEVO"
+  },
+  "Lovin' You|Minnie Riperton": {
+    "videoId": "9I3UTG1dSTc",
+    "title": "Minnie Riperton - Lovin&#39; You (Official Video)",
+    "channelName": "Minnie Riperton"
+  },
+  "Just The Way You Are|Bruno Mars": {
+    "videoId": "LjhCEhWiKXk",
+    "title": "Bruno Mars - Just The Way You Are (Official Music Video)",
+    "channelName": "Bruno Mars"
+  },
+  "Lady Marmalade|Labelle": {
+    "videoId": "t4LWIP7SAjY",
+    "title": "(Patti) LaBelle - Lady Marmalade (1975) HD 0815007",
+    "channelName": "Olga0815007"
+  },
+  "My Eyes Adored You|Frankie Valli": {
+    "videoId": "vYtpKBNTCB8",
+    "title": "Frankie Valli - My Eyes Adored You (Official Audio)",
+    "channelName": "RHINO"
+  },
+  "Black Water|The Doobie Brothers": {
+    "videoId": "m4oZCtfmh44",
+    "title": "The Doobie Brothers - Black Water (Official Music Video)",
+    "channelName": "The Doobie Brothers"
+  },
+  "Have You Never Been Mellow|Olivia Newton-John": {
+    "videoId": "A5MeEiUoVWg",
+    "title": "Olivia Newton-John - Have You Ever Been Mellow ( Sydney - 2006 )",
+    "channelName": "Olivia Newton-John"
+  },
+  "Like A G6|Far*East Movement Featuring Cataracs & Dev": {
+    "videoId": "w4s6H4ku6ZY",
+    "title": "Far East Movement - Like A G6 ft. The Cataracs, DEV",
+    "channelName": "FarEastMovementVEVO"
+  },
+  "Best Of My Love|Eagles": {
+    "videoId": "kAvwl-W68aw",
+    "title": "The Best of My Love (2013 Remaster)",
+    "channelName": "Eagles - Topic"
+  },
+  "Pick Up The Pieces|AWB": {
+    "videoId": "MfAJLGFWxYo",
+    "title": "Average White Band - Pick up the pieces",
+    "channelName": "whatiship73"
+  },
+  "We R Who We R|Ke$ha": {
+    "videoId": "mXvmSaE0JXA",
+    "title": "Ke$ha - We R Who We R (Official Video)",
+    "channelName": "keshaVEVO"
+  },
+  "You're No Good|Linda Ronstadt": {
+    "videoId": "XxgwjC3Rxi4",
+    "title": "NEW * You&#39;re No Good - Linda Ronstadt {Stereo} 1974",
+    "channelName": "Smurfstools Oldies Music Time Machine"
+  },
+  "What's My Name?|Rihanna Featuring Drake": {
+    "videoId": "U0CGsw6h60k",
+    "title": "Rihanna - What&#39;s My Name? ft. Drake",
+    "channelName": "RihannaVEVO"
+  },
+  "Fire|Ohio Players": {
+    "videoId": "zqsYNc_M988",
+    "title": "Ohio Players - Fire • TopPop",
+    "channelName": "TopPop"
+  },
+  "Laughter In The Rain|Neil Sedaka": {
+    "videoId": "MtIibcNDQ6o",
+    "title": "Neil Sedaka - Laughter in the Rain (1974)",
+    "channelName": "OceanKingNY"
+  },
+  "Only Girl (In The World)|Rihanna": {
+    "videoId": "pa14VNsdSYM",
+    "title": "Rihanna - Only Girl (In The World)",
+    "channelName": "RihannaVEVO"
+  },
+  "Please Mr. Postman|Carpenters": {
+    "videoId": "AHfddvbKb4w",
+    "title": "Please Mr Postman- The Carpenters (1975)",
+    "channelName": "TheCarpenters"
+  },
+  "Raise Your Glass|P!nk": {
+    "videoId": "XjVNlG5cZyQ",
+    "title": "P!nk - Raise Your Glass (Official Video)",
+    "channelName": "PinkVEVO"
+  },
+  "Mandy|Barry Manilow": {
+    "videoId": "S359ujv5DVM",
+    "title": "Barry Manilow   Mandy [1974]",
+    "channelName": "Oldies Music"
+  },
+  "Firework|Katy Perry": {
+    "videoId": "QGJuMBdaqIw",
+    "title": "Katy Perry - Firework (Official Music Video)",
+    "channelName": "KatyPerryVEVO"
+  },
+  "Lucy In The Sky With Diamonds|Elton John": {
+    "videoId": "zJtAAg_jAjk",
+    "title": "Elton John - Lucy In The Sky With Diamonds (Live On Old Grey Whistle Test)",
+    "channelName": "EltonJohnVEVO"
+  },
+  "Angie Baby|Helen Reddy": {
+    "videoId": "UQKyGt_I5L4",
+    "title": "Angie Baby- Helen Reddy",
+    "channelName": "kameron rackstraw"
+  },
+  "Grenade|Bruno Mars": {
+    "videoId": "SR6iYWJxHqs",
+    "title": "Bruno Mars - Grenade (Official Music Video)",
+    "channelName": "Bruno Mars"
+  },
+  "Cat's In The Cradle|Harry Chapin": {
+    "videoId": "5u-KWa3tL-0",
+    "title": "Harry Chapin - Cat&#39;s In The Cradle (Official Lyric Video)",
+    "channelName": "RHINO"
+  },
+  "Kung Fu Fighting|Carl Douglas": {
+    "videoId": "bCa28vA_GsA",
+    "title": "Carl Douglas - Kung Fu Fighting (Live in 1974) [Official 4K Video]",
+    "channelName": "DJ S Universe Q"
+  },
+  "Hold It Against Me|Britney Spears": {
+    "videoId": "-Edv8Onsrgg",
+    "title": "Britney Spears - Hold It Against Me (Official Video)",
+    "channelName": "BritneySpearsVEVO"
+  },
+  "I Can Help|Billy Swan": {
+    "videoId": "fsSxdGZni3Y",
+    "title": "Billy Swan - I Can Help (1980)",
+    "channelName": "Musikladen"
+  },
+  "Whatever Gets You Thru The Night|John Lennon With The Plastic Ono Nuclear Band": {
+    "videoId": "vjWebKavfuI",
+    "title": "WHATEVER GETS YOU THRU THE NIGHT. (Ultimate Mix, 2020)  - John Lennon (official music video HD)",
+    "channelName": "johnlennon"
+  },
+  "Black And Yellow|Wiz Khalifa": {
+    "videoId": "UePtoxDhJSw",
+    "title": "Wiz Khalifa - Black And Yellow [Official Music Video]",
+    "channelName": "Wiz Khalifa Music"
+  },
+  "You Ain't Seen Nothing Yet/Free Wheelin'|Bachman-Turner Overdrive": {
+    "videoId": "7miRCLeFSJo",
+    "title": "Bachman Turner Overdrive - You Aint Seen Nothing Yet",
+    "channelName": "skytrax1"
+  },
+  "Born This Way|Lady Gaga": {
+    "videoId": "wV1FrqwZyKw",
+    "title": "Lady Gaga - Born This Way (Official Music Video)",
+    "channelName": "LadyGagaVEVO"
+  },
+  "You Haven't Done Nothin|Stevie Wonder": {
+    "videoId": "0SEGHvLElxc",
+    "title": "You Haven&#39;t Done Nothin&#39;",
+    "channelName": "Stevie Wonder - Topic"
+  },
+  "Then Came You|Dionne Warwicke & Spinners": {
+    "videoId": "uOViqvRsIgo",
+    "title": "Dionne Warwick and The Spinners - Then Came You",
+    "channelName": "tazed1"
+  },
+  "Nothing From Nothing|Billy Preston": {
+    "videoId": "IX2bE-OBtwk",
+    "title": "Billy Preston - Nothing From Nothing • TopPop",
+    "channelName": "TopPop"
+  },
+  "I Honestly Love You|Olivia Newton-John": {
+    "videoId": "y3chpddh_-o",
+    "title": "Olivia Newton-John - I Honestly Love You",
+    "channelName": "OliviaNewtonJohnVEVO"
+  },
+  "Rock Me Gently|Andy Kim": {
+    "videoId": "wVI02HrZElI",
+    "title": "Rock Me Gently by Andy Kim",
+    "channelName": "scottruss42"
+  },
+  "E.T.|Katy Perry Featuring Kanye West": {
+    "videoId": "OehxXNCYvTM",
+    "title": "Katy Perry - &quot;E.T.&quot; (feat. Kanye West) Official Lyrics Video",
+    "channelName": "Katy Perry"
+  },
+  "Can't Get Enough Of Your Love, Babe|Barry White": {
+    "videoId": "7eYiM8Ssaiw",
+    "title": "Barry White - Can&#39;t Get Enough Of Your Love (Live) Remastered",
+    "channelName": "TMC Records"
+  },
+  "I Shot The Sheriff|Eric Clapton": {
+    "videoId": "APWhx97QvxE",
+    "title": "Eric Clapton - I Shot The Sheriff [Crossroads 2010] (Official Live Video)",
+    "channelName": "RHINO"
+  },
+  "(You're) Having My Baby|Paul Anka with Odia Coates": {
+    "videoId": "SFHWl-ZyRAg",
+    "title": "(You&#39;re) Having My Baby - Paul Anka and Odia Coates",
+    "channelName": "numberonesongs111"
+  },
+  "S&M|Rihanna Featuring Britney Spears": {
+    "videoId": "KdS6HFQ_LUc",
+    "title": "Rihanna - S&amp;M",
+    "channelName": "RihannaVEVO"
+  },
+  "The Night Chicago Died|Paper Lace": {
+    "videoId": "tR0gjl66PVs",
+    "title": "The Night Chicago Died",
+    "channelName": "Paper Lace - Topic"
+  },
+  "Rolling In The Deep|Adele": {
+    "videoId": "rYEDA3JcQqw",
+    "title": "Adele - Rolling in the Deep (Official Music Video)",
+    "channelName": "Adele"
+  },
+  "Feel Like Makin' Love|Roberta Flack": {
+    "videoId": "S_JeuGdXl5o",
+    "title": "Feel Like Makin&#39; Love (2006 Remaster)",
+    "channelName": "Roberta Flack - Topic"
+  },
+  "Annie's Song|John Denver": {
+    "videoId": "TyJRsp5t9mA",
+    "title": "John Denver - Annie&#39;s Song (from The Wildlife Concert)",
+    "channelName": "JohnDenverVEVO"
+  },
+  "Rock Your Baby|George McCrae": {
+    "videoId": "gutE8I0Tk3E",
+    "title": "George McCrae - Rock Your Baby • TopPop",
+    "channelName": "TopPop"
+  },
+  "Rock The Boat|The Hues Corporation": {
+    "videoId": "iKr9wZpjBqE",
+    "title": "Hues Corporation - Rock The Boat • TopPop",
+    "channelName": "TopPop"
+  },
+  "Sundown|Gordon Lightfoot": {
+    "videoId": "1IBdZ645S-o",
+    "title": "Gordon Lightfoot - Sundown (Official Audio)",
+    "channelName": "Gordon Lightfoot"
+  },
+  "Give Me Everything|Pitbull Featuring Ne-Yo, Afrojack & Nayer": {
+    "videoId": "EPo5wWmKEaI",
+    "title": "Pitbull - Give Me Everything ft. Ne-Yo, Afrojack, Nayer",
+    "channelName": "PitbullVEVO"
+  }
 }
