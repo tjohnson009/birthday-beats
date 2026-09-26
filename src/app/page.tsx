@@ -1,11 +1,18 @@
 'use client';
+// import { BirthdayBeat } from "@/components/BirthdayBeat";
+import { Song } from "@/lib/spotify";
 import { useRef, useState } from "react";
+
+interface SongResult extends Song {
+    chartDate: string;
+    videoId: string | null;
+}
 
 export default function Home() {
     const [date, setDate] = useState("1993-03-26");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string|null>(null);
-    const [songData, setSongData] = useState<null | string>(null); 
+    const [songData, setSongData] = useState<null | SongResult>(null); 
     const resultsRef = useRef(null); 
     const errorRef = useRef(null); 
 
@@ -40,14 +47,24 @@ export default function Home() {
             </form>
             
             <div className="results">
-                <pre className={songData == null ? "hidden" : ""} ref={resultsRef}>
-                    {JSON.stringify(songData, null, 1)}
-                </pre>
+                <div ref={resultsRef}>
+                    {songData && (
+                        <>
+                        <img src={songData.albumArt} alt={songData.title}></img>
+                    <iframe src={"https://open.spotify.com/embed/track/" + songData.id}
+                    width="100%" height="152" allow="encrypted-media" />
+                    </>
+                )
+            }
+
+                </div>
             </div>
             <div className="error">
-                <pre className={error == null ? "hidden" : ""} ref={errorRef}>
+                {error && (
+                    <>
                     {JSON.stringify(error, null, 1)}
-                </pre>
+                    </>
+                )}
             </div>
             </main>
         </div>
