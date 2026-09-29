@@ -1,0 +1,42 @@
+name: Refresh chart data 
+
+on:
+  schedule:
+    # Wednesdays 12:00 UTC — Billboard reveals Tuesday afternoon ET,
+    # and the source dataset ingests it by Wednesday morning.
+    - cron: "0 12 * * 3"
+  workflow_dispatch: # allows manual runs from the Actions tab
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm ci
+
+      - name: Refresh Billboard dataset
+        run: node --experimental-strip-types src/scripts/buildBillboardData.ts
+
+      - name: Resolve YouTube videos for new songs
+        run: node --experimental-strip-types src/scripts/buildYoutubeData.ts
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+
+      - name: Commit refreshed data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/number-ones.json data/youtube-videos.json
+          if git diff --cached --quiet; then
+            echo "No chart changes this week"
+          else
+            git commit -m "Weekly chart data refresh - CI"
+            git push
+          fi
