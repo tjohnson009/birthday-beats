@@ -1,7 +1,7 @@
 'use client';
 // import { BirthdayBeat } from "@/components/BirthdayBeat";
 import { Song } from "@/lib/spotify";
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 
 interface SongResult extends Song {
     chartDate: string;
@@ -16,11 +16,11 @@ export default function Home() {
     const resultsRef = useRef(null); 
     const errorRef = useRef(null); 
 
-    const handleDateChange = (e) => {
-        setDate(e.target.value); 
+    const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setDate(e.currentTarget.value); 
     }
 
-    const onDateSubmit = async (e) => {
+    const onDateSubmit = async (e :React.FormEvent<HTMLFormElement>) => {
         e.preventDefault(); 
         setLoading(true); 
         setError(null); 
@@ -50,7 +50,7 @@ export default function Home() {
                 <div ref={resultsRef}>
                     {songData && (
                         <>
-                        <img src={songData.albumArt} alt={songData.title}></img>
+                        <img src={songData.albumArt ?? "../../public/audio-placeholder.png"} alt={songData.title} />
                     <iframe src={"https://open.spotify.com/embed/track/" + songData.id}
                     width="100%" height="152" allow="encrypted-media" />
                     </>
