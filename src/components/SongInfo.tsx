@@ -1,8 +1,6 @@
 import { ReactElement } from "react";
-import { Roboto } from "next/font/google";
+import { roboto } from "@/lib/fonts";
 import type { SongResult } from "@/app/page";
-
-const roboto = Roboto({ subsets: ["latin"], weight: ["400", "500", "700"] });
 
 type SongInfoProps = {
     songData: SongResult;
