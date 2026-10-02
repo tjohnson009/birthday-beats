@@ -37,8 +37,13 @@ export default function SongInfo(props: SongInfoProps): ReactElement {
             </p>
 
             <p className="text-sm text-neutral-500">
-                {songData.albumName} · {songData.releaseDate.slice(0, 4)} ·{" "}
-                {formatDuration(songData.duration)}
+                {songData.albumName} ·{" "}
+                {songData.albumTotalTracks > 1 && (
+                    <>
+                        Track {songData.trackNumber} of {songData.albumTotalTracks} ·{" "}
+                    </>
+                )}
+                {songData.releaseDate.slice(0, 4)} · {formatDuration(songData.duration)}
             </p>
 
             <p className="text-xs text-neutral-500">#1 the week of {songData.chartDate}</p>
