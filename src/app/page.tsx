@@ -1,9 +1,11 @@
 "use client";
-// import { BirthdayBeat } from "@/components/BirthdayBeat";
+import Loading from "@/components/Loading";
 import { Song } from "@/lib/spotify";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
+import ErrorMessage from "@/components/ErrorMessage";
+import SongInfo from "@/components/SongInfo";
 
-interface SongResult extends Song {
+export interface SongResult extends Song {
     chartDate: string;
     videoId: string | null;
 }
@@ -23,12 +25,12 @@ export default function Home() {
         e.preventDefault();
         setLoading(true);
         setError(null);
+        setSongData(null);
         const response = await fetch(`/api/song?date=${date}`);
 
         if (!response.ok) {
             const data = await response.json();
             setLoading(false);
-            setSongData(null);
             setError(`${response.status} - ${data.message}`);
             return;
         }
@@ -39,7 +41,7 @@ export default function Home() {
     };
 
     return (
-        <div className="flex flex-col flex-1 items-center justify-center font-sans dark:bg-black outline-amber-400">
+        <div className="flex flex-col flex-1 items-center justify-center font-sans dark:bg-black">
             <main className="flex flex-col flex-1 items-center justify-center w-full py-4 gap-5.5">
                 <form action="" id="date" onSubmit={onDateSubmit}>
                     <input
@@ -55,6 +57,8 @@ export default function Home() {
                     </button>
                 </form>
 
+                {loading && <Loading />}
+
                 <div className="results">
                     <div className="flex flex-col w-full gap-5.5 max-w-xl mx-auto px-4">
                         {/* {songData && (
@@ -69,14 +73,13 @@ export default function Home() {
                                     alt={songData.title}
                                     className="aspect-square w-full"
                                 />
+                                <SongInfo songData={songData} />
                                 {songData?.videoId && (
-                                    <div className="youtube-container">
-                                        <iframe
-                                            src={"https://www.youtube.com/embed/" + songData?.videoId}
-                                            allowFullScreen
-                                            className="aspect-video w-full"
-                                        />
-                                    </div>
+                                    <iframe
+                                        src={"https://www.youtube.com/embed/" + songData?.videoId}
+                                        allowFullScreen
+                                        className="aspect-video w-full"
+                                    />
                                 )}
                                 <iframe
                                     src={"https://open.spotify.com/embed/track/" + songData.id}
@@ -88,7 +91,7 @@ export default function Home() {
                         )}
                     </div>
                 </div>
-                <div className="error">{error && <>{error}</>}</div>
+                <div className="error">{error && <ErrorMessage message={error} />}</div>
             </main>
         </div>
     );
