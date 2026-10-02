@@ -4,6 +4,7 @@ import { Song } from "@/lib/spotify";
 import React, { useState } from "react";
 import ErrorMessage from "@/components/ErrorMessage";
 import SongInfo from "@/components/SongInfo";
+import { roboto } from "@/lib/fonts";
 
 export interface SongResult extends Song {
     chartDate: string;
@@ -11,11 +12,14 @@ export interface SongResult extends Song {
 }
 
 export default function Home() {
-    const [date, setDate] = useState("1993-03-26");
+    const today = new Date().toLocaleDateString("en-CA");
+
+    const [date, setDate] = useState<string>(today);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [songData, setSongData] = useState<null | SongResult>(null);
     // const resultsRef = useRef<HTMLDivElement | null>(null)
+
 
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setDate(e.currentTarget.value);
@@ -46,11 +50,12 @@ export default function Home() {
                 <form action="" id="date" onSubmit={onDateSubmit}>
                     <input
                         type="date"
+                        max={today}
                         name="date-picker"
                         id="date-picker"
                         value={date}
                         onChange={handleDateChange}
-                        className=""
+                        className={roboto.className}
                     />
                     <button type="submit" form="date">
                         Go!
