@@ -1,4 +1,4 @@
-'use client';
+"use client";
 // import { BirthdayBeat } from "@/components/BirthdayBeat";
 import { Song } from "@/lib/spotify";
 import React, { useRef, useState } from "react";
@@ -11,61 +11,84 @@ interface SongResult extends Song {
 export default function Home() {
     const [date, setDate] = useState("1993-03-26");
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string|null>(null);
-    const [songData, setSongData] = useState<null | SongResult>(null); 
-    const resultsRef = useRef(null); 
-    const errorRef = useRef(null); 
+    const [error, setError] = useState<string | null>(null);
+    const [songData, setSongData] = useState<null | SongResult>(null);
+    // const resultsRef = useRef<HTMLDivElement | null>(null)
 
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setDate(e.currentTarget.value); 
-    }
+        setDate(e.currentTarget.value);
+    };
 
-    const onDateSubmit = async (e :React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault(); 
-        setLoading(true); 
-        setError(null); 
+    const onDateSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setLoading(true);
+        setError(null);
         const response = await fetch(`/api/song?date=${date}`);
 
-    if (!response.ok) {
-        const data = await response.json(); 
-        setLoading(false); 
-        setSongData(null); 
-        setError(`${response.status} - ${data.message}`);
-        return; 
-    }
+        if (!response.ok) {
+            const data = await response.json();
+            setLoading(false);
+            setSongData(null);
+            setError(`${response.status} - ${data.message}`);
+            return;
+        }
 
-    setSongData(await response.json()); 
-    setLoading(false); 
-    }
+        setSongData(await response.json());
+        setLoading(false);
+        // resultsRef.current?.scrollIntoView({ behavior: "smooth" })
+    };
 
     return (
         <div className="flex flex-col flex-1 items-center justify-center font-sans dark:bg-black outline-amber-400">
-            <main className="flex flex-col flex-1 border border-amber-400 items-center justify-center">
-            <form action="" id="date" onSubmit={onDateSubmit}>
-            <input type="date" name="date-picker" id="date-picker" value={date} onChange={handleDateChange} className=""/>
-            <button type="submit" form="date">Go!</button>
-            </form>
-            
-            <div className="results">
-                <div ref={resultsRef}>
-                    {songData && (
-                        <>
-                        <img src={songData.albumArt ?? "../../public/audio-placeholder.png"} alt={songData.title} />
-                    <iframe src={"https://open.spotify.com/embed/track/" + songData.id}
-                    width="100%" height="152" allow="encrypted-media" />
-                    </>
-                )
-            }
+            <main className="flex flex-col flex-1 items-center justify-center w-full py-4 gap-5.5">
+                <form action="" id="date" onSubmit={onDateSubmit}>
+                    <input
+                        type="date"
+                        name="date-picker"
+                        id="date-picker"
+                        value={date}
+                        onChange={handleDateChange}
+                        className=""
+                    />
+                    <button type="submit" form="date">
+                        Go!
+                    </button>
+                </form>
 
+                <div className="results">
+                    <div className="flex flex-col w-full gap-5.5 max-w-xl mx-auto px-4">
+                        {/* {songData && (
+                            <div className="flex">
+                                {}
+                            </div>
+                        )} */}
+                        {songData && (
+                            <>
+                                <img
+                                    src={songData.albumArt ?? "/audio-placeholder.png"}
+                                    alt={songData.title}
+                                    className="aspect-square w-full"
+                                />
+                                {songData?.videoId && (
+                                    <div className="youtube-container">
+                                        <iframe
+                                            src={"https://www.youtube.com/embed/" + songData?.videoId}
+                                            allowFullScreen
+                                            className="aspect-video w-full"
+                                        />
+                                    </div>
+                                )}
+                                <iframe
+                                    src={"https://open.spotify.com/embed/track/" + songData.id}
+                                    width="100%"
+                                    height="152"
+                                    allow="encrypted-media"
+                                />
+                            </>
+                        )}
+                    </div>
                 </div>
-            </div>
-            <div className="error">
-                {error && (
-                    <>
-                    {JSON.stringify(error, null, 1)}
-                    </>
-                )}
-            </div>
+                <div className="error">{error && <>{error}</>}</div>
             </main>
         </div>
     );
