@@ -19,7 +19,8 @@ export async function GET(request: NextRequest) {
     let songData;
     try {
         songData = await searchSong(numberOne.song, numberOne.artist, Number(numberOne.date.slice(0, 4)));
-    } catch {
+    } catch (error) {
+        console.error("Spotify search failed:", error);
         return NextResponse.json(
             { message: "Having trouble reaching Spotify right now — try again in a minute." },
             { status: 503 }
