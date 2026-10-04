@@ -30,18 +30,25 @@ export default function Home() {
         setLoading(true);
         setError(null);
         setSongData(null);
-        const response = await fetch(`/api/song?date=${date}`);
+        try {
+            const response = await fetch(`/api/song?date=${date}`);
 
-        if (!response.ok) {
-            const data = await response.json();
+            if (!response.ok) {
+                let message = "Something went wrong. Please try again in a minute.";
+                try {
+                    message = (await response.json()).message;
+                } catch {}
+                setError(message);
+                return;
+            }
+
+            setSongData(await response.json());
+            // resultsRef.current?.scrollIntoView({ behavior: "smooth" })
+        } catch {
+            setError("Could not reach the server — check your connection and try again.");
+        } finally {
             setLoading(false);
-            setError(`${response.status} - ${data.message}`);
-            return;
         }
-
-        setSongData(await response.json());
-        setLoading(false);
-        // resultsRef.current?.scrollIntoView({ behavior: "smooth" })
     };
 
     return (

@@ -16,7 +16,15 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ message: "Could not find a song for that date." }, { status: 404 });
     }
 
-    const songData = await searchSong(numberOne.song, numberOne.artist);
+    let songData;
+    try {
+        songData = await searchSong(numberOne.song, numberOne.artist, Number(numberOne.date.slice(0, 4)));
+    } catch {
+        return NextResponse.json(
+            { message: "Having trouble reaching Spotify right now — try again in a minute." },
+            { status: 503 }
+        );
+    }
     const youtubeVideoInfo = lookupYoutubeVideoForSong(numberOne.song, numberOne.artist);
 
     if (!songData) {
