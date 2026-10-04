@@ -58,7 +58,11 @@ const ARTIST_ALIASES: Record<string, string> = {
     "My Universe|Coldplay x BTS": "Coldplay", 
 };
 
-export const searchSong = async (title: string, artist: string): Promise<Song | null> => {
+export const searchSong = async (
+    title: string,
+    artist: string,
+    chartYear?: number
+): Promise<Song | null> => {
     const accessToken = await getAccessToken();
     const aliasedArtist = ARTIST_ALIASES[`${title}|${artist}`] ?? artist;
     const normalizedTitle = title.replace(/\(\s*(from|theme)\b[^)]*\)/gi, "").split("/")[0].trim();
@@ -66,8 +70,8 @@ export const searchSong = async (title: string, artist: string): Promise<Song | 
         .replace(/\(\s*(featuring|feat\.?)\b[^)]*\)/gi, "")
         .replace(/\s+(featuring|feat\.?|duet with|with|starring)\s+.*$/i, "")
         .trim();
-    const query = `track:${normalizedTitle} artist:${leadArtist}`;
-    // if (year) query += ` year:${year}`;
+    let query = `track:${normalizedTitle} artist:${leadArtist}`;
+    if (chartYear) query += ` year:${chartYear - 1}-${chartYear}`;
 
     const params = new URLSearchParams({
         q: query,

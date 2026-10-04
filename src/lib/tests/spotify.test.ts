@@ -120,6 +120,28 @@ describe("searchSong function", () => {
         expect(result).not.toBeNull();
     });
 
+    it("adds a year range to the query when a chart year is given", async () => {
+        await searchSong("Music", "Madonna", 2000); // the Playboi Carti regression
+
+        const searchCall = (global.fetch as jest.Mock).mock.calls.find(callArgs =>
+            callArgs[0].toString().includes("api.spotify.com")
+        );
+        const query = new URL(searchCall[0].toString()).searchParams.get("q");
+
+        expect(query).toBe("track:Music artist:Madonna year:1999-2000");
+    });
+
+    it("omits the year clause when no chart year is given", async () => {
+        await searchSong("Music", "Madonna");
+
+        const searchCall = (global.fetch as jest.Mock).mock.calls.find(callArgs =>
+            callArgs[0].toString().includes("api.spotify.com")
+        );
+        const query = new URL(searchCall[0].toString()).searchParams.get("q");
+
+        expect(query).toBe("track:Music artist:Madonna");
+    });
+
     it("caches and reuses tokens", async () => {
         jest.resetModules();
         const { searchSong } = await import("../spotify");
