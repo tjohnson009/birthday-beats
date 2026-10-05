@@ -176,6 +176,28 @@ describe("searchSong function", () => {
         expect(result?.albumName).toBe("Merry Christmas");
     });
 
+    it("prefers the album release over the single", async () => {
+        const makeRelease = (albumType: string, albumName: string) => ({
+            id: "x",
+            name: "Choosin' Texas",
+            artists: [{ name: "Ella Langley" }],
+            explicit: false,
+            album: { release_date: "2026-04-10", name: albumName, images: [], album_type: albumType, total_tracks: 12 },
+            track_number: 3,
+            duration_ms: 200000,
+            external_urls: { spotify: "https://open.spotify.com/track/x" },
+        });
+        global.fetch = jest.fn((url) => {
+            return url.toString().includes("accounts.spotify.com")
+                ? Promise.resolve({ ok: true, json: async () => ({ access_token: "fake-token", expires_in: 3600 }) })
+                : Promise.resolve({ ok: true, json: async () => ({ tracks: { items: [makeRelease("single", "Choosin' Texas"), makeRelease("album", "Dandelion")] } }) });
+        }) as jest.Mock;
+
+        const result = await searchSong("Choosin' Texas", "Ella Langley");
+
+        expect(result?.albumName).toBe("Dandelion");
+    });
+
     it("settles for a compilation when nothing better exists", async () => {
         const compilation = {
             id: "x",

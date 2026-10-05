@@ -94,7 +94,10 @@ export const searchSong = async (title: string, artist: string): Promise<Song | 
     const wantedName = normalize(normalizedTitle);
     const isOriginalVersion = (candidate: { name: string; album: { album_type: string } }) =>
         candidate.album.album_type !== "compilation" && normalize(candidate.name) === wantedName;
-    let track = data.tracks.items.find(isOriginalVersion) ?? data.tracks.items[0];
+    const originals = data.tracks.items.filter(isOriginalVersion);
+    let track = originals.find((candidate: { album: { album_type: string } }) => candidate.album.album_type === "album")
+        ?? originals[0]
+        ?? data.tracks.items[0];
 
     if (!track) {
         const fallbackParams = new URLSearchParams({
