@@ -120,26 +120,82 @@ describe("searchSong function", () => {
         expect(result).not.toBeNull();
     });
 
-    it("adds a year range to the query when a chart year is given", async () => {
-        await searchSong("Music", "Madonna", 2000); // the Playboi Carti regression
+    it("skips a wrong-titled imposter ranked above the real song", async () => {
+        // the Playboi Carti regression: "Popular (...Music from the HBO...)"
+        // matched track:Music artist:Madonna and outranked the real track
+        const imposter = {
+            id: "imp",
+            name: "Popular (with Playboi Carti & Madonna)",
+            artists: [{ name: "The Weeknd" }, { name: "Playboi Carti" }, { name: "Madonna" }],
+            explicit: true,
+            album: { release_date: "2023-06-02", name: "Popular", images: [], album_type: "single", total_tracks: 1 },
+            track_number: 1,
+            duration_ms: 215000,
+            external_urls: { spotify: "https://open.spotify.com/track/imp" },
+        };
+        const real = {
+            id: "real",
+            name: "Music",
+            artists: [{ name: "Madonna" }],
+            explicit: false,
+            album: { release_date: "2000-09-19", name: "Music", images: [], album_type: "album", total_tracks: 11 },
+            track_number: 1,
+            duration_ms: 225000,
+            external_urls: { spotify: "https://open.spotify.com/track/real" },
+        };
+        global.fetch = jest.fn((url) => {
+            return url.toString().includes("accounts.spotify.com")
+                ? Promise.resolve({ ok: true, json: async () => ({ access_token: "fake-token", expires_in: 3600 }) })
+                : Promise.resolve({ ok: true, json: async () => ({ tracks: { items: [imposter, real] } }) });
+        }) as jest.Mock;
 
-        const searchCall = (global.fetch as jest.Mock).mock.calls.find(callArgs =>
-            callArgs[0].toString().includes("api.spotify.com")
-        );
-        const query = new URL(searchCall[0].toString()).searchParams.get("q");
+        const result = await searchSong("Music", "Madonna");
 
-        expect(query).toBe("track:Music artist:Madonna year:1999-2000");
+        expect(result?.title).toBe("Music");
     });
 
-    it("omits the year clause when no chart year is given", async () => {
-        await searchSong("Music", "Madonna");
+    it("prefers a real album over a compilation in mixed results", async () => {
+        const makeTrack = (albumType: string, albumName: string) => ({
+            id: "x",
+            name: "All I Want For Christmas Is You",
+            artists: [{ name: "Mariah Carey" }],
+            explicit: false,
+            album: { release_date: "1994-11-01", name: albumName, images: [], album_type: albumType, total_tracks: 12 },
+            track_number: 2,
+            duration_ms: 241000,
+            external_urls: { spotify: "https://open.spotify.com/track/x" },
+        });
+        global.fetch = jest.fn((url) => {
+            return url.toString().includes("accounts.spotify.com")
+                ? Promise.resolve({ ok: true, json: async () => ({ access_token: "fake-token", expires_in: 3600 }) })
+                : Promise.resolve({ ok: true, json: async () => ({ tracks: { items: [makeTrack("compilation", "Kerst"), makeTrack("album", "Merry Christmas")] } }) });
+        }) as jest.Mock;
 
-        const searchCall = (global.fetch as jest.Mock).mock.calls.find(callArgs =>
-            callArgs[0].toString().includes("api.spotify.com")
-        );
-        const query = new URL(searchCall[0].toString()).searchParams.get("q");
+        const result = await searchSong("All I Want For Christmas Is You", "Mariah Carey");
 
-        expect(query).toBe("track:Music artist:Madonna");
+        expect(result?.albumName).toBe("Merry Christmas");
+    });
+
+    it("settles for a compilation when nothing better exists", async () => {
+        const compilation = {
+            id: "x",
+            name: "All I Want For Christmas Is You",
+            artists: [{ name: "Mariah Carey" }],
+            explicit: false,
+            album: { release_date: "2023-11-01", name: "Kerst", images: [], album_type: "compilation", total_tracks: 20 },
+            track_number: 2,
+            duration_ms: 241000,
+            external_urls: { spotify: "https://open.spotify.com/track/x" },
+        };
+        global.fetch = jest.fn((url) => {
+            return url.toString().includes("accounts.spotify.com")
+                ? Promise.resolve({ ok: true, json: async () => ({ access_token: "fake-token", expires_in: 3600 }) })
+                : Promise.resolve({ ok: true, json: async () => ({ tracks: { items: [compilation] } }) });
+        }) as jest.Mock;
+
+        const result = await searchSong("All I Want For Christmas Is You", "Mariah Carey");
+
+        expect(result?.albumName).toBe("Kerst");
     });
 
     it("caches and reuses tokens", async () => {

@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
 
     let songData;
     try {
-        songData = await searchSong(numberOne.song, numberOne.artist, Number(numberOne.date.slice(0, 4)));
+        songData = await searchSong(numberOne.song, numberOne.artist);
     } catch (error) {
         console.error("Spotify search failed:", error);
         return NextResponse.json(

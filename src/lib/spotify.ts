@@ -58,11 +58,7 @@ const ARTIST_ALIASES: Record<string, string> = {
     "My Universe|Coldplay x BTS": "Coldplay", 
 };
 
-export const searchSong = async (
-    title: string,
-    artist: string,
-    chartYear?: number
-): Promise<Song | null> => {
+export const searchSong = async (title: string, artist: string): Promise<Song | null> => {
     const accessToken = await getAccessToken();
     const aliasedArtist = ARTIST_ALIASES[`${title}|${artist}`] ?? artist;
     const normalizedTitle = title.replace(/\(\s*(from|theme)\b[^)]*\)/gi, "").split("/")[0].trim();
@@ -70,14 +66,13 @@ export const searchSong = async (
         .replace(/\(\s*(featuring|feat\.?)\b[^)]*\)/gi, "")
         .replace(/\s+(featuring|feat\.?|duet with|with|starring)\s+.*$/i, "")
         .trim();
-    let query = `track:${normalizedTitle} artist:${leadArtist}`;
-    if (chartYear) query += ` year:${chartYear - 1}-${chartYear}`;
+    const query = `track:${normalizedTitle} artist:${leadArtist}`;
 
     const params = new URLSearchParams({
         q: query,
         type: `track`,
         market: `US`,
-        limit: `1`,
+        limit: `5`,
     });
 
     const response = await fetch(`https://api.spotify.com/v1/search?${params}`, {
@@ -91,7 +86,15 @@ export const searchSong = async (
     }
 
     const data = await response.json();
-    let track = data.tracks.items[0];
+    // of the top 5 matches, prefer the one that is the original version of the
+    // song: named exactly what Billboard says, and not on a compilation (those
+    // carry reissue/"greatest hits" cover art). If none qualifies, fall back to
+    // Spotify's top match — never worse than taking the first result.
+    const normalize = (s: string) => s.toLowerCase().replace(/&/g, " and ").replace(/[^a-z0-9]+/g, " ").trim();
+    const wantedName = normalize(normalizedTitle);
+    const isOriginalVersion = (candidate: { name: string; album: { album_type: string } }) =>
+        candidate.album.album_type !== "compilation" && normalize(candidate.name) === wantedName;
+    let track = data.tracks.items.find(isOriginalVersion) ?? data.tracks.items[0];
 
     if (!track) {
         const fallbackParams = new URLSearchParams({
