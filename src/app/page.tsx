@@ -20,7 +20,6 @@ export default function Home() {
     const [songData, setSongData] = useState<null | SongResult>(null);
     // const resultsRef = useRef<HTMLDivElement | null>(null)
 
-
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setDate(e.currentTarget.value);
     };
@@ -54,7 +53,7 @@ export default function Home() {
     return (
         <div className="flex flex-col flex-1 items-center justify-center font-sans dark:bg-black">
             <main className="flex flex-col flex-1 items-center justify-center w-full py-4 gap-5.5">
-                <form action="" id="date" onSubmit={onDateSubmit}>
+                <form action="" id="date" className="flex mx-auto gap-2" onSubmit={onDateSubmit}>
                     <input
                         type="date"
                         max={today}
@@ -62,9 +61,14 @@ export default function Home() {
                         id="date-picker"
                         value={date}
                         onChange={handleDateChange}
-                        className={roboto.className}
+                        className={`${roboto.className} px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700               
+  bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-400 scheme-light dark:scheme-dark hover:cursor-pointer`}
                     />
-                    <button type="submit" form="date">
+                    <button
+                        type="submit"
+                        className="rounded-lg px-4 py-2 text-white font-medium bg-green-600 hover:bg-green-700 hover:cursor-pointer"
+                        form="date"
+                    >
                         Go!
                     </button>
                 </form>
