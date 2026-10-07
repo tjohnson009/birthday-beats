@@ -2,9 +2,9 @@ name: Refresh chart data
 
 on:
   schedule:
-    # Wednesdays 12:00 UTC — Billboard reveals Tuesday afternoon ET,
+    # Wednesdays 12:23 UTC — Billboard reveals Tuesday afternoon ET,
     # and the source dataset ingests it by Wednesday morning.
-    - cron: "0 12 * * 3"
+    - cron: "23 12 * * 3"
   workflow_dispatch: # allows manual runs from the Actions tab
 
 jobs:
