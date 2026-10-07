@@ -1,5 +1,3 @@
-import Link from "next/link";
-import { roboto } from "@/lib/fonts";
 import { ReactElement } from "react";
 
 export default function Footer(): ReactElement {
