@@ -1,7 +1,7 @@
 "use client";
 import Loading from "@/components/Loading";
 import { Song } from "@/lib/spotify";
-import React, { useState } from "react";
+import React, { useState, useSyncExternalStore } from "react";
 import ErrorMessage from "@/components/ErrorMessage";
 import SongInfo from "@/components/SongInfo";
 import { roboto } from "@/lib/fonts";
@@ -11,13 +11,24 @@ export interface SongResult extends Song {
     videoId: string | null;
 }
 
-export default function Home() {
-    const today = new Date().toLocaleDateString("en-CA");
+const subscribe = () => {
+    return () => {};
+};
 
-    const [date, setDate] = useState<string>(today);
+const getToday = () => {
+    return new Date().toLocaleDateString("en-CA");
+};
+
+const getServerToday = () => "";
+
+export default function Home() {
+    const today = useSyncExternalStore(subscribe, getToday, getServerToday);
+
+    const [date, setDate] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [songData, setSongData] = useState<null | SongResult>(null);
+    const selectedDate = date ?? today;
     // const resultsRef = useRef<HTMLDivElement | null>(null)
 
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,7 +41,7 @@ export default function Home() {
         setError(null);
         setSongData(null);
         try {
-            const response = await fetch(`/api/song?date=${date}`);
+            const response = await fetch(`/api/song?date=${selectedDate}`);
 
             if (!response.ok) {
                 let message = "Something went wrong. Please try again in a minute.";
@@ -59,7 +70,7 @@ export default function Home() {
                         max={today}
                         name="date-picker"
                         id="date-picker"
-                        value={date}
+                        value={selectedDate}
                         onChange={handleDateChange}
                         className={`${roboto.className} px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700               
   bg-white dark:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-400 scheme-light dark:scheme-dark hover:cursor-pointer`}
