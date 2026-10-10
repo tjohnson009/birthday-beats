@@ -99,6 +99,10 @@ export default function Home() {
                                     src={songData.albumArt ?? "/audio-placeholder.png"}
                                     alt={songData.title}
                                     className="aspect-square w-full"
+                                    onError={(e) => {
+                                        e.currentTarget.onerror = null;
+                                        e.currentTarget.src = "/audio-placeholder.png";
+                                    }}
                                 />
                                 <SongInfo songData={songData} />
                                 {songData?.videoId && (
