@@ -55,5 +55,11 @@ and `.env.local` stay at the project root.
 - YouTube search costs 100 quota units of a 10,000/day budget (~100
   searches/day). Cache resolved results per chart week so repeat lookups
   cost zero API calls.
+- YouTube's `videoEmbeddable` filter is not enough: Vevo blocks playback on
+  sites it hasn't approved and the Data API still reports those videos as
+  embeddable (verified Oct 2026, "A Bar Song (Tipsy)"). Search with
+  `videoSyndicated=true` + `regionCode=US`. The only way to detect a
+  blocked video after the fact is to load the embed in a real browser with
+  the site as referrer.
 - Secrets live in `.env.local` (`SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`,
   `YOUTUBE_API_KEY`) — never commit them.

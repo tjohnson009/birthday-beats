@@ -31,6 +31,8 @@ export const getYoutubeVideoInfo = async (title: string, artist: string) => {
         q: `${title.replace(/\(.*?\)/g, "").trim()} ${artist} official music video`,
         videoCategoryId: "10",
         videoEmbeddable: "true",
+        videoSyndicated: "true",
+        regionCode: "US",
     });
 
     const response = await fetch(`https://www.googleapis.com/youtube/v3/search?${searchParams}`);
