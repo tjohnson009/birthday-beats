@@ -1,3 +1,5 @@
+import spotifyOverrides from "../../data/spotify-overrides.json" with { type: "json" };
+
 const clientId = process.env.SPOTIFY_CLIENT_ID;
 const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 
@@ -53,17 +55,50 @@ export const getAccessToken = async () => {
     return token.value;
 };
 
-const ARTIST_ALIASES: Record<string, string> = {
-    "Careless Whisper|Wham! Featuring George Michael": "George Michael", 
-    "My Universe|Coldplay x BTS": "Coldplay", 
-    "Calcutta|Lawrence Welk And His Orchestra": "Lawrence Welk",
-    "Pick Up The Pieces|AWB": "Average White Band",
+// Per-song fixes for searches the rules get wrong: a corrected `artist` or `title` for
+// the query, or a `trackId` to skip the search and fetch that exact Spotify track.
+type SongOverride = { artist?: string; title?: string; trackId?: string; reason?: string };
+const overrides = spotifyOverrides as Record<string, SongOverride>;
+
+type SpotifyTrack = {
+    id: string;
+    name: string;
+    explicit: boolean;
+    track_number: number;
+    duration_ms: number;
+    artists: { name: string }[];
+    album: { name: string; album_type: string; release_date: string; total_tracks: number; images: { url: string }[] };
+    external_urls: { spotify: string };
+};
+
+const toSong = (track: SpotifyTrack): Song => {
+    return {
+        id: track.id,
+        title: track.name,
+        artistList: track.artists.map((artist: { name: string }) => artist.name),
+        explicit: track.explicit,
+        releaseDate: track.album.release_date,
+        albumName: track.album.name,
+        albumArt: track.album.images[0]?.url ?? null,
+        albumType: track.album.album_type,
+        albumTotalTracks: track.album.total_tracks,
+        trackNumber: track.track_number,
+        duration: track.duration_ms,
+        spotifyUrl: track.external_urls.spotify,
+    };
 };
 
 export const searchSong = async (title: string, artist: string): Promise<Song | null> => {
     const accessToken = await getAccessToken();
-    const aliasedArtist = ARTIST_ALIASES[`${title}|${artist}`] ?? artist;
-    const normalizedTitle = title.replace(/\(\s*(from|theme)\b[^)]*\)/gi, "").split("/")[0].trim();
+    const override = overrides[`${title}|${artist}`];
+    if (override?.trackId) {
+        const pinned = await fetch(`https://api.spotify.com/v1/tracks/${override.trackId}?market=US`, {
+            headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        if (pinned.ok) return toSong(await pinned.json());
+    }
+    const aliasedArtist = override?.artist ?? artist;
+    const normalizedTitle = (override?.title ?? title).replace(/\(\s*(from|theme)\b[^)]*\)/gi, "").split("/")[0].trim();
     const leadArtist = aliasedArtist
         .replace(/\(\s*(featuring|feat\.?)\b[^)]*\)/gi, "")
         .replace(/\s+(featuring|feat\.?|duet with|with|starring)\s+.*$/i, "")
@@ -149,18 +184,5 @@ export const searchSong = async (title: string, artist: string): Promise<Song | 
 
     if (!track) return null;
 
-    return {
-        id: track.id,
-        title: track.name,
-        artistList: track.artists.map((artist: { name: string }) => artist.name),
-        explicit: track.explicit,
-        releaseDate: track.album.release_date,
-        albumName: track.album.name,
-        albumArt: track.album.images[0]?.url ?? null,
-        albumType: track.album.album_type,
-        albumTotalTracks: track.album.total_tracks,
-        trackNumber: track.track_number,
-        duration: track.duration_ms,
-        spotifyUrl: track.external_urls.spotify,
-    };
+    return toSong(track);
 };

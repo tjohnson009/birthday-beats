@@ -1,5 +1,7 @@
 import { searchSong } from "../spotify";
 import { FAKE_SEARCH_RESPONSE } from "./fixtures";
+import numberOnes from "../../../data/number-ones.json";
+import overrides from "../../../data/spotify-overrides.json";
 
 describe("searchSong function", () => {
     beforeEach(() => {
@@ -325,6 +327,29 @@ describe("searchSong function", () => {
         const result = await searchSong("All I Want For Christmas Is You", "Mariah Carey");
 
         expect(result?.albumName).toBe("Kerst");
+    });
+
+    it("every override names a real #1 song", () => {
+        const realSongs = new Set(numberOnes.map((s) => `${s.song}|${s.artist}`));
+        for (const key of Object.keys(overrides)) {
+            expect(realSongs.has(key)).toBe(true);
+        }
+    });
+
+    it("fetches a pinned track by id instead of searching", async () => {
+        global.fetch = jest.fn((url) => {
+            const u = url.toString();
+            if (u.includes("accounts.spotify.com")) {
+                return Promise.resolve({ ok: true, json: async () => ({ access_token: "fake-token", expires_in: 3600 }) });
+            }
+            return u.includes("/v1/tracks/3BSi5qoJGLab7rn7zfmTPA")
+                ? Promise.resolve({ ok: true, json: async () => FAKE_SEARCH_RESPONSE.tracks.items[0] })
+                : Promise.reject(new Error("search should not be called for a pinned song"));
+        }) as jest.Mock;
+
+        const result = await searchSong("Groovy Kind Of Love", "Phil Collins");
+
+        expect(result?.id).toBe("1a8U4QxJR4tFvAfSPSRFGO");
     });
 
     it("caches and reuses tokens", async () => {
