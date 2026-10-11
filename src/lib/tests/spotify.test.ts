@@ -1,5 +1,7 @@
 import { searchSong } from "../spotify";
 import { FAKE_SEARCH_RESPONSE } from "./fixtures";
+import numberOnes from "../../../data/number-ones.json";
+import overrides from "../../../data/spotify-overrides.json";
 
 describe("searchSong function", () => {
     beforeEach(() => {
@@ -120,6 +122,113 @@ describe("searchSong function", () => {
         expect(result).not.toBeNull();
     });
 
+    it("retries the filtered search without a parenthetical subtitle Spotify doesn't use", async () => {
+        // "Bodak Yellow (Money Moves)" on Billboard is just "Bodak Yellow" on Spotify
+        const real = {
+            id: "real",
+            name: "Bodak Yellow",
+            artists: [{ name: "Cardi B" }],
+            explicit: true,
+            album: { release_date: "2018-04-06", name: "Invasion of Privacy", images: [], album_type: "album", total_tracks: 13 },
+            track_number: 3,
+            duration_ms: 223000,
+            external_urls: { spotify: "https://open.spotify.com/track/real" },
+        };
+        global.fetch = jest.fn((url) => {
+            const u = url.toString();
+            if (u.includes("accounts.spotify.com")) {
+                return Promise.resolve({ ok: true, json: async () => ({ access_token: "fake-token", expires_in: 3600 }) });
+            }
+            return new URL(u).searchParams.get("q") === "track:Bodak Yellow artist:Cardi B"
+                ? Promise.resolve({ ok: true, json: async () => ({ tracks: { items: [real] } }) }) // bare title hits
+                : Promise.resolve({ ok: true, json: async () => ({ tracks: { items: [] } }) }); // full title misses
+        }) as jest.Mock;
+
+        const result = await searchSong("Bodak Yellow (Money Moves)", "Cardi B");
+
+        const queries = (global.fetch as jest.Mock).mock.calls
+            .filter((callArgs) => callArgs[0].toString().includes("api.spotify.com"))
+            .map((callArgs) => new URL(callArgs[0].toString()).searchParams.get("q"));
+        expect(queries).toEqual(["track:Bodak Yellow (Money Moves) artist:Cardi B", "track:Bodak Yellow artist:Cardi B"]);
+        expect(result?.title).toBe("Bodak Yellow");
+    });
+
+    it("rejects a free-text match by a different artist, like a karaoke backing track", async () => {
+        const karaoke = {
+            id: "kar",
+            name: "Bodak Yellow (Money Moves) [made popular by Cardi B] [backing version]",
+            artists: [{ name: "Party Tyme" }],
+            explicit: false,
+            album: { release_date: "2024-03-04", name: "Pop Party Pack 8", images: [], album_type: "compilation", total_tracks: 64 },
+            track_number: 7,
+            duration_ms: 218996,
+            external_urls: { spotify: "https://open.spotify.com/track/kar" },
+        };
+        global.fetch = jest.fn((url) => {
+            const u = url.toString();
+            if (u.includes("accounts.spotify.com")) {
+                return Promise.resolve({ ok: true, json: async () => ({ access_token: "fake-token", expires_in: 3600 }) });
+            }
+            return u.includes(encodeURIComponent("track:"))
+                ? Promise.resolve({ ok: true, json: async () => ({ tracks: { items: [] } }) }) // both filtered searches miss
+                : Promise.resolve({ ok: true, json: async () => ({ tracks: { items: [karaoke] } }) }); // free text finds only karaoke
+        }) as jest.Mock;
+
+        const result = await searchSong("Bodak Yellow (Money Moves)", "Cardi B");
+
+        expect(result).toBeNull();
+    });
+
+    it("accepts a free-text match when Billboard credits a backing band Spotify omits", async () => {
+        // Billboard: "Roy Orbison And The Candy Men"; Spotify: just "Roy Orbison"
+        const real = {
+            id: "real",
+            name: "Oh, Pretty Woman",
+            artists: [{ name: "Roy Orbison" }],
+            explicit: false,
+            album: { release_date: "1964-08-01", name: "Orbisongs", images: [], album_type: "album", total_tracks: 12 },
+            track_number: 1,
+            duration_ms: 178000,
+            external_urls: { spotify: "https://open.spotify.com/track/real" },
+        };
+        global.fetch = jest.fn((url) => {
+            const u = url.toString();
+            if (u.includes("accounts.spotify.com")) {
+                return Promise.resolve({ ok: true, json: async () => ({ access_token: "fake-token", expires_in: 3600 }) });
+            }
+            return u.includes(encodeURIComponent("track:"))
+                ? Promise.resolve({ ok: true, json: async () => ({ tracks: { items: [] } }) }) // filtered search misses
+                : Promise.resolve({ ok: true, json: async () => ({ tracks: { items: [real] } }) }); // free text hits
+        }) as jest.Mock;
+
+        const result = await searchSong("Oh, Pretty Woman", "Roy Orbison And The Candy Men");
+
+        expect(result?.title).toBe("Oh, Pretty Woman");
+    });
+
+    it("never settles for a karaoke track as the filtered search's top match", async () => {
+        // the Captain & Tennille regression: artist: matched a karaoke track quoting the band
+        const karaoke = {
+            id: "kar",
+            name: "Love Will Keep Us Together (Originally Performed by Captain & Tennille) [Karaoke Version]",
+            artists: [{ name: "The Karaoke Channel" }],
+            explicit: false,
+            album: { release_date: "2014-01-01", name: "The Karaoke Channel - Sing Like Captain & Tennille", images: [], album_type: "single", total_tracks: 1 },
+            track_number: 1,
+            duration_ms: 200000,
+            external_urls: { spotify: "https://open.spotify.com/track/kar" },
+        };
+        global.fetch = jest.fn((url) => {
+            return url.toString().includes("accounts.spotify.com")
+                ? Promise.resolve({ ok: true, json: async () => ({ access_token: "fake-token", expires_in: 3600 }) })
+                : Promise.resolve({ ok: true, json: async () => ({ tracks: { items: [karaoke] } }) });
+        }) as jest.Mock;
+
+        const result = await searchSong("Love Will Keep Us Together", "The Captain & Tennille");
+
+        expect(result).toBeNull();
+    });
+
     it("skips a wrong-titled imposter ranked above the real song", async () => {
         // the Playboi Carti regression: "Popular (...Music from the HBO...)"
         // matched track:Music artist:Madonna and outranked the real track
@@ -218,6 +327,29 @@ describe("searchSong function", () => {
         const result = await searchSong("All I Want For Christmas Is You", "Mariah Carey");
 
         expect(result?.albumName).toBe("Kerst");
+    });
+
+    it("every override names a real #1 song", () => {
+        const realSongs = new Set(numberOnes.map((s) => `${s.song}|${s.artist}`));
+        for (const key of Object.keys(overrides)) {
+            expect(realSongs.has(key)).toBe(true);
+        }
+    });
+
+    it("fetches a pinned track by id instead of searching", async () => {
+        global.fetch = jest.fn((url) => {
+            const u = url.toString();
+            if (u.includes("accounts.spotify.com")) {
+                return Promise.resolve({ ok: true, json: async () => ({ access_token: "fake-token", expires_in: 3600 }) });
+            }
+            return u.includes("/v1/tracks/3BSi5qoJGLab7rn7zfmTPA")
+                ? Promise.resolve({ ok: true, json: async () => FAKE_SEARCH_RESPONSE.tracks.items[0] })
+                : Promise.reject(new Error("search should not be called for a pinned song"));
+        }) as jest.Mock;
+
+        const result = await searchSong("Groovy Kind Of Love", "Phil Collins");
+
+        expect(result?.id).toBe("1a8U4QxJR4tFvAfSPSRFGO");
     });
 
     it("caches and reuses tokens", async () => {

@@ -1,3 +1,5 @@
+import spotifyOverrides from "../../data/spotify-overrides.json" with { type: "json" };
+
 const clientId = process.env.SPOTIFY_CLIENT_ID;
 const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 
@@ -53,15 +55,50 @@ export const getAccessToken = async () => {
     return token.value;
 };
 
-const ARTIST_ALIASES: Record<string, string> = {
-    "Careless Whisper|Wham! Featuring George Michael": "George Michael", 
-    "My Universe|Coldplay x BTS": "Coldplay", 
+// Per-song fixes for searches the rules get wrong: a corrected `artist` or `title` for
+// the query, or a `trackId` to skip the search and fetch that exact Spotify track.
+type SongOverride = { artist?: string; title?: string; trackId?: string; reason?: string };
+const overrides = spotifyOverrides as Record<string, SongOverride>;
+
+type SpotifyTrack = {
+    id: string;
+    name: string;
+    explicit: boolean;
+    track_number: number;
+    duration_ms: number;
+    artists: { name: string }[];
+    album: { name: string; album_type: string; release_date: string; total_tracks: number; images: { url: string }[] };
+    external_urls: { spotify: string };
+};
+
+const toSong = (track: SpotifyTrack): Song => {
+    return {
+        id: track.id,
+        title: track.name,
+        artistList: track.artists.map((artist: { name: string }) => artist.name),
+        explicit: track.explicit,
+        releaseDate: track.album.release_date,
+        albumName: track.album.name,
+        albumArt: track.album.images[0]?.url ?? null,
+        albumType: track.album.album_type,
+        albumTotalTracks: track.album.total_tracks,
+        trackNumber: track.track_number,
+        duration: track.duration_ms,
+        spotifyUrl: track.external_urls.spotify,
+    };
 };
 
 export const searchSong = async (title: string, artist: string): Promise<Song | null> => {
     const accessToken = await getAccessToken();
-    const aliasedArtist = ARTIST_ALIASES[`${title}|${artist}`] ?? artist;
-    const normalizedTitle = title.replace(/\(\s*(from|theme)\b[^)]*\)/gi, "").split("/")[0].trim();
+    const override = overrides[`${title}|${artist}`];
+    if (override?.trackId) {
+        const pinned = await fetch(`https://api.spotify.com/v1/tracks/${override.trackId}?market=US`, {
+            headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        if (pinned.ok) return toSong(await pinned.json());
+    }
+    const aliasedArtist = override?.artist ?? artist;
+    const normalizedTitle = (override?.title ?? title).replace(/\(\s*(from|theme)\b[^)]*\)/gi, "").split("/")[0].trim();
     const leadArtist = aliasedArtist
         .replace(/\(\s*(featuring|feat\.?)\b[^)]*\)/gi, "")
         .replace(/\s+(featuring|feat\.?|duet with|with|starring)\s+.*$/i, "")
@@ -95,16 +132,36 @@ export const searchSong = async (title: string, artist: string): Promise<Song | 
     const isOriginalVersion = (candidate: { name: string; album: { album_type: string } }) =>
         candidate.album.album_type !== "compilation" && normalize(candidate.name) === wantedName;
     const originals = data.tracks.items.filter(isOriginalVersion);
+    // karaoke/cover tracks quote the original in their name and album, so the
+    // artist: filter matches them — never settle for one as the "top match"
+    const notKaraoke = (c: { name: string; album: { name: string } }) =>
+        !/karaoke|backing version|made popular by|originally performed|in the style of|tribute/i.test(c.name + " " + c.album.name);
     let track = originals.find((candidate: { album: { album_type: string } }) => candidate.album.album_type === "album")
         ?? originals[0]
-        ?? data.tracks.items[0];
+        ?? data.tracks.items.find(notKaraoke);
+
+    // Billboard's parenthetical subtitles are often not in Spotify's title
+    // ("Bodak Yellow (Money Moves)" is just "Bodak Yellow"), and track: needs
+    // every word — so retry once without them before going free-text.
+    const bareTitle = normalizedTitle.replace(/\([^)]*\)/g, "").replace(/\s+/g, " ").trim();
+    if (!track && bareTitle !== normalizedTitle) {
+        params.set("q", `track:${bareTitle} artist:${leadArtist}`);
+        const retryResponse = await fetch(`https://api.spotify.com/v1/search?${params}`, {
+            headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        if (retryResponse.ok) {
+            const retryItems = (await retryResponse.json()).tracks.items;
+            const retryWanted = normalize(bareTitle);
+            track = retryItems.find((c: { name: string }) => normalize(c.name) === retryWanted) ?? retryItems.find(notKaraoke);
+        }
+    }
 
     if (!track) {
         const fallbackParams = new URLSearchParams({
             q: `${normalizedTitle} ${artist}`,
             type: `track`,
             market: `US`,
-            limit: `1`,
+            limit: `5`,
         });
 
         const fallbackResponse = await fetch(`https://api.spotify.com/v1/search?${fallbackParams}`, {
@@ -115,24 +172,17 @@ export const searchSong = async (title: string, artist: string): Promise<Song | 
 
         if (fallbackResponse.ok) {
             const fallbackData = await fallbackResponse.json();
-            track = fallbackData.tracks.items[0];
+            // free text also matches karaoke/cover tracks that quote the original
+            // in their name — only accept one the Billboard artist performs on
+            // (either name containing the other, so "Roy Orbison And The Candy Men"
+            // still accepts Spotify's plain "Roy Orbison")
+            track = fallbackData.tracks.items.find((c: { artists: { name: string }[] }) =>
+                c.artists.some((a) => normalize(leadArtist).includes(normalize(a.name)) || normalize(a.name).includes(normalize(leadArtist))),
+            );
         }
     }
 
     if (!track) return null;
 
-    return {
-        id: track.id,
-        title: track.name,
-        artistList: track.artists.map((artist: { name: string }) => artist.name),
-        explicit: track.explicit,
-        releaseDate: track.album.release_date,
-        albumName: track.album.name,
-        albumArt: track.album.images[0]?.url ?? null,
-        albumType: track.album.album_type,
-        albumTotalTracks: track.album.total_tracks,
-        trackNumber: track.track_number,
-        duration: track.duration_ms,
-        spotifyUrl: track.external_urls.spotify,
-    };
+    return toSong(track);
 };

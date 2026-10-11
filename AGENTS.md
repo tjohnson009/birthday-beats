@@ -36,6 +36,8 @@ and `.env.local` stay at the project root.
 - `src/lib/billboard.ts` — local Billboard dataset lookup (`getNumberOneSong`)
 - `src/lib/youtube.ts` — YouTube music-video search (preview fallback)
 - `data/` — Billboard Hot 100 dataset (gitignored if large)
+- `data/spotify-overrides.json` — per-song fixes for Spotify searches the rules get
+  wrong: a corrected `artist`/`title` for the query, or a pinned `trackId`
 
 ## Key Decisions & Constraints
 
@@ -61,5 +63,10 @@ and `.env.local` stay at the project root.
   `videoSyndicated=true` + `regionCode=US`. The only way to detect a
   blocked video after the fact is to load the embed in a real browser with
   the site as referrer.
+- Spotify's dev-mode rate limit is per DEVELOPER ACCOUNT, not per app (both
+  dashboard apps share it): roughly 700 requests in a ~3 h window, then a
+  3-hour lockout that takes the live site down. Never run bulk searches
+  from this account; keep any batch under ~100 calls/hour (a 1,195-song
+  audit at 30 s/song ran clean). Fix single songs via `spotify-overrides.json`.
 - Secrets live in `.env.local` (`SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`,
   `YOUTUBE_API_KEY`) — never commit them.
