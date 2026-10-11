@@ -56,6 +56,8 @@ export const getAccessToken = async () => {
 const ARTIST_ALIASES: Record<string, string> = {
     "Careless Whisper|Wham! Featuring George Michael": "George Michael", 
     "My Universe|Coldplay x BTS": "Coldplay", 
+    "Calcutta|Lawrence Welk And His Orchestra": "Lawrence Welk",
+    "Pick Up The Pieces|AWB": "Average White Band",
 };
 
 export const searchSong = async (title: string, artist: string): Promise<Song | null> => {
@@ -95,16 +97,36 @@ export const searchSong = async (title: string, artist: string): Promise<Song | 
     const isOriginalVersion = (candidate: { name: string; album: { album_type: string } }) =>
         candidate.album.album_type !== "compilation" && normalize(candidate.name) === wantedName;
     const originals = data.tracks.items.filter(isOriginalVersion);
+    // karaoke/cover tracks quote the original in their name and album, so the
+    // artist: filter matches them — never settle for one as the "top match"
+    const notKaraoke = (c: { name: string; album: { name: string } }) =>
+        !/karaoke|backing version|made popular by|originally performed|in the style of|tribute/i.test(c.name + " " + c.album.name);
     let track = originals.find((candidate: { album: { album_type: string } }) => candidate.album.album_type === "album")
         ?? originals[0]
-        ?? data.tracks.items[0];
+        ?? data.tracks.items.find(notKaraoke);
+
+    // Billboard's parenthetical subtitles are often not in Spotify's title
+    // ("Bodak Yellow (Money Moves)" is just "Bodak Yellow"), and track: needs
+    // every word — so retry once without them before going free-text.
+    const bareTitle = normalizedTitle.replace(/\([^)]*\)/g, "").replace(/\s+/g, " ").trim();
+    if (!track && bareTitle !== normalizedTitle) {
+        params.set("q", `track:${bareTitle} artist:${leadArtist}`);
+        const retryResponse = await fetch(`https://api.spotify.com/v1/search?${params}`, {
+            headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        if (retryResponse.ok) {
+            const retryItems = (await retryResponse.json()).tracks.items;
+            const retryWanted = normalize(bareTitle);
+            track = retryItems.find((c: { name: string }) => normalize(c.name) === retryWanted) ?? retryItems.find(notKaraoke);
+        }
+    }
 
     if (!track) {
         const fallbackParams = new URLSearchParams({
             q: `${normalizedTitle} ${artist}`,
             type: `track`,
             market: `US`,
-            limit: `1`,
+            limit: `5`,
         });
 
         const fallbackResponse = await fetch(`https://api.spotify.com/v1/search?${fallbackParams}`, {
@@ -115,7 +137,13 @@ export const searchSong = async (title: string, artist: string): Promise<Song | 
 
         if (fallbackResponse.ok) {
             const fallbackData = await fallbackResponse.json();
-            track = fallbackData.tracks.items[0];
+            // free text also matches karaoke/cover tracks that quote the original
+            // in their name — only accept one the Billboard artist performs on
+            // (either name containing the other, so "Roy Orbison And The Candy Men"
+            // still accepts Spotify's plain "Roy Orbison")
+            track = fallbackData.tracks.items.find((c: { artists: { name: string }[] }) =>
+                c.artists.some((a) => normalize(leadArtist).includes(normalize(a.name)) || normalize(a.name).includes(normalize(leadArtist))),
+            );
         }
     }
 
