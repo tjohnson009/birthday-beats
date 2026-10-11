@@ -29,7 +29,6 @@ export const getYoutubeVideoInfo = async (title: string, artist: string) => {
         maxResults: "1",
         key: youtubeApiKey,
         q: `${title.replace(/\(.*?\)/g, "").trim()} ${artist} official music video`,
-        videoCategoryId: "10",
         videoEmbeddable: "true",
         videoSyndicated: "true",
         regionCode: "US",
