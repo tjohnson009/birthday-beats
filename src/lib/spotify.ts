@@ -55,8 +55,6 @@ export const getAccessToken = async () => {
     return token.value;
 };
 
-// Per-song fixes for searches the rules get wrong: a corrected `artist` or `title` for
-// the query, or a `trackId` to skip the search and fetch that exact Spotify track.
 type SongOverride = { artist?: string; title?: string; trackId?: string; reason?: string };
 const overrides = spotifyOverrides as Record<string, SongOverride>;
 
@@ -123,26 +121,20 @@ export const searchSong = async (title: string, artist: string): Promise<Song | 
     }
 
     const data = await response.json();
-    // of the top 5 matches, prefer the one that is the original version of the
-    // song: named exactly what Billboard says, and not on a compilation (those
-    // carry reissue/"greatest hits" cover art). If none qualifies, fall back to
-    // Spotify's top match — never worse than taking the first result.
+
     const normalize = (s: string) => s.toLowerCase().replace(/&/g, " and ").replace(/[^a-z0-9]+/g, " ").trim();
     const wantedName = normalize(normalizedTitle);
     const isOriginalVersion = (candidate: { name: string; album: { album_type: string } }) =>
         candidate.album.album_type !== "compilation" && normalize(candidate.name) === wantedName;
     const originals = data.tracks.items.filter(isOriginalVersion);
-    // karaoke/cover tracks quote the original in their name and album, so the
-    // artist: filter matches them — never settle for one as the "top match"
+
     const notKaraoke = (c: { name: string; album: { name: string } }) =>
         !/karaoke|backing version|made popular by|originally performed|in the style of|tribute/i.test(c.name + " " + c.album.name);
     let track = originals.find((candidate: { album: { album_type: string } }) => candidate.album.album_type === "album")
         ?? originals[0]
         ?? data.tracks.items.find(notKaraoke);
 
-    // Billboard's parenthetical subtitles are often not in Spotify's title
-    // ("Bodak Yellow (Money Moves)" is just "Bodak Yellow"), and track: needs
-    // every word — so retry once without them before going free-text.
+
     const bareTitle = normalizedTitle.replace(/\([^)]*\)/g, "").replace(/\s+/g, " ").trim();
     if (!track && bareTitle !== normalizedTitle) {
         params.set("q", `track:${bareTitle} artist:${leadArtist}`);
@@ -172,10 +164,7 @@ export const searchSong = async (title: string, artist: string): Promise<Song | 
 
         if (fallbackResponse.ok) {
             const fallbackData = await fallbackResponse.json();
-            // free text also matches karaoke/cover tracks that quote the original
-            // in their name — only accept one the Billboard artist performs on
-            // (either name containing the other, so "Roy Orbison And The Candy Men"
-            // still accepts Spotify's plain "Roy Orbison")
+
             track = fallbackData.tracks.items.find((c: { artists: { name: string }[] }) =>
                 c.artists.some((a) => normalize(leadArtist).includes(normalize(a.name)) || normalize(a.name).includes(normalize(leadArtist))),
             );
