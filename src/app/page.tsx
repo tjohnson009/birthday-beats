@@ -28,6 +28,7 @@ export default function Home() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [songData, setSongData] = useState<null | SongResult>(null);
+    const [hasSearched, setHasSearched] = useState(false);
     const selectedDate = date ?? today;
     // const resultsRef = useRef<HTMLDivElement | null>(null)
 
@@ -37,6 +38,7 @@ export default function Home() {
 
     const onDateSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setHasSearched(true);
         setLoading(true);
         setError(null);
         setSongData(null);
@@ -64,12 +66,27 @@ export default function Home() {
     return (
         <div className="flex flex-col flex-1 items-center justify-center font-sans dark:bg-black">
             <main className="flex flex-col flex-1 items-center justify-center w-full py-4 gap-5.5">
+                {/* intro: fades and slides up, collapsing its space, once the first search is submitted */}
+                <div
+                    className={`${roboto.className} grid w-full max-w-md px-4 text-center transition-all transition-discrete duration-500 ease-out ${
+                        hasSearched ? "grid-rows-[0fr] opacity-0 -translate-y-2 hidden" : "grid-rows-[1fr] opacity-100"
+                    }`}
+                >
+                    <div className="overflow-hidden">
+                        <h1 className="text-2xl font-bold">What was the #1 song in the US on the day you were born?</h1>
+                        <p id="intro" className="mt-2 text-neutral-600 dark:text-neutral-400">
+                            Pick your birthday and press Go. Birthday Beats finds that week&apos;s Billboard Hot 100
+                            chart-topper, back to August 1958, and plays it.
+                        </p>
+                    </div>
+                </div>
                 <form action="" id="date" className="flex mx-auto gap-2" onSubmit={onDateSubmit}>
                     <input
                         type="date"
                         max={today}
                         name="date-picker"
                         id="date-picker"
+                        aria-describedby="intro"
                         value={selectedDate}
                         onChange={handleDateChange}
                         className={`${roboto.className} px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700               
