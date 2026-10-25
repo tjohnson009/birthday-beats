@@ -1,4 +1,5 @@
 import { ReactElement } from "react";
+import StatsCounter from "@/components/StatsCounter";
 
 export default function Footer(): ReactElement {
     return (
@@ -11,6 +12,7 @@ export default function Footer(): ReactElement {
   sm:justify-between"
             >
                 <p>Birthday Beats — the #1 song on the day you were born</p>
+                <StatsCounter />
                 <div className="flex gap-4">
                     <a
                         href="https://www.linkedin.com/in/tjohnson009"
