@@ -7,12 +7,14 @@ export default function Footer(): ReactElement {
             className="mt-auto w-full border-t border-neutral-200 px-4 py-6 text-xs 
   text-neutral-500 dark:border-neutral-800"
         >
+            <div className="mx-auto mb-3 flex max-w-xl justify-center">
+                <StatsCounter />
+            </div>
             <div
-                className="mx-auto flex max-w-xl flex-col text-center items-center gap-2 sm:flex-row 
+                className="mx-auto flex max-w-xl flex-col text-center items-center gap-2 sm:flex-row
   sm:justify-between"
             >
-                <p>Birthday Beats — the #1 song on the day you were born</p>
-                <StatsCounter />
+                <p>Birthday Beats — Discover the #1 song on the day you were born</p>
                 <div className="flex gap-4">
                     <a
                         href="https://www.linkedin.com/in/tjohnson009"
