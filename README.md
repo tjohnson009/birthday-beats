@@ -19,7 +19,7 @@ your birthday
 └─────────┬───────────┘
           ▼
 ┌─────────────────────┐     "Find this song."
-│  lib/spotify.ts      │ ◄── Spotify Web API (Client Credentials + cached tokens)
+│  lib/songCache.ts    │ ◄── Redis cache (40-day TTL) → Spotify Web API on a miss
 └─────────┬───────────┘
           ▼
 ┌─────────────────────┐     "Find the music video."
@@ -32,6 +32,8 @@ your birthday
 The interesting part: **there is no "Billboard API."** Chart history lives in this repo as a half-megabyte JSON file, distilled by a build script from a 42 MB community dataset of every Hot 100 chart ever published. The lookup is a pure function over sorted dates — no network, microsecond-fast, and fully unit-testable.
 
 The YouTube side works the same way, for a different reason: YouTube's search API allows ~100 searches per day, so the app never searches at runtime. A resumable backfill script resolved the videos for all 1,194 distinct #1 songs offline (write-after-every-resolve crash safety, quota-aware clean exits), and runtime lookups hit the committed manifest for free.
+
+Spotify gets the same treatment from a third angle: search results are cached in Redis with a 40-day expiry, so each of the 1,194 songs costs Spotify at most one API call per TTL window — and because cached entries age out on their own, album-art URLs can never go stale for longer than the window. If Redis is ever unreachable, the cache just steps aside and live search carries on.
 
 A weekly GitHub Action keeps it all current: every Wednesday it rebuilds the chart data, resolves the video for any new #1, and commits — which redeploys the site. No human involved.
 
@@ -54,22 +56,24 @@ The things a code reviewer would actually care about:
 - **Third-party data lies** YouTube's API reports Vevo-blocked videos as embeddable; the truth only shows when a real browser loads the embed from your domain. A headless-browser audit found and replaced 14 of them. Search now filters on `videoSyndicated` + region.
 - **Graceful degradation, two layers deep** If Spotify is down, the API returns a friendly 503 and the UI says so. If the stats database is down, songs still play and the footer simply omits its numbers — analytics are never allowed to break the product.
 - **Derive, don't store** Visits and plays live as rows in a Postgres event log (Neon), not as counters — the footer's numbers are `count(*)` at read time, and the stored events can answer questions that haven't been asked yet. Aggregates only; nothing identifying is logged.
+- **Three stores, three lifetimes** The Postgres event log never expires (facts are forever), the YouTube manifest only changes on purpose (videos are pinned deliberately), and cached Spotify results age out on a 40-day TTL (copies of someone else's data should refresh themselves). Each store was picked by access pattern: query-inside → Postgres, lookup-by-key → Redis, read-only-at-runtime → committed JSON.
 - **Token caching that's actually tested** The Spotify Client Credentials token is cached at module scope with an expiry cushion — and a Jest test proves two searches produce exactly one token request.
 - **An idempotent, rerunnable data pipeline** Both data scripts rebuild from source at any time, exit cleanly at quota limits, and resume where they left off.
 
 ## Tech Stack
 
-Next.js (App Router) · TypeScript · Tailwind CSS · Spotify Web API · YouTube Data API · Neon Postgres · GitHub Actions · Vercel · Jest
+Next.js (App Router) · TypeScript · Tailwind CSS · Spotify Web API · YouTube Data API · Neon Postgres · Upstash Redis · GitHub Actions · Vercel · Jest
 
 ## Running It Locally
 
 ```bash
 npm install
 
-# .env.local — all four are required:
-#   SPOTIFY_CLIENT_ID / SPOTIFY_CLIENT_SECRET   developer.spotify.com → create an app
-#   YOUTUBE_API_KEY                             only needed to re-run the video backfill
-#   DATABASE_URL                                a Postgres connection string (free tier: neon.com)
+# .env.local — all of these are required:
+#   SPOTIFY_CLIENT_ID / SPOTIFY_CLIENT_SECRET          developer.spotify.com → create an app
+#   DATABASE_URL                                       a Postgres connection string (free tier: neon.com)
+#   UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN  a Redis instance (free tier: upstash.com)
+#   YOUTUBE_API_KEY                                    only needed to re-run the video backfill
 
 npm run dev        # → http://localhost:3000
 npm test           # 27 tests, all network mocked
@@ -92,6 +96,7 @@ npm run build:youtube
 - [x] Deployed on Vercel
 - [x] Auto-refresh chart data via scheduled GitHub Action
 - [x] Visit + play tracking in a Postgres event log
+- [x] Redis cache in front of Spotify search (40-day TTL)
 - [ ] Polish: scroll-to-results, art-driven color scheme, share button
 
 ## Chart data
