@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getNumberOneSongForDate } from "@/lib/billboard";
 import { lookupYoutubeVideoForSong } from "@/lib/youtube";
-import { searchSong } from "@/lib/spotify";
+import { getCachedSong } from "@/lib/songCache";
 import { logSearch } from "@/lib/events";
 
 export async function GET(request: NextRequest) {
@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
 
     let songData;
     try {
-        songData = await searchSong(numberOne.song, numberOne.artist);
+        songData = await getCachedSong(numberOne.song, numberOne.artist); // calls searchSong if cache read fails
     } catch (error) {
         console.error("Spotify search failed:", error);
         return NextResponse.json(
