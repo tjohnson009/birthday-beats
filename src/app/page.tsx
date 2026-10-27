@@ -75,8 +75,8 @@ export default function Home() {
                     <div className="overflow-hidden">
                         <h1 className="text-2xl font-bold">What was the #1 song in the US on the day you were born?</h1>
                         <p id="intro" className="mt-2 text-neutral-600 dark:text-neutral-400">
-                            Pick your birthday and press Go. Birthday Beats finds that week&apos;s Billboard Hot 100
-                            chart-topper, back to August 1958, and plays it.
+                            Or the day you graduated, said &quot;I do,&quot; or got your first car? Pick any date back to
+                            August 1958, press Go, and hear that week&apos;s Billboard #1.
                         </p>
                     </div>
                 </div>
