@@ -2,8 +2,7 @@ import React, { ReactElement } from "react";
 import { display } from "@/lib/fonts";
 import { FIRST_CHART_DATE, formatLongDate } from "@/lib/dates";
 
-export type SearchError =
-    { kind: "too-early" } | { kind: "spotify" } | { kind: "network" } | { kind: "other"; message: string };
+export type SearchError = { kind: "too-early" } | { kind: "network" } | { kind: "other"; message: string };
 
 type ErrorMessageProps = {
     error: SearchError;
@@ -19,11 +18,6 @@ export default function ErrorMessage({ error, onRetry, onTryDate, onSurprise }: 
             title: `The Hot 100 started on ${formatLongDate(FIRST_CHART_DATE)}`,
             detail: "There's no #1 song before then.",
             action: { label: `Try ${formatLongDate(FIRST_CHART_DATE)}`, run: () => onTryDate(FIRST_CHART_DATE) },
-        },
-        spotify: {
-            title: "Spotify isn't answering right now",
-            detail: "We know which song was #1, but couldn't load it. This usually clears up in a minute.",
-            action: { label: "Try again", run: onRetry },
         },
         network: {
             title: "Can't reach Birthday Beats",
