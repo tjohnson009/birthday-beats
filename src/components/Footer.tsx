@@ -3,10 +3,7 @@ import StatsCounter from "@/components/StatsCounter";
 
 export default function Footer(): ReactElement {
     return (
-        <footer
-            className="mt-auto w-full border-t border-neutral-200 px-4 py-6 text-xs 
-  text-neutral-500 dark:border-neutral-800"
-        >
+        <footer className="mt-auto w-full border-t border-line px-4 py-6 text-xs text-muted">
             <div className="mx-auto mb-3 flex max-w-xl justify-center">
                 <StatsCounter />
             </div>
@@ -20,8 +17,7 @@ export default function Footer(): ReactElement {
                         href="https://www.linkedin.com/in/tjohnson009"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hover:text-neutral-800 
-  dark:hover:text-neutral-200"
+                        className="hover:text-foreground"
                     >
                         LinkedIn
                     </a>
@@ -29,8 +25,7 @@ export default function Footer(): ReactElement {
                         href="https://github.com/tjohnson009/birthday-beats"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hover:text-neutral-800 
-  dark:hover:text-neutral-200"
+                        className="hover:text-foreground"
                     >
                         GitHub
                     </a>

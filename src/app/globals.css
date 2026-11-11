@@ -1,21 +1,62 @@
 @import "tailwindcss";
 
 :root {
-    --background: #ffffff;
-    --foreground: #171717;
+    --background: #f5f8fa;
+    --foreground: #0f1e2e;
+    --surface: #ffffff;
+    --muted: #5a6b7d;
+    --line: #dce5ec;
+    --brand-blue: #2f6bff;
+    --brand-green: #16c79a;
 }
 
 @theme inline {
     --color-background: var(--background);
     --color-foreground: var(--foreground);
+    --color-surface: var(--surface);
+    --color-muted: var(--muted);
+    --color-line: var(--line);
+    --color-brand-blue: var(--brand-blue);
+    --color-brand-green: var(--brand-green);
     --font-sans: var(--font-geist-sans);
     --font-mono: var(--font-geist-mono);
+    --animate-reveal: reveal 600ms ease-out both;
+    --animate-eq: eq 900ms ease-in-out infinite;
+    --animate-marquee: marquee 140s linear infinite;
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --background: #0a0a0a;
-        --foreground: #ededed;
+        --background: #0b141d;
+        --foreground: #eaf2f8;
+        --surface: #111d29;
+        --muted: #93a6b8;
+        --line: #1f2f3e;
+    }
+}
+
+/* the album art slides up into place */
+@keyframes reveal {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.97);
+    }
+}
+
+/* each title row holds its titles twice, so sliding by half its width loops seamlessly */
+@keyframes marquee {
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+@keyframes eq {
+    0%,
+    100% {
+        transform: scaleY(0.35);
+    }
+    50% {
+        transform: scaleY(1);
     }
 }
 
@@ -23,4 +64,15 @@ body {
     background: var(--background);
     color: var(--foreground);
     font-family: Arial, Helvetica, sans-serif;
+}
+
+/* the page color also lives on one fixed layer, so all of it is drawn the same way. without this, Chrome
+   draws the tiles behind the moving title wall one shade off on some monitors, which shows as a faint band */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: var(--background);
+    will-change: transform;
 }

@@ -76,7 +76,7 @@ npm install
 #   YOUTUBE_API_KEY                                    only needed to re-run the video backfill
 
 npm run dev        # → http://localhost:3000
-npm test           # 27 tests, all network mocked
+npm test           # 47 tests, all network mocked
 ```
 
 To refresh the chart data (new #1s appear weekly — the GitHub Action does this automatically):
