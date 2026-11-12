@@ -1,24 +1,25 @@
 "use client";
 import Loading from "@/components/Loading";
-import { Song } from "@/lib/spotify";
-import React, { useState, useSyncExternalStore } from "react";
+import React, { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import ErrorMessage, { type SearchError } from "@/components/ErrorMessage";
 import SongInfo from "@/components/SongInfo";
 import DatePicker from "@/components/DatePicker";
 import QuickPicks from "@/components/QuickPicks";
 import HeroTitles from "@/components/HeroTitles";
+import ChartStrip from "@/components/ChartStrip";
 import { resultArea, resultGrid } from "@/components/resultLayout";
 import { display, roboto } from "@/lib/fonts";
-import { FIRST_CHART_DATE, randomIsoDateBetween } from "@/lib/dates";
-
-export interface SongResult extends Song {
-    chartDate: string;
-    videoId: string | null;
-}
+import { FIRST_CHART_DATE, clampIsoDate, randomIsoDateBetween } from "@/lib/dates";
+import { weekForDate, type StripData } from "@/lib/chartStrip";
+import type { SongResult } from "@/lib/songResult";
 
 type BirthdayBeatsProps = {
     heroTitles: string[];
 };
+
+// a strip stop on a song that isn't saved yet waits this long, still, before asking Spotify for its details
+const DETAILS_DELAY_MS = 1500;
+const PLACEHOLDER_ART = "/audio-placeholder.png";
 
 const subscribe = () => {
     return () => {};
@@ -31,7 +32,6 @@ const getToday = () => {
 const getServerToday = () => "";
 
 const toSearchError = async (response: Response, searchDate: string): Promise<SearchError> => {
-    if (response.status === 503) return { kind: "spotify" };
     if (response.status === 404 && searchDate < FIRST_CHART_DATE) return { kind: "too-early" };
 
     let message = "Something went wrong. Please try again in a minute.";
@@ -46,14 +46,41 @@ export default function BirthdayBeats({ heroTitles }: BirthdayBeatsProps) {
 
     const [date, setDate] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    const [refreshing, setRefreshing] = useState(false); // a strip stop is loading over the current result
     const [error, setError] = useState<SearchError | null>(null);
     const [songData, setSongData] = useState<null | SongResult>(null);
     const [hasSearched, setHasSearched] = useState(false);
+    const [stripData, setStripData] = useState<StripData | null>(null);
+    // set while the strip is moving; otherwise the strip follows the picked date
+    const [stripWeek, setStripWeek] = useState<number | null>(null);
+    const stripRequest = useRef<AbortController | null>(null);
+    const detailsTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
     const selectedDate = date ?? today;
     // const resultsRef = useRef<HTMLDivElement | null>(null)
 
+    // the strip is extra: if its data can't load, the date picker works on its own
+    useEffect(() => {
+        fetch("/api/chart")
+            .then((response) => (response.ok ? response.json() : null))
+            .then((data) => data && setStripData(data))
+            .catch(() => {});
+    }, []);
+
+    const cancelStripLoad = () => {
+        clearTimeout(detailsTimer.current);
+        stripRequest.current?.abort();
+        stripRequest.current = null;
+        setRefreshing(false);
+    };
+
+    const pickDate = (picked: string) => {
+        setDate(picked);
+        setStripWeek(null);
+    };
+
     const search = async (searchDate: string) => {
-        setDate(searchDate);
+        cancelStripLoad();
+        pickDate(searchDate);
         setHasSearched(true);
         setLoading(true);
         setError(null);
@@ -73,6 +100,59 @@ export default function BirthdayBeats({ heroTitles }: BirthdayBeatsProps) {
         } finally {
             setLoading(false);
         }
+    };
+
+    // a strip stop: show the song right away from a cache-only peek, which never calls Spotify. if its
+    // details aren't saved yet, ask Spotify only once the strip has stayed put a moment longer
+    const loadFromStrip = async (week: number) => {
+        if (!stripData) return;
+        cancelStripLoad();
+        const stopDate = stripData.dates[week];
+        const controller = new AbortController();
+        stripRequest.current = controller;
+        setHasSearched(true);
+        setError(null);
+        if (songData) setRefreshing(true);
+        else setLoading(true);
+
+        const get = async (mode: string): Promise<SongResult | null> => {
+            const response = await fetch(`/api/song?date=${stopDate}&source=strip${mode}`, {
+                signal: controller.signal,
+            });
+            if (response.ok) return response.json();
+            setSongData(null);
+            setError(await toSearchError(response, stopDate));
+            return null;
+        };
+
+        try {
+            const peek = await get("&mode=peek");
+            if (!peek) return;
+            setSongData(peek);
+            if (peek.spotify || peek.spotifyStatus !== "not-cached") return;
+            detailsTimer.current = setTimeout(async () => {
+                try {
+                    const full = await get("");
+                    if (full) setSongData(full);
+                } catch {
+                    // moved on, or offline: the peeked song stays on screen
+                }
+            }, DETAILS_DELAY_MS);
+        } catch {
+            if (!controller.signal.aborted) setError({ kind: "network" });
+        } finally {
+            if (!controller.signal.aborted) {
+                setLoading(false);
+                setRefreshing(false);
+            }
+        }
+    };
+
+    const moveStrip = (week: number) => {
+        cancelStripLoad();
+        setStripWeek(week);
+        // chart weeks are dated ahead, so the newest one can be after today
+        setDate(clampIsoDate(stripData!.dates[week], FIRST_CHART_DATE, today));
     };
 
     const surprise = () => search(randomIsoDateBetween(FIRST_CHART_DATE, today));
@@ -114,7 +194,7 @@ export default function BirthdayBeats({ heroTitles }: BirthdayBeatsProps) {
                 <form
                     action=""
                     id="date"
-                    className={`${roboto.className} flex flex-col items-center gap-4 px-4`}
+                    className={`${roboto.className} flex w-full flex-col items-center gap-4 px-4`}
                     onSubmit={onDateSubmit}
                 >
                     <div
@@ -132,7 +212,7 @@ export default function BirthdayBeats({ heroTitles }: BirthdayBeatsProps) {
                                 value={selectedDate}
                                 min={FIRST_CHART_DATE}
                                 max={today}
-                                onChange={setDate}
+                                onChange={pickDate}
                                 className="text-base sm:text-lg"
                             />
                             <button
@@ -144,44 +224,64 @@ export default function BirthdayBeats({ heroTitles }: BirthdayBeatsProps) {
                             </button>
                         </div>
                     </div>
+                    {stripData && today && (
+                        <ChartStrip
+                            data={stripData}
+                            week={stripWeek ?? weekForDate(stripData.dates, selectedDate)}
+                            onMove={moveStrip}
+                            onRest={loadFromStrip}
+                        />
+                    )}
                     {!hasSearched && <QuickPicks today={today} onPick={search} />}
                 </form>
 
                 {loading && <Loading />}
 
-                <div className="results w-full">
+                <div className={`results w-full transition-opacity duration-200 ${refreshing ? "opacity-60" : ""}`}>
                     {songData && (
                         <div className={resultGrid}>
                             <div className={`${resultArea.art} mx-auto w-full max-w-md`}>
-                                <img
-                                    src={songData.albumArt ?? "/audio-placeholder.png"}
-                                    alt={songData.title}
-                                    className="relative aspect-square w-full rounded-2xl shadow-2xl shadow-black/25 animate-reveal motion-reduce:animate-none"
-                                    onError={(e) => {
-                                        e.currentTarget.onerror = null;
-                                        e.currentTarget.src = "/audio-placeholder.png";
-                                    }}
-                                />
+                                {!songData.spotify && songData.spotifyStatus === "not-cached" ? (
+                                    <div className="aspect-square w-full rounded-2xl bg-line/50 animate-pulse motion-reduce:animate-none" />
+                                ) : (
+                                    <img
+                                        src={songData.spotify?.albumArt ?? PLACEHOLDER_ART}
+                                        alt={songData.spotify?.title ?? songData.title}
+                                        className="relative aspect-square w-full rounded-2xl shadow-2xl shadow-black/25 animate-reveal motion-reduce:animate-none"
+                                        onError={(e) => {
+                                            if (!e.currentTarget.src.endsWith(PLACEHOLDER_ART))
+                                                e.currentTarget.src = PLACEHOLDER_ART;
+                                        }}
+                                    />
+                                )}
                             </div>
                             <div className={resultArea.info}>
                                 <SongInfo songData={songData} />
                             </div>
-                            {songData?.videoId && (
+                            {songData.videoId && (
                                 <iframe
-                                    src={"https://www.youtube.com/embed/" + songData?.videoId}
+                                    src={"https://www.youtube.com/embed/" + songData.videoId}
                                     title={`${songData.title} music video`}
                                     allowFullScreen
                                     className={`${resultArea.video} aspect-video w-full rounded-xl lg:mx-auto lg:max-w-3xl`}
                                 />
                             )}
-                            <iframe
-                                src={"https://open.spotify.com/embed/track/" + songData.id}
-                                title={`${songData.title} on Spotify`}
-                                width="100%"
-                                height="152"
-                                allow="encrypted-media"
-                                className={`${resultArea.spotify} rounded-xl`}
-                            />
+                            {songData.spotify ? (
+                                <iframe
+                                    src={"https://open.spotify.com/embed/track/" + songData.spotify.id}
+                                    title={`${songData.spotify.title} on Spotify`}
+                                    width="100%"
+                                    height="152"
+                                    allow="encrypted-media"
+                                    className={`${resultArea.spotify} rounded-xl`}
+                                />
+                            ) : (
+                                songData.spotifyStatus === "not-cached" && (
+                                    <div
+                                        className={`${resultArea.spotify} h-[152px] rounded-xl bg-line/50 animate-pulse motion-reduce:animate-none`}
+                                    />
+                                )
+                            )}
                         </div>
                     )}
                 </div>

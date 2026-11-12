@@ -8,6 +8,8 @@
     --line: #dce5ec;
     --brand-blue: #2f6bff;
     --brand-green: #16c79a;
+    --strip-light: 62%;
+    --strip-dark: 52%;
 }
 
 @theme inline {
@@ -32,6 +34,8 @@
         --surface: #111d29;
         --muted: #93a6b8;
         --line: #1f2f3e;
+        --strip-light: 46%;
+        --strip-dark: 36%;
     }
 }
 
