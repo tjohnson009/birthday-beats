@@ -7,14 +7,24 @@ import DatePicker from "@/components/DatePicker";
 import QuickPicks from "@/components/QuickPicks";
 import HeroTitles from "@/components/HeroTitles";
 import ChartStrip from "@/components/ChartStrip";
+import BirthdaySwitch, { type BirthdayView } from "@/components/BirthdaySwitch";
 import { resultArea, resultGrid } from "@/components/resultLayout";
 import { display, roboto } from "@/lib/fonts";
-import { FIRST_CHART_DATE, clampIsoDate, randomIsoDateBetween } from "@/lib/dates";
+import {
+    FIRST_CHART_DATE,
+    TREND_AGE,
+    checkNthBirthday,
+    clampIsoDate,
+    formatShortDate,
+    nthBirthday,
+    randomIsoDateBetween,
+} from "@/lib/dates";
 import { weekForDate, type StripData } from "@/lib/chartStrip";
 import type { SongResult } from "@/lib/songResult";
 
 type BirthdayBeatsProps = {
     heroTitles: string[];
+    trend?: boolean; // the /17 page: Go shows the #1 from the 17th birthday
 };
 
 // a strip stop on a song that isn't saved yet waits this long, still, before asking Spotify for its details
@@ -41,7 +51,7 @@ const toSearchError = async (response: Response, searchDate: string): Promise<Se
     return { kind: "other", message };
 };
 
-export default function BirthdayBeats({ heroTitles }: BirthdayBeatsProps) {
+export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBeatsProps) {
     const today = useSyncExternalStore(subscribe, getToday, getServerToday);
 
     const [date, setDate] = useState<string | null>(null);
@@ -53,9 +63,18 @@ export default function BirthdayBeats({ heroTitles }: BirthdayBeatsProps) {
     const [stripData, setStripData] = useState<StripData | null>(null);
     // set while the strip is moving; otherwise the strip follows the picked date
     const [stripWeek, setStripWeek] = useState<number | null>(null);
-    const stripRequest = useRef<AbortController | null>(null);
+    // the birthday behind the result on screen, and whether it shows that day's #1 or the 17th birthday's
+    const [birthday, setBirthday] = useState<string | null>(null);
+    const [view, setView] = useState<BirthdayView>("born");
+    // results already fetched for this birthday, so switching back doesn't ask again
+    const savedResults = useRef<Partial<Record<BirthdayView, SongResult>>>({});
+    // one lookup at a time: a newer search, switch, or strip stop cancels the one before it
+    const songRequest = useRef<AbortController | null>(null);
     const detailsTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
     const selectedDate = date ?? today;
+    const seventeenth = birthday && nthBirthday(birthday, TREND_AGE);
+    const seventeenthCheck = birthday && today ? checkNthBirthday(birthday, TREND_AGE, today) : "future";
+    const futureNote = trend && view === "born" && seventeenthCheck === "future";
     // const resultsRef = useRef<HTMLDivElement | null>(null)
 
     // the strip is extra: if its data can't load, the date picker works on its own
@@ -66,10 +85,11 @@ export default function BirthdayBeats({ heroTitles }: BirthdayBeatsProps) {
             .catch(() => {});
     }, []);
 
-    const cancelStripLoad = () => {
+    const cancelSongLoad = () => {
         clearTimeout(detailsTimer.current);
-        stripRequest.current?.abort();
-        stripRequest.current = null;
+        songRequest.current?.abort();
+        songRequest.current = null;
+        setLoading(false);
         setRefreshing(false);
     };
 
@@ -78,38 +98,68 @@ export default function BirthdayBeats({ heroTitles }: BirthdayBeatsProps) {
         setStripWeek(null);
     };
 
-    const search = async (searchDate: string) => {
-        cancelStripLoad();
-        pickDate(searchDate);
+    // looks up one date for Go or the switch, and shows it as the given view
+    const showSong = async (lookupDate: string, nextView: BirthdayView) => {
+        cancelSongLoad();
+        const controller = new AbortController();
+        songRequest.current = controller;
         setHasSearched(true);
         setLoading(true);
         setError(null);
         setSongData(null);
+        setView(nextView);
         try {
-            const response = await fetch(`/api/song?date=${searchDate}`);
+            const response = await fetch(`/api/song?date=${lookupDate}`, { signal: controller.signal });
 
             if (!response.ok) {
-                setError(await toSearchError(response, searchDate));
+                setError(await toSearchError(response, lookupDate));
                 return;
             }
 
-            setSongData(await response.json());
+            const result: SongResult = await response.json();
+            savedResults.current[nextView] = result;
+            setSongData(result);
             // resultsRef.current?.scrollIntoView({ behavior: "smooth" })
         } catch {
-            setError({ kind: "network" });
+            if (!controller.signal.aborted) setError({ kind: "network" });
         } finally {
-            setLoading(false);
+            if (!controller.signal.aborted) setLoading(false);
         }
+    };
+
+    // on /17, Go jumps straight to the 17th birthday, unless it hasn't happened yet
+    const search = (searchDate: string) => {
+        pickDate(searchDate);
+        setBirthday(searchDate);
+        savedResults.current = {};
+        if (trend && today && checkNthBirthday(searchDate, TREND_AGE, today) === "ok")
+            showSong(nthBirthday(searchDate, TREND_AGE), "seventeen");
+        else showSong(searchDate, "born");
+    };
+
+    const toggleView = () => {
+        if (!birthday || !seventeenth) return;
+        const next = view === "born" ? "seventeen" : "born";
+        const saved = savedResults.current[next];
+        if (!saved) return showSong(next === "seventeen" ? seventeenth : birthday, next);
+        cancelSongLoad();
+        setError(null);
+        setSongData(saved);
+        setView(next);
     };
 
     // a strip stop: show the song right away from a cache-only peek, which never calls Spotify. if its
     // details aren't saved yet, ask Spotify only once the strip has stayed put a moment longer
     const loadFromStrip = async (week: number) => {
         if (!stripData) return;
-        cancelStripLoad();
+        cancelSongLoad();
         const stopDate = stripData.dates[week];
         const controller = new AbortController();
-        stripRequest.current = controller;
+        songRequest.current = controller;
+        // browsing the strip treats each stop as the birthday
+        setBirthday(clampIsoDate(stopDate, FIRST_CHART_DATE, today));
+        setView("born");
+        savedResults.current = {};
         setHasSearched(true);
         setError(null);
         if (songData) setRefreshing(true);
@@ -149,7 +199,7 @@ export default function BirthdayBeats({ heroTitles }: BirthdayBeatsProps) {
     };
 
     const moveStrip = (week: number) => {
-        cancelStripLoad();
+        cancelSongLoad();
         setStripWeek(week);
         // chart weeks are dated ahead, so the newest one can be after today
         setDate(clampIsoDate(stripData!.dates[week], FIRST_CHART_DATE, today));
@@ -182,11 +232,17 @@ export default function BirthdayBeats({ heroTitles }: BirthdayBeatsProps) {
                             <span className="whitespace-nowrap bg-linear-to-r from-brand-blue to-brand-green bg-clip-text text-transparent">
                                 #1 song
                             </span>{" "}
-                            in the US on the day you were born?
+                            {trend ? `on your ${TREND_AGE}th birthday?` : "in the US on the day you were born?"}
                         </h1>
                         <p id="intro" className="mt-3 text-muted">
-                            Or the day you graduated, said &quot;I do,&quot; or got your first car? Pick any date back
-                            to August 1958, press Go, and hear that week&apos;s Billboard #1.
+                            {trend ? (
+                                <>The trend says it&apos;s how your 2027 will go. Enter your birthday to find yours.</>
+                            ) : (
+                                <>
+                                    Or the day you graduated, said &quot;I do,&quot; or got your first car? Pick any
+                                    date back to August 1958, press Go, and hear that week&apos;s Billboard #1.
+                                </>
+                            )}
                         </p>
                     </div>
                 </div>
@@ -204,7 +260,7 @@ export default function BirthdayBeats({ heroTitles }: BirthdayBeatsProps) {
                         className="flex flex-col items-center gap-2"
                     >
                         <p id="date-label" className="text-center text-sm text-muted text-balance">
-                            Your birthday, or any day that matters to you
+                            {trend ? "Your birthday" : "Your birthday, or any day that matters to you"}
                         </p>
                         {/* under 360px the date and the Go button don't fit on one line, so Go drops below at full width */}
                         <div className="flex flex-wrap items-center justify-center gap-1 rounded-3xl border border-line bg-surface p-2 shadow-sm">
@@ -232,8 +288,34 @@ export default function BirthdayBeats({ heroTitles }: BirthdayBeatsProps) {
                             onRest={loadFromStrip}
                         />
                     )}
-                    {!hasSearched && <QuickPicks today={today} onPick={search} />}
+                    {/* the picks are dates, not birthdays, so the trend page leaves them out */}
+                    {!hasSearched && !trend && <QuickPicks today={today} onPick={search} />}
                 </form>
+
+                {birthday && seventeenth && (
+                    <div className={`${roboto.className} flex flex-col items-center gap-3 px-4 text-center`}>
+                        {/* on /17 the note below already says when they turn 17 */}
+                        {!futureNote && (
+                            <BirthdaySwitch
+                                view={view}
+                                check={seventeenthCheck}
+                                turnsYear={Number(seventeenth.slice(0, 4))}
+                                onToggle={toggleView}
+                            />
+                        )}
+                        {view === "seventeen" && (
+                            <p className={`${display.className} text-lg font-semibold text-balance`}>
+                                #1 on your {TREND_AGE}th birthday · {formatShortDate(seventeenth)}
+                            </p>
+                        )}
+                        {futureNote && songData && (
+                            <p className="text-sm text-muted text-balance">
+                                You turn {TREND_AGE} in {seventeenth.slice(0, 4)}. Here&apos;s the #1 from the day you
+                                were born.
+                            </p>
+                        )}
+                    </div>
+                )}
 
                 {loading && <Loading />}
 
