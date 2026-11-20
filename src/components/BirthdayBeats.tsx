@@ -8,6 +8,7 @@ import QuickPicks from "@/components/QuickPicks";
 import HeroTitles from "@/components/HeroTitles";
 import ChartStrip from "@/components/ChartStrip";
 import BirthdaySwitch, { type BirthdayView } from "@/components/BirthdaySwitch";
+import ShareSheet from "@/components/ShareSheet";
 import { resultArea, resultGrid } from "@/components/resultLayout";
 import { display, roboto } from "@/lib/fonts";
 import {
@@ -66,6 +67,7 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
     // the birthday behind the result on screen, and whether it shows that day's #1 or the 17th birthday's
     const [birthday, setBirthday] = useState<string | null>(null);
     const [view, setView] = useState<BirthdayView>("born");
+    const [sharing, setSharing] = useState(false);
     // results already fetched for this birthday, so switching back doesn't ask again
     const savedResults = useRef<Partial<Record<BirthdayView, SongResult>>>({});
     // one lookup at a time: a newer search, switch, or strip stop cancels the one before it
@@ -294,15 +296,26 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
 
                 {birthday && seventeenth && (
                     <div className={`${roboto.className} flex flex-col items-center gap-3 px-4 text-center`}>
-                        {/* on /17 the note below already says when they turn 17 */}
-                        {!futureNote && (
-                            <BirthdaySwitch
-                                view={view}
-                                check={seventeenthCheck}
-                                turnsYear={Number(seventeenth.slice(0, 4))}
-                                onToggle={toggleView}
-                            />
-                        )}
+                        <div className="flex flex-wrap justify-center gap-2">
+                            {/* on /17 the note below already says when they turn 17 */}
+                            {!futureNote && (
+                                <BirthdaySwitch
+                                    view={view}
+                                    check={seventeenthCheck}
+                                    turnsYear={Number(seventeenth.slice(0, 4))}
+                                    onToggle={toggleView}
+                                />
+                            )}
+                            {songData && !loading && (
+                                <button
+                                    type="button"
+                                    onClick={() => setSharing(true)}
+                                    className="rounded-2xl bg-brand-blue px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-blue/90 hover:cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue"
+                                >
+                                    Share to your Story
+                                </button>
+                            )}
+                        </div>
                         {view === "seventeen" && (
                             <p className={`${display.className} text-lg font-semibold text-balance`}>
                                 #1 on your {TREND_AGE}th birthday · {formatShortDate(seventeenth)}
@@ -315,6 +328,14 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
                             </p>
                         )}
                     </div>
+                )}
+
+                {sharing && birthday && seventeenth && (
+                    <ShareSheet
+                        date={view === "seventeen" ? seventeenth : birthday}
+                        kind={view}
+                        onClose={() => setSharing(false)}
+                    />
                 )}
 
                 {loading && <Loading />}
