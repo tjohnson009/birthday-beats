@@ -33,7 +33,7 @@ The interesting part: **there is no "Billboard API."** Chart history lives in th
 
 The YouTube side works the same way, for a different reason: YouTube's search API allows ~100 searches per day, so the app never searches at runtime. A resumable backfill script resolved the videos for all 1,194 distinct #1 songs offline (write-after-every-resolve crash safety, quota-aware clean exits), and runtime lookups hit the committed manifest for free.
 
-Spotify gets the same treatment from a third angle: search results are cached in Redis with a 40-day expiry, so each of the 1,194 songs costs Spotify at most one API call per TTL window — and because cached entries age out on their own, album-art URLs can never go stale for longer than the window. If Redis is ever unreachable, the cache just steps aside and live search carries on.
+Spotify gets the same treatment from a third angle: search results are cached in Redis with a 40-day expiry, so each of the 1,194 songs costs Spotify at most one API call per TTL window — and because cached entries age out on their own, album-art URLs can never go stale for longer than the window. If Redis is ever unreachable, the site stops calling Spotify (the guard can't count calls without it) and shows the song, artist, and video without album details. Songs Spotify can't match are remembered for a day, so they don't spend the budget again.
 
 A weekly GitHub Action keeps it all current: every Wednesday it rebuilds the chart data, resolves the video for any new #1, and commits — which redeploys the site. No human involved.
 

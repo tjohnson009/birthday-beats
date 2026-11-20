@@ -3,9 +3,18 @@ import { searchSong, type Song } from "@/lib/spotify";
 import { reserveSpotifyLookup } from "@/lib/spotifyGuard";
 import type { SpotifyStatus } from "@/lib/songResult";
 
-const redis = Redis.fromEnv();
+// a struggling Redis answers fast instead of holding every lookup for seconds: one quick retry, then a
+// 1.5 s limit per command (the guard then fails closed and the song shows without Spotify details)
+const redis = Redis.fromEnv({
+    retry: { retries: 1, backoff: () => 100 },
+    signal: () => AbortSignal.timeout(1500),
+});
 
 const FORTY_DAYS_IN_SECONDS = 60 * 60 * 24 * 40;
+// "Spotify has no match" is remembered for a day, so repeat lookups of that song spend no Spotify budget
+const ONE_DAY_IN_SECONDS = 60 * 60 * 24;
+
+type CacheEntry = Song | { notFound: true };
 
 type LookupOptions = {
     peek: boolean; // only read the cache, never call Spotify
@@ -20,7 +29,8 @@ export const getSongDetails = async (
     const key = `${title}|${artist}`;
 
     try {
-        const cached = await redis.get<Song>(key);
+        const cached = await redis.get<CacheEntry>(key);
+        if (cached && "notFound" in cached) return { song: null, status: "not-found" };
         if (cached) return { song: cached, status: "cached" };
     } catch (error) {
         console.error("Cache read failed:", error);
@@ -29,7 +39,11 @@ export const getSongDetails = async (
     if (peek) return { song: null, status: "not-cached" };
 
     try {
-        if ((await reserveSpotifyLookup(redis, visitor)) !== "ok") return { song: null, status: "limited" };
+        const guard = await reserveSpotifyLookup(redis, visitor);
+        if (guard !== "ok") {
+            console.warn(`Spotify guard said no (${guard}) for ${key}`);
+            return { song: null, status: "limited" };
+        }
     } catch (error) {
         // with Redis down the guard can't count, and uncounted searches could set off a Spotify lockout,
         // so the song shows without Spotify details instead
@@ -45,13 +59,12 @@ export const getSongDetails = async (
         return { song: null, status: "unavailable" };
     }
 
-    if (!song) return { song: null, status: "not-found" };
-
     try {
-        await redis.set(key, song, { ex: FORTY_DAYS_IN_SECONDS });
+        if (!song) await redis.set(key, { notFound: true }, { ex: ONE_DAY_IN_SECONDS });
+        else await redis.set(key, song, { ex: FORTY_DAYS_IN_SECONDS });
     } catch (error) {
         console.error("Cache write failed:", error);
     }
 
-    return { song, status: "fresh" };
+    return song ? { song, status: "fresh" } : { song: null, status: "not-found" };
 };
