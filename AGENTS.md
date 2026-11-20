@@ -35,6 +35,10 @@ and `.env.local` stay at the project root.
 - `src/lib/spotify.ts` — Client Credentials token management + track search
 - `src/lib/billboard.ts` — local Billboard dataset lookup (`getNumberOneSong`)
 - `src/lib/youtube.ts` — YouTube music-video search (preview fallback)
+- `src/app/17/page.tsx`: the 17th-birthday trend page (`BirthdayBeats` with `trend`)
+- `src/lib/share.ts` + `src/app/api/share-image/route.tsx`: story-size share image (next/og), chart data only, year only
+- `src/lib/spotifyGuard.ts`: Redis-counted Spotify budget (500 calls / 3 h site-wide, 10 lookups / min per visitor)
+- `src/scripts/prefillSongCache.ts`: slow cache head start through the live site's guard (`npm run prefill:cache`)
 - `data/` — Billboard Hot 100 dataset (gitignored if large)
 - `data/spotify-overrides.json` — per-song fixes for Spotify searches the rules get
   wrong: a corrected `artist`/`title` for the query, or a pinned `trackId`
@@ -68,5 +72,6 @@ and `.env.local` stay at the project root.
   3-hour lockout that takes the live site down. Never run bulk searches
   from this account; keep any batch under ~100 calls/hour (a 1,195-song
   audit at 30 s/song ran clean). Fix single songs via `spotify-overrides.json`.
+  The site enforces this with `spotifyGuard.ts`, which fails closed: if Redis errors, no Spotify call is made.
 - Secrets live in `.env.local` (`SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`,
   `YOUTUBE_API_KEY`) — never commit them.

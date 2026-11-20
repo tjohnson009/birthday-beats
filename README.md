@@ -57,6 +57,7 @@ The things a code reviewer would actually care about:
 - **Graceful degradation, two layers deep** If Spotify is down, the API returns a friendly 503 and the UI says so. If the stats database is down, songs still play and the footer simply omits its numbers — analytics are never allowed to break the product.
 - **Derive, don't store** Visits and plays live as rows in a Postgres event log (Neon), not as counters — the footer's numbers are `count(*)` at read time, and the stored events can answer questions that haven't been asked yet. Aggregates only; nothing identifying is logged.
 - **Three stores, three lifetimes** The Postgres event log never expires (facts are forever), the YouTube manifest only changes on purpose (videos are pinned deliberately), and cached Spotify results age out on a 40-day TTL (copies of someone else's data should refresh themselves). Each store was picked by access pattern: query-inside → Postgres, lookup-by-key → Redis, read-only-at-runtime → committed JSON.
+- **A Spotify budget that fails closed** Spotify's dev-mode quota is unpublished and a lockout lasts three hours, so a Redis-backed guard caps the site at 500 calls per 3 hours and 10 lookups a minute per visitor. If Redis can't count, the site stops calling Spotify and shows the song without album details instead of calling blind. Every Spotify call also gives up after 5 seconds.
 - **Token caching that's actually tested** The Spotify Client Credentials token is cached at module scope with an expiry cushion — and a Jest test proves two searches produce exactly one token request.
 - **An idempotent, rerunnable data pipeline** Both data scripts rebuild from source at any time, exit cleanly at quota limits, and resume where they left off.
 
@@ -97,7 +98,8 @@ npm run build:youtube
 - [x] Auto-refresh chart data via scheduled GitHub Action
 - [x] Visit + play tracking in a Postgres event log
 - [x] Redis cache in front of Spotify search (40-day TTL)
-- [ ] Polish: scroll-to-results, art-driven color scheme, share button
+- [x] `/17` trend page ("the #1 on your 17th birthday is how your 2027 will go"), a switch between your birthday and 17th birthday #1, and a story-size share image
+- [ ] Polish: scroll-to-results, art-driven color scheme
 
 ## Chart data
 
