@@ -18,7 +18,7 @@ type BirthdayBeatsProps = {
 };
 
 // a strip stop on a song that isn't saved yet waits this long, still, before asking Spotify for its details
-const DETAILS_DELAY_MS = 1500;
+const DETAILS_DELAY_MS = 2000;
 const PLACEHOLDER_ART = "/audio-placeholder.png";
 
 const subscribe = () => {

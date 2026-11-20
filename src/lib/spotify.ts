@@ -3,6 +3,9 @@ import spotifyOverrides from "../../data/spotify-overrides.json" with { type: "j
 const clientId = process.env.SPOTIFY_CLIENT_ID;
 const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 
+// a Spotify call that hasn't answered by then gives up, so a hung Spotify can't hold requests open
+export const SPOTIFY_TIMEOUT_MS = 5000;
+
 export type Song = {
     id: string;
     title: string;
@@ -32,6 +35,7 @@ export const getAccessToken = async () => {
 
     // call spotify API with proper credentials
     const response = await fetch("https://accounts.spotify.com/api/token", {
+        signal: AbortSignal.timeout(SPOTIFY_TIMEOUT_MS),
         method: "POST",
         body: new URLSearchParams({
             grant_type: "client_credentials",
@@ -91,6 +95,7 @@ export const searchSong = async (title: string, artist: string): Promise<Song | 
     const override = overrides[`${title}|${artist}`];
     if (override?.trackId) {
         const pinned = await fetch(`https://api.spotify.com/v1/tracks/${override.trackId}?market=US`, {
+            signal: AbortSignal.timeout(SPOTIFY_TIMEOUT_MS),
             headers: { Authorization: `Bearer ${accessToken}` },
         });
         if (pinned.ok) return toSong(await pinned.json());
@@ -111,6 +116,7 @@ export const searchSong = async (title: string, artist: string): Promise<Song | 
     });
 
     const response = await fetch(`https://api.spotify.com/v1/search?${params}`, {
+        signal: AbortSignal.timeout(SPOTIFY_TIMEOUT_MS),
         headers: {
             Authorization: `Bearer ${accessToken}`,
         },
@@ -139,6 +145,7 @@ export const searchSong = async (title: string, artist: string): Promise<Song | 
     if (!track && bareTitle !== normalizedTitle) {
         params.set("q", `track:${bareTitle} artist:${leadArtist}`);
         const retryResponse = await fetch(`https://api.spotify.com/v1/search?${params}`, {
+            signal: AbortSignal.timeout(SPOTIFY_TIMEOUT_MS),
             headers: { Authorization: `Bearer ${accessToken}` },
         });
         if (retryResponse.ok) {
@@ -157,6 +164,7 @@ export const searchSong = async (title: string, artist: string): Promise<Song | 
         });
 
         const fallbackResponse = await fetch(`https://api.spotify.com/v1/search?${fallbackParams}`, {
+            signal: AbortSignal.timeout(SPOTIFY_TIMEOUT_MS),
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },

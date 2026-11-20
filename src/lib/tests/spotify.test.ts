@@ -21,6 +21,14 @@ describe("searchSong function", () => {
         expect(result).toBeNull();
     });
 
+    it("gives every Spotify request a time limit, so a hung Spotify can't hold a request open", async () => {
+        await searchSong("Nonexistent Song", "Nobody");
+
+        const calls = (global.fetch as jest.Mock).mock.calls;
+        expect(calls.length).toBeGreaterThan(0);
+        for (const [, options] of calls) expect(options.signal).toBeInstanceOf(AbortSignal);
+    });
+
     it("maps a Spotify track to a Song", async () => {
         global.fetch = jest.fn((url) => {
             return url.toString().includes("accounts.spotify.com")

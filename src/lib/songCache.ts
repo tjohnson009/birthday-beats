@@ -31,8 +31,10 @@ export const getSongDetails = async (
     try {
         if ((await reserveSpotifyLookup(redis, visitor)) !== "ok") return { song: null, status: "limited" };
     } catch (error) {
-        // with Redis down the guard can't count, so searches carry on as they did before it existed
+        // with Redis down the guard can't count, and uncounted searches could set off a Spotify lockout,
+        // so the song shows without Spotify details instead
         console.error("Spotify guard failed:", error);
+        return { song: null, status: "limited" };
     }
 
     let song: Song | null;
