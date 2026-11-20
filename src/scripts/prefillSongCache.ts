@@ -20,7 +20,6 @@ const BASE_URL = process.argv[2] ?? "https://birthday-beats.vercel.app";
 const FIRST_WEEK = "1977-01-01";
 const LAST_WEEK = "2009-12-31";
 const LOOKUP_GAP_MS = 90_000; // about 40 Spotify lookups an hour, inside the site budget
-const LIMITED_WAIT_MS = 15 * 60_000;
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -62,11 +61,10 @@ for (let i = 0; i < queue.length; i++) {
         console.log(`${label}: ${spotifyStatus}`);
         counts[spotifyStatus] = (counts[spotifyStatus] ?? 0) + 1;
 
+        // the budget is shared with real visitors, so stop rather than compete with them for it
         if (spotifyStatus === "limited") {
-            console.log(`site budget reached, waiting ${LIMITED_WAIT_MS / 60_000} minutes`);
-            await sleep(LIMITED_WAIT_MS);
-            i--; // try the same song again
-            continue;
+            console.log("site budget reached, stopping so visitors keep the rest. run it again later to continue");
+            break;
         }
     } catch (error) {
         console.log(`${label}: request failed (${error instanceof Error ? error.message : error})`);
