@@ -2,7 +2,7 @@ import fs from "node:fs";
 
 // gives the live site's Spotify cache a head start before a traffic spike. it asks the live site itself,
 // so the site's Spotify guard counts every lookup and this can never push past its budget.
-// songs come in order of how many 17th birthdays (1977-2009) they cover. stop it with ctrl+c at any time
+// songs come in order of how many 17th birthdays (1977 to now) they cover. stop it with ctrl+c at any time
 // usage: npm run prefill:cache [base url]
 
 type NumberOneEntry = {
@@ -17,8 +17,7 @@ type SongResponse = {
 };
 
 const BASE_URL = process.argv[2] ?? "https://birthday-beats.vercel.app";
-const FIRST_WEEK = "1977-01-01";
-const LAST_WEEK = "2009-12-31";
+const FIRST_WEEK = "1977-01-01"; // trend posts mostly come from people now in their 30s to 60s, and younger
 const LOOKUP_GAP_MS = 90_000; // about 40 Spotify lookups an hour, inside the site budget
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -27,7 +26,7 @@ const numberOnes: NumberOneEntry[] = JSON.parse(fs.readFileSync("data/number-one
 
 const songs = new Map<string, { week: string; title: string; artist: string; weeks: number }>();
 for (const entry of numberOnes) {
-    if (entry.date < FIRST_WEEK || entry.date > LAST_WEEK) continue;
+    if (entry.date < FIRST_WEEK) continue;
     const key = `${entry.song}|${entry.artist}`;
     const song = songs.get(key);
     if (song) song.weeks++;
@@ -61,9 +60,10 @@ for (let i = 0; i < queue.length; i++) {
         console.log(`${label}: ${spotifyStatus}`);
         counts[spotifyStatus] = (counts[spotifyStatus] ?? 0) + 1;
 
-        // the budget is shared with real visitors, so stop rather than compete with them for it
-        if (spotifyStatus === "limited") {
-            console.log("site budget reached, stopping so visitors keep the rest. run it again later to continue");
+        // the budget is shared with real visitors, so stop rather than compete with them for it; and if Spotify
+        // itself is failing, more calls won't help
+        if (spotifyStatus === "limited" || spotifyStatus === "unavailable") {
+            console.log(`${spotifyStatus}: stopping so visitors keep the budget. run it again later to continue`);
             break;
         }
     } catch (error) {
