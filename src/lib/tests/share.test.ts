@@ -1,10 +1,9 @@
-import { artistFontSize, shareCard, shareImagePath, shareLink, titleFontSize } from "../share";
-
-const TODAY = "2026-11-20";
+import { shareImagePath, shareLink } from "../share";
+import { artistFontSize, shareCard, titleFontSize } from "../shareCard";
 
 describe("shareCard", () => {
     it("words the 17th birthday card like the trend, with the year only", () => {
-        expect(shareCard("2001-05-12", "seventeen", TODAY)).toEqual({
+        expect(shareCard("2001-05-12", "2001", "seventeen")).toEqual({
             heading: "My 2027 is going to sound like...",
             title: "All For You",
             artist: "Janet",
@@ -15,7 +14,7 @@ describe("shareCard", () => {
     });
 
     it("words the birthday card, with the year only", () => {
-        expect(shareCard("1983-06-15", "born", TODAY)).toEqual({
+        expect(shareCard("1983-06-11", "1983", "born")).toEqual({
             heading: "The #1 song the week I was born",
             title: "Flashdance...What A Feeling",
             artist: "Irene Cara",
@@ -25,18 +24,25 @@ describe("shareCard", () => {
         });
     });
 
-    it("returns null for input it can't draw, so no custom text gets on the image", () => {
+    it("takes the year next to a chart week, for birthdays early in January or late in December", () => {
+        expect(shareCard("1990-12-29", "1991", "born")?.detail).toBe("1991");
+        expect(shareCard("1990-12-29", "1989", "born")?.detail).toBe("1989");
+    });
+
+    it("returns null for anything that isn't a real chart week, kind, and nearby year, so no custom text gets drawn", () => {
         const bad = [
-            ["", "born"],
-            ["1983-13-40", "born"],
-            ["1983-02-30", "born"],
-            ["not-a-date", "born"],
-            ["1950-01-01", "born"],
-            ["2030-01-01", "born"],
-            ["1983-06-15", "x"],
-            ["1983-06-15", ""],
+            ["", "1983", "born"],
+            ["1983-06-15", "1983", "born"], // a date, but not a chart week
+            ["1983-13-40", "1983", "born"],
+            ["not-a-date", "1983", "born"],
+            ["1950-01-07", "1950", "born"],
+            ["1983-06-11", "1985", "born"],
+            ["1983-06-11", "83", "born"],
+            ["1983-06-11", "", "born"],
+            ["1983-06-11", "1983", "x"],
+            ["1983-06-11", "1983", ""],
         ];
-        for (const [date, kind] of bad) expect(shareCard(date, kind, TODAY)).toBeNull();
+        for (const [week, year, kind] of bad) expect(shareCard(week, year, kind)).toBeNull();
     });
 });
 
@@ -44,7 +50,12 @@ describe("share links", () => {
     it("points the 17th birthday card at the trend page", () => {
         expect(shareLink("seventeen")).toBe("https://birthday-beats.vercel.app/17");
         expect(shareLink("born")).toBe("https://birthday-beats.vercel.app");
-        expect(shareImagePath("2001-05-12", "seventeen")).toBe("/api/share-image?date=2001-05-12&kind=seventeen");
+    });
+
+    it("builds the one image address the route accepts: chart week, year, kind", () => {
+        expect(shareImagePath("2001-05-12", "2001", "seventeen")).toBe(
+            "/api/share-image?week=2001-05-12&year=2001&kind=seventeen",
+        );
     });
 });
 

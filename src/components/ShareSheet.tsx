@@ -1,10 +1,12 @@
 "use client";
 import { ReactElement, useEffect, useRef, useState } from "react";
 import { display, roboto } from "@/lib/fonts";
+import { copyText } from "@/lib/copyText";
 import { shareImagePath, shareLink, type ShareKind } from "@/lib/share";
 
 type ShareSheetProps = {
-    date: string;
+    week: string; // the chart week of the song on screen
+    year: string; // the year printed on the image
     kind: ShareKind;
     onClose: () => void;
 };
@@ -15,12 +17,12 @@ const buttonClass =
 // websites can't post into an Instagram Story, so this hands over the pieces: the image to save, the link to
 // paste into a Link sticker, and the steps. it has to work in Instagram's built-in browser, where the share
 // menu and the clipboard may be missing, so pressing and holding the image always works as a fallback
-export default function ShareSheet({ date, kind, onClose }: ShareSheetProps): ReactElement {
+export default function ShareSheet({ week, year, kind, onClose }: ShareSheetProps): ReactElement {
     const dialogRef = useRef<HTMLDialogElement>(null);
     const linkRef = useRef<HTMLInputElement>(null);
     const [file, setFile] = useState<File | null>(null);
-    const [copied, setCopied] = useState(false);
-    const imagePath = shareImagePath(date, kind);
+    const [copy, setCopy] = useState<"idle" | "copied" | "by-hand">("idle");
+    const imagePath = shareImagePath(week, year, kind);
     const link = shareLink(kind);
     const fileName = kind === "seventeen" ? "my-2027-song.png" : "my-birthday-song.png";
 
@@ -28,8 +30,10 @@ export default function ShareSheet({ date, kind, onClose }: ShareSheetProps): Re
         dialogRef.current?.showModal();
     }, []);
 
-    // fetched ahead of time: Safari only opens the share menu when the tap calls it right away
+    // fetched ahead of time: Safari only opens the share menu when the tap calls it right away. skipped where
+    // there's no share menu (Instagram's browser), since the <img> already downloads the image
     useEffect(() => {
+        if (!navigator.canShare) return;
         let cancelled = false;
         fetch(imagePath)
             .then((response) => (response.ok ? response.blob() : null))
@@ -45,14 +49,9 @@ export default function ShareSheet({ date, kind, onClose }: ShareSheetProps): Re
     }, [imagePath, fileName]);
 
     const copyLink = async () => {
-        try {
-            await navigator.clipboard.writeText(link);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
-        } catch {
-            // no clipboard here: select the link so a long press can copy it
-            linkRef.current?.select();
-        }
+        if (!(await copyText(link, linkRef.current))) return setCopy("by-hand");
+        setCopy("copied");
+        setTimeout(() => setCopy("idle"), 2000);
     };
 
     const share = async () => {
@@ -70,9 +69,10 @@ export default function ShareSheet({ date, kind, onClose }: ShareSheetProps): Re
             // a tap on the dimmed backdrop lands on the dialog itself
             onClick={(e) => e.target === dialogRef.current && dialogRef.current.close()}
             aria-labelledby="share-title"
-            className={`${roboto.className} m-auto max-h-[100dvh] w-[calc(100%-2rem)] max-w-md overflow-y-auto rounded-3xl bg-background p-5 text-foreground shadow-2xl backdrop:bg-black/70`}
+            className={`${roboto.className} m-auto max-h-[100dvh] w-[calc(100%-2rem)] max-w-md overflow-y-auto rounded-3xl bg-background p-0 text-foreground shadow-2xl backdrop:bg-black/70`}
         >
-            <div className="flex flex-col items-center gap-4 text-center">
+            {/* the padding lives here, not on the dialog, so a tap inside the card never counts as a backdrop tap */}
+            <div className="flex flex-col items-center gap-4 p-5 text-center">
                 <h2 id="share-title" className={`${display.className} text-xl font-extrabold`}>
                     Share to your Story
                 </h2>
@@ -91,7 +91,7 @@ export default function ShareSheet({ date, kind, onClose }: ShareSheetProps): Re
                         onClick={copyLink}
                         className={`${buttonClass} bg-brand-blue text-white hover:bg-brand-blue/90`}
                     >
-                        {copied ? "Copied!" : "Copy link"}
+                        {copy === "copied" ? "Copied!" : "Copy link"}
                     </button>
                     {file && (
                         <button
@@ -118,6 +118,11 @@ export default function ShareSheet({ date, kind, onClose }: ShareSheetProps): Re
                     onFocus={(e) => e.currentTarget.select()}
                     className="w-full rounded-xl border border-line bg-surface px-3 py-2 text-center text-sm text-muted"
                 />
+                {copy === "by-hand" && (
+                    <p role="status" className="-mt-2 text-sm font-medium">
+                        Press and hold the link above to copy it.
+                    </p>
+                )}
 
                 <ol className="w-full list-decimal space-y-1 pl-5 text-left text-sm">
                     <li>Add this image to your Story.</li>

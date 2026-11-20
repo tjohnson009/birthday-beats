@@ -2,7 +2,8 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { NextRequest, NextResponse } from "next/server";
-import { artistFontSize, shareCard, titleFontSize } from "@/lib/share";
+import { shareImagePath, type ShareKind } from "@/lib/share";
+import { artistFontSize, shareCard, titleFontSize } from "@/lib/shareCard";
 
 // a story-size image of someone's song, made from the chart file only (no Spotify, no album art)
 const SIZE = { width: 1080, height: 1920 };
@@ -14,15 +15,17 @@ const GREEN = "#16c79a";
 
 const font = (file: string) => readFile(join(process.cwd(), "src/assets/fonts", file));
 
-// a day of slack past today, so someone ahead of UTC can share on their birthday
-const latestDate = () => new Date(Date.now() + 86_400_000).toISOString().slice(0, 10);
-
 export async function GET(request: NextRequest) {
     const params = request.nextUrl.searchParams;
-    const card = shareCard(params.get("date") ?? "", params.get("kind") ?? "", latestDate());
+    const [week, year, kind] = ["week", "year", "kind"].map((name) => params.get(name) ?? "");
+    const card = shareCard(week, year, kind);
 
-    if (!card) {
-        return NextResponse.json({ message: "Missing or invalid date or kind." }, { status: 400 });
+    // only the exact address the site builds gets drawn: extra or reordered params would each skip the CDN
+    // cache and cost a fresh render
+    const canonical =
+        request.nextUrl.pathname + request.nextUrl.search === shareImagePath(week, year, kind as ShareKind);
+    if (!card || !canonical) {
+        return NextResponse.json({ message: "Missing or invalid week, year, or kind." }, { status: 400 });
     }
 
     const [semiBold, extraBold] = await Promise.all([
@@ -87,8 +90,8 @@ export async function GET(request: NextRequest) {
                 { name: "Bricolage", data: semiBold, weight: 600, style: "normal" },
                 { name: "Bricolage", data: extraBold, weight: 800, style: "normal" },
             ],
-            // each date and kind always draws the same image, so the CDN can keep it
-            headers: { "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=604800" },
+            // a week, year, and kind always draw the same image, so browsers and the CDN can keep it
+            headers: { "Cache-Control": "public, max-age=86400, s-maxage=604800, stale-while-revalidate=604800" },
         },
     );
 }
