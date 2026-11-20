@@ -6,6 +6,7 @@
         "dev": "next dev",
         "build": "next build",
         "build:youtube": "node --experimental-strip-types --env-file=.env.local src/scripts/buildYoutubeData.ts",
+        "prefill:cache": "node --experimental-strip-types src/scripts/prefillSongCache.ts",
         "start": "next start",
         "lint": "eslint",
         "format": "prettier --write",
