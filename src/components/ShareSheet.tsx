@@ -32,8 +32,16 @@ const waitingButton = `${mainLook} opacity-60`;
 const plainButton = `${buttonBase} min-h-11 px-2 py-2 border border-line bg-surface text-sm hover:cursor-pointer hover:border-brand-blue`;
 const doneButton = `${buttonBase} min-h-11 px-2 py-2 border border-brand-green bg-surface text-sm hover:cursor-pointer`;
 
+// Instagram's close X and menu sit right above the page, and an iPhone has its notch and home bar, so the sheet
+// stops 24px short of the top and bottom, plus the safe area. taller content scrolls inside it
+const edgeRoom = "max-h-[calc(100dvh-2*(24px+max(env(safe-area-inset-top),env(safe-area-inset-bottom))))]";
+
 const storyLine = "Post it to your Story, then add the song so it plays.";
 const computerLine = "Save it, then post it from your phone. Add the song so it plays.";
+
+// the song search text as the sheet prints it, in curly quotes. its own quotes turn single so they don't nest:
+// “The Happy Organ Dave ‘Baby’ Cortez”. what gets copied keeps the plain text
+const quoted = (text: string) => `“${text.replace(/(^|[\s([{])"/g, "$1‘").replace(/"/g, "’")}”`;
 
 // websites can't post into a Story or add its song, so this hands over the pieces: the picture to save or
 // share, the link and the song name to copy. most people know the rest; "New to this?" covers the ones who don't
@@ -100,8 +108,12 @@ export default function ShareSheet({ week, year, kind, title, artist, onClose }:
         };
     }, [canShareFiles, imagePath, fileName]);
 
-    const copyLink = async () => {
+    const copyLink = async (e: MouseEvent<HTMLButtonElement>) => {
+        const tapped = e.currentTarget;
+        // on a fail, focus stays on the link's field, which shows now with the link selected
         if (!(await copyText(link, linkRef.current))) return setLinkFailed(true);
+        // the fallback focuses the link's field, which hides again once it worked, so focus goes back to the button
+        if (document.activeElement === linkRef.current) tapped.focus();
         setLinkFailed(false);
         setLastCopied("link");
     };
@@ -174,18 +186,19 @@ export default function ShareSheet({ week, year, kind, title, artist, onClose }:
             onClick={(e) => e.target === dialogRef.current && dialogRef.current.close()}
             aria-labelledby="share-title"
             tabIndex={-1}
-            className={`${roboto.className} m-auto max-h-[100dvh] w-[calc(100%-2rem)] max-w-md overflow-y-auto overscroll-contain rounded-3xl bg-background p-0 text-foreground shadow-2xl outline-none backdrop:bg-black/70`}
+            className={`${roboto.className} m-auto ${edgeRoom} w-[calc(100%-2rem)] max-w-md overflow-y-auto overscroll-contain rounded-3xl bg-background p-0 text-foreground shadow-2xl outline-none backdrop:bg-black/70`}
         >
-            {/* stays at the top while the sheet scrolls, so the X is always in reach */}
-            <div className="sticky top-0 z-10 flex items-center justify-between gap-2 bg-background pt-3 pr-3 pb-2 pl-5">
-                <h2 id="share-title" className={`${display.className} text-xl font-extrabold`}>
+            {/* stays at the top while the sheet scrolls, so the X is always in reach. the first column is empty and
+                as wide as the X, so the title sits in the middle of the sheet */}
+            <div className="sticky top-0 z-10 grid grid-cols-[2.75rem_1fr_2.75rem] items-center bg-background px-3 pt-3 pb-2">
+                <h2 id="share-title" className={`${display.className} col-start-2 text-center text-xl font-extrabold`}>
                     Share your song
                 </h2>
                 <button
                     type="button"
                     aria-label="Close"
                     onClick={() => dialogRef.current?.close()}
-                    className={`flex size-11 shrink-0 items-center justify-center rounded-full hover:cursor-pointer hover:bg-line/60 ${focusRing}`}
+                    className={`col-start-3 flex size-11 items-center justify-center rounded-full hover:cursor-pointer hover:bg-line/60 ${focusRing}`}
                 >
                     <svg
                         aria-hidden="true"
@@ -259,7 +272,7 @@ export default function ShareSheet({ week, year, kind, title, artist, onClose }:
                     )}
                     {songFailed && (
                         <p role="status" className="mt-2 font-medium">
-                            Copy didn&apos;t work. Type {`"${songText}"`} instead.
+                            Copy didn&apos;t work. Type {quoted(songText)} instead.
                         </p>
                     )}
                 </div>
@@ -287,7 +300,8 @@ export default function ShareSheet({ week, year, kind, title, artist, onClose }:
                         <li>Save the picture.</li>
                         <li>In Instagram or TikTok, start a Story and pick the picture.</li>
                         <li>
-                            Add music and search {`"${songText}"`}. On Instagram, add a Link sticker and paste the link.
+                            Add music and search {quoted(songText)}. On Instagram, add a Link sticker and paste the
+                            link.
                         </li>
                     </ol>
                 </details>

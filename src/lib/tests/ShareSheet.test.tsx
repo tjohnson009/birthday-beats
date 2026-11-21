@@ -13,6 +13,8 @@ const TITLE = "Lady Marmalade";
 const ARTIST = "Christina Aguilera, Lil' Kim, Mya & P!nk";
 // what Copy song name copies and the help says to search: title and lead artist, cleaned up like the Spotify search
 const SEARCH = songSearchText(TITLE, ARTIST);
+// how the sheet prints it: in curly quotes, with no quotes of its own to turn single
+const SHOWN = `“${SEARCH}”`;
 const STORY_LINE = "Post it to your Story, then add the song so it plays.";
 const COMPUTER_LINE = "Save it, then post it from your phone. Add the song so it plays.";
 const HOLD_LINE = "Press and hold the picture to save it.";
@@ -137,10 +139,33 @@ describe("ShareSheet, the same short sheet everywhere", () => {
         expect(header.className).toMatch(/\btop-0\b/);
         expect(close.className).toMatch(/\bsize-11\b/);
         expect(close.className).toMatch(/focus-visible:outline/);
+        // the title sits in the middle of the sheet: an empty column on the left as wide as the X on the right
+        expect(header.className).toMatch(/\bgrid-cols-\[2\.75rem_1fr_2\.75rem\]/);
+        expect(header.className).toMatch(/\bpx-3\b/);
+        expect(screen.getByRole("heading", { name: "Share your song" }).className).toMatch(
+            /\bcol-start-2\b.*\btext-center\b/,
+        );
+        expect(close.className).toMatch(/\bcol-start-3\b/);
 
         fireEvent.click(close);
 
         expect(onClose).toHaveBeenCalledTimes(1);
+    });
+
+    // Instagram's close X and menu sit right above the page, and an iPhone has its notch and home bar, so a tall
+    // sheet stops short of the top and bottom and scrolls inside itself
+    it.each(["A", "B", "C"] as const)("%s: the sheet stays clear of the top and bottom edges", async (key) => {
+        await openSheet(PHONES[key]);
+
+        const dialog = screen.getByRole("dialog", { name: "Share your song" });
+        expect(dialog.className).not.toMatch(/max-h-\[100dvh\]/);
+        expect(dialog.className).toContain(
+            "max-h-[calc(100dvh-2*(24px+max(env(safe-area-inset-top),env(safe-area-inset-bottom))))]",
+        );
+        expect(dialog.className).toMatch(/\bm-auto\b/);
+        expect(dialog.className).toMatch(/\boverflow-y-auto\b/);
+        // the same 16px on each side as before
+        expect(dialog.className).toMatch(/\bw-\[calc\(100%-2rem\)\]/);
     });
 
     // focus on the X would show its ring the moment a shared link opens the sheet
@@ -202,7 +227,7 @@ describe("ShareSheet, the same short sheet everywhere", () => {
         ).toEqual([
             "Save the picture.",
             "In Instagram or TikTok, start a Story and pick the picture.",
-            `Add music and search "${SEARCH}". On Instagram, add a Link sticker and paste the link.`,
+            `Add music and search ${SHOWN}. On Instagram, add a Link sticker and paste the link.`,
         ]);
         // big enough to tap
         expect(within(help).getByText("New to this?").className).toMatch(/\bmin-h-11\b/);
@@ -377,6 +402,29 @@ describe("ShareSheet clipboard", () => {
         expect(field.className).not.toMatch(/\bsr-only\b/);
         expect(screen.getByText("Press and hold the link to copy it.")).toBeTruthy();
         expect(noButton("Link copied")).toBeNull();
+        // the field shows now, so focus stays on it with the link selected
+        expect(document.activeElement).toBe(field);
+    });
+
+    it("with no clipboard, the link copies from its hidden field, then focus goes back to the button", async () => {
+        await openSheet(PHONES.A);
+        const field = screen.getByDisplayValue(LINK) as HTMLInputElement;
+        writeText.mockRejectedValue(new Error("no clipboard"));
+        let selected = "";
+        document.execCommand = jest.fn(() => {
+            const active = document.activeElement as HTMLInputElement;
+            selected = active.value.slice(active.selectionStart ?? 0, active.selectionEnd ?? 0);
+            return true;
+        });
+
+        await act(async () => fireEvent.click(button("Copy link")));
+
+        expect(document.execCommand).toHaveBeenCalledWith("copy");
+        expect(selected).toBe(LINK);
+        expect(button("Link copied")).toBeTruthy();
+        expect(field.className).toMatch(/\bsr-only\b/);
+        // the field it used can't be seen, so focus goes back to the button
+        expect(document.activeElement).toBe(button("Link copied"));
     });
 
     // pasted straight into Spotify, Instagram or TikTok's music search
@@ -389,7 +437,34 @@ describe("ShareSheet clipboard", () => {
         expect(button("Song name copied")).toBeTruthy();
         const help = screen.getByText("New to this?").closest("details")!;
         expect(within(help).getAllByRole("listitem")[2].textContent).toBe(
-            'Add music and search "Break Your Heart Taio Cruz". On Instagram, add a Link sticker and paste the link.',
+            "Add music and search “Break Your Heart Taio Cruz”. On Instagram, add a Link sticker and paste the link.",
+        );
+    });
+
+    // printed in curly quotes, with the song's own quotes turned single so they don't nest. the copy stays as is
+    it.each([
+        ["The Happy Organ", 'Dave "Baby" Cortez', "“The Happy Organ Dave ‘Baby’ Cortez”"],
+        [
+            'The Theme From "A Summer Place"',
+            "Percy Faith And His Orchestra",
+            "“The Theme From ‘A Summer Place’ Percy Faith And His Orchestra”",
+        ],
+    ])("%s by %s shows as %s, and copies with its plain quotes", async (title, artist, shown) => {
+        await openSheet(PHONES.A, { title, artist });
+        const plain = songSearchText(title, artist);
+        expect(plain).toContain('"');
+        writeText.mockRejectedValue(new Error("no clipboard"));
+        document.execCommand = () => false;
+
+        await act(async () => fireEvent.click(button("Copy song name")));
+
+        expect(writeText).toHaveBeenLastCalledWith(plain);
+        // the hidden field the old copy command selects holds the plain text too
+        expect((screen.getByLabelText("Song name to search") as HTMLInputElement).value).toBe(plain);
+        expect(screen.getByText(`Copy didn't work. Type ${shown} instead.`)).toBeTruthy();
+        const help = screen.getByText("New to this?").closest("details")!;
+        expect(within(help).getAllByRole("listitem")[2].textContent).toBe(
+            `Add music and search ${shown}. On Instagram, add a Link sticker and paste the link.`,
         );
     });
 
@@ -425,7 +500,7 @@ describe("ShareSheet clipboard", () => {
 
         await act(async () => fireEvent.click(button("Copy song name")));
 
-        expect(screen.getByText(`Copy didn't work. Type "${SEARCH}" instead.`)).toBeTruthy();
+        expect(screen.getByText(`Copy didn't work. Type ${SHOWN} instead.`)).toBeTruthy();
         expect(noButton("Song name copied")).toBeNull();
         expect(screen.getByDisplayValue(SEARCH).className).toMatch(/\bsr-only\b/);
         expect(document.activeElement).toBe(button("Copy song name"));
