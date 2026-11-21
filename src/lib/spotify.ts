@@ -1,4 +1,4 @@
-import spotifyOverrides from "../../data/spotify-overrides.json" with { type: "json" };
+import { overrides, searchTerms } from "@/lib/songSearch";
 
 const clientId = process.env.SPOTIFY_CLIENT_ID;
 const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
@@ -59,8 +59,6 @@ export const getAccessToken = async () => {
     return token.value;
 };
 
-type SongOverride = { artist?: string; title?: string; trackId?: string; reason?: string };
-const overrides = spotifyOverrides as Record<string, SongOverride>;
 
 type SpotifyTrack = {
     id: string;
@@ -100,12 +98,7 @@ export const searchSong = async (title: string, artist: string): Promise<Song | 
         });
         if (pinned.ok) return toSong(await pinned.json());
     }
-    const aliasedArtist = override?.artist ?? artist;
-    const normalizedTitle = (override?.title ?? title).replace(/\(\s*(from|theme)\b[^)]*\)/gi, "").split("/")[0].trim();
-    const leadArtist = aliasedArtist
-        .replace(/\(\s*(featuring|feat\.?)\b[^)]*\)/gi, "")
-        .replace(/\s+(featuring|feat\.?|duet with|with|starring)\s+.*$/i, "")
-        .trim();
+    const { title: normalizedTitle, artist: leadArtist } = searchTerms(title, artist);
     const query = `track:${normalizedTitle} artist:${leadArtist}`;
 
     const params = new URLSearchParams({
