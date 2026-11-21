@@ -68,8 +68,9 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
     const [songData, setSongData] = useState<null | SongResult>(null);
     const [hasSearched, setHasSearched] = useState(false);
     const [stripData, setStripData] = useState<StripData | null>(null);
-    // set while the strip is moving; otherwise the strip follows the picked date
-    const [stripWeek, setStripWeek] = useState<number | null>(null);
+    // the date the strip sits on: the song on screen, or where the person moved the strip. it stays
+    // put when the picker changes, and is empty until the first search so the strip doesn't give it away
+    const [stripDate, setStripDate] = useState<string | null>(null);
     // the birthday behind the result on screen, and whether it shows that day's #1 or the 17th birthday's
     const [birthday, setBirthday] = useState<string | null>(null);
     const [view, setView] = useState<BirthdayView>("born");
@@ -98,6 +99,8 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
     const pickerMatchesResult = birthday !== null && selectedDate === birthday;
     const searched = hasSearched || shared !== null;
     const sharedLoading = shared !== null && !songData && !error;
+    // a shared link counts as the first search
+    const stripAt = stripDate ?? shared?.week ?? null;
     // what Share hands over: the shared result, or the birthday result on screen
     const shareTarget = shared
         ? { year: shared.year, kind: shared.kind }
@@ -131,17 +134,13 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
         setRefreshing(false);
     };
 
-    const pickDate = (picked: string) => {
-        setDate(picked);
-        setStripWeek(null);
-    };
-
     // looks up one date for Go or the switch, and shows it as the given view
     const showSong = async (lookupDate: string, nextView: BirthdayView) => {
         cancelSongLoad();
         const controller = new AbortController();
         songRequest.current = controller;
         setHasSearched(true);
+        setStripDate(lookupDate);
         setLoading(true);
         setError(null);
         setSongData(null);
@@ -196,7 +195,7 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
     // on /17, Go jumps straight to the 17th birthday, unless it hasn't happened yet
     const search = (searchDate: string) => {
         leaveSharedResult();
-        pickDate(searchDate);
+        setDate(searchDate);
         setBirthday(searchDate);
         savedResults.current = {};
         if (trend && today && checkNthBirthday(searchDate, TREND_AGE, today) === "ok")
@@ -207,10 +206,12 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
     const toggleView = () => {
         if (!birthday || !seventeenth) return;
         const next = view === "born" ? "seventeen" : "born";
+        const nextDate = next === "seventeen" ? seventeenth : birthday;
         const saved = savedResults.current[next];
-        if (!saved) return showSong(next === "seventeen" ? seventeenth : birthday, next);
+        if (!saved) return showSong(nextDate, next);
         cancelSongLoad();
         setError(null);
+        setStripDate(nextDate);
         scrollToResult.current = true;
         setSongData(saved);
         setView(next);
@@ -275,7 +276,7 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
 
     const moveStrip = (week: number) => {
         cancelSongLoad();
-        setStripWeek(week);
+        setStripDate(stripData!.dates[week]);
         // chart weeks are dated ahead, so the newest one can be after today
         setDate(clampIsoDate(stripData!.dates[week], FIRST_CHART_DATE, today));
     };
@@ -346,7 +347,7 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
                                 value={selectedDate}
                                 min={earliestDate}
                                 max={today}
-                                onChange={pickDate}
+                                onChange={setDate}
                                 className="text-base sm:text-lg"
                             />
                             {/* off until the page is ready: before that, a tap would only reload the page */}
@@ -360,10 +361,10 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
                             </button>
                         </div>
                     </div>
-                    {stripData && today && (
+                    {stripData && today && stripAt && (
                         <ChartStrip
                             data={stripData}
-                            week={stripWeek ?? weekForDate(stripData.dates, selectedDate)}
+                            week={weekForDate(stripData.dates, stripAt)}
                             onMove={moveStrip}
                             onRest={loadFromStrip}
                         />
