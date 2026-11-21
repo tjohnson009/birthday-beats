@@ -168,6 +168,22 @@ describe("the chart strip waits for Go", () => {
         expect(stripSays()).toMatch(/^July 13, 1985: A View To A Kill/);
     });
 
+    it("stays up when the person lets go of it on a shared result without moving it", async () => {
+        window.history.replaceState(null, "", "/?week=1985-07-13&year=1985&kind=born&share=1");
+        await renderPage();
+        await song("A View To A Kill");
+
+        // a click or a tiny nudge: the person touches the strip, but it stays on the shared week
+        const track = strip()!;
+        fireEvent.wheel(track);
+        track.scrollLeft = 4 * WEEK_PX + WEEK_PX / 2;
+        fireEvent.scroll(track);
+
+        await waitFor(() => expect(songRequests.at(-1)).toBe("/api/song?date=1985-07-13&source=strip&mode=peek"));
+        await waitForStripToSettle();
+        expect(stripSays()).toMatch(/^July 13, 1985: A View To A Kill/);
+    });
+
     it("on /17, sits on the 17th birthday's week and follows the switch back to the birthday", async () => {
         await renderPage(true);
         pickDate("1968-07-15");

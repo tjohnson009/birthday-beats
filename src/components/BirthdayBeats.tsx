@@ -224,6 +224,8 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
         cancelSongLoad();
         leaveSharedResult();
         const stopDate = stripData.dates[week];
+        // a stop with no move first (a click on a shared result) still needs this, or the strip goes away
+        setStripDate(stopDate);
         const controller = new AbortController();
         songRequest.current = controller;
         // browsing the strip treats each stop as the birthday
