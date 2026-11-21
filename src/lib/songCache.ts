@@ -10,7 +10,7 @@ const redis = Redis.fromEnv({
     signal: () => AbortSignal.timeout(1500),
 });
 
-const FORTY_DAYS_IN_SECONDS = 60 * 60 * 24 * 40;
+const SIXTY_DAYS_IN_SECONDS = 60 * 60 * 24 * 60;
 // "Spotify has no match" is remembered for a day, so repeat lookups of that song spend no Spotify budget
 const ONE_DAY_IN_SECONDS = 60 * 60 * 24;
 
@@ -61,7 +61,7 @@ export const getSongDetails = async (
 
     try {
         if (!song) await redis.set(key, { notFound: true }, { ex: ONE_DAY_IN_SECONDS });
-        else await redis.set(key, song, { ex: FORTY_DAYS_IN_SECONDS });
+        else await redis.set(key, song, { ex: SIXTY_DAYS_IN_SECONDS });
     } catch (error) {
         console.error("Cache write failed:", error);
     }

@@ -47,6 +47,14 @@ describe("getSongDetails", () => {
         expect(redis.set).toHaveBeenCalledWith("Hey Jude|The Beatles", { notFound: true }, { ex: 86_400 });
     });
 
+    it("keeps found Spotify details for 60 days", async () => {
+        const song = { trackId: "abc" };
+        (searchSong as jest.Mock).mockResolvedValue(song);
+
+        expect(await lookup()).toEqual({ song, status: "fresh" });
+        expect(redis.set).toHaveBeenCalledWith("Hey Jude|The Beatles", song, { ex: 60 * 86_400 });
+    });
+
     it("answers a remembered no-match without spending Spotify budget", async () => {
         redis.get.mockResolvedValue({ notFound: true });
 
