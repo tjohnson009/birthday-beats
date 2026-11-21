@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { SITE_URL } from "@/lib/share";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -15,8 +16,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+    // both domains serve the site; search engines are pointed at birthdaybeats.net
+    metadataBase: new URL(SITE_URL),
+    alternates: { canonical: "/" },
     title: "Birthday Beats",
-    description: "What was the #1 song in the US on the day you were born? What about the day you graduated college? Birthday Beats helps you remember, see, and hear the number 1 song from any date since August 1958",
+    description:
+        "What was the #1 song in the US on the day you were born? What about the day you graduated college? Birthday Beats helps you remember, see, and hear the number 1 song from any date since August 1958",
 };
 
 export default function RootLayout({
@@ -30,7 +35,7 @@ export default function RootLayout({
                 <Header />
                 {children}
                 <Footer />
-                </body>
+            </body>
         </html>
     );
 }

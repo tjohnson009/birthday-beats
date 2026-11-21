@@ -8,7 +8,7 @@ import { songSearchText } from "@/lib/songSearch";
 // the share sheet's rules: the same short sheet on every screen, with the main button picked by where the
 // person is, the one-thing clipboard, and what each share sends. phones are faked by their user agent
 
-const LINK = "https://birthday-beats.vercel.app/17";
+const LINK = "https://birthdaybeats.net/17";
 const TITLE = "Lady Marmalade";
 const ARTIST = "Christina Aguilera, Lil' Kim, Mya & P!nk";
 // what Copy song name copies and the help says to search: title and lead artist, cleaned up like the Spotify search

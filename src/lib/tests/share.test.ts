@@ -9,7 +9,7 @@ describe("shareCard", () => {
             artist: "Janet",
             detail: "the #1 song on my 17th birthday · 2001",
             cta: "Find YOUR 2027 song",
-            link: "birthday-beats.vercel.app/17",
+            link: "birthdaybeats.net/17",
         });
     });
 
@@ -20,7 +20,7 @@ describe("shareCard", () => {
             artist: "Irene Cara",
             detail: "1983",
             cta: "Find yours",
-            link: "birthday-beats.vercel.app",
+            link: "birthdaybeats.net",
         });
     });
 
@@ -48,8 +48,8 @@ describe("shareCard", () => {
 
 describe("share links", () => {
     it("points the 17th birthday card at the trend page", () => {
-        expect(shareLink("seventeen")).toBe("https://birthday-beats.vercel.app/17");
-        expect(shareLink("born")).toBe("https://birthday-beats.vercel.app");
+        expect(shareLink("seventeen")).toBe("https://birthdaybeats.net/17");
+        expect(shareLink("born")).toBe("https://birthdaybeats.net");
     });
 
     it("builds the one image address the route accepts: chart week, year, kind", () => {

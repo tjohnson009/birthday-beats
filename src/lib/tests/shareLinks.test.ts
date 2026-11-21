@@ -7,7 +7,7 @@ import {
     sharedResultUrl,
 } from "../share";
 
-const RESULT_17 = "https://birthday-beats.vercel.app/17?week=2001-05-12&year=2001&kind=seventeen&share=1";
+const RESULT_17 = "https://birthdaybeats.net/17?week=2001-05-12&year=2001&kind=seventeen&share=1";
 
 describe("sharedResultUrl", () => {
     it("points a 17th birthday result at /17 with its chart week, year, and kind, never a birth date", () => {
@@ -16,7 +16,7 @@ describe("sharedResultUrl", () => {
 
     it("points a birthday result at the home page", () => {
         expect(sharedResultUrl("1983-06-11", "1983", "born")).toBe(
-            "https://birthday-beats.vercel.app/?week=1983-06-11&year=1983&kind=born&share=1",
+            "https://birthdaybeats.net/?week=1983-06-11&year=1983&kind=born&share=1",
         );
     });
 
@@ -30,18 +30,18 @@ describe("sharedResultUrl", () => {
 describe("escape links out of Instagram's browser", () => {
     it("wraps the whole result address for iPhone's extbrowser link", () => {
         expect(instagramEscapeLink(RESULT_17)).toBe(
-            "instagram://extbrowser/?url=https%3A%2F%2Fbirthday-beats.vercel.app%2F17%3Fweek%3D2001-05-12%26year%3D2001%26kind%3Dseventeen%26share%3D1",
+            "instagram://extbrowser/?url=https%3A%2F%2Fbirthdaybeats.net%2F17%3Fweek%3D2001-05-12%26year%3D2001%26kind%3Dseventeen%26share%3D1",
         );
     });
 
     it("builds an Android intent link with no package, so the default browser opens it", () => {
         expect(androidEscapeLink(RESULT_17)).toBe(
-            "intent://birthday-beats.vercel.app/17?week=2001-05-12&year=2001&kind=seventeen&share=1#Intent;scheme=https;end",
+            "intent://birthdaybeats.net/17?week=2001-05-12&year=2001&kind=seventeen&share=1#Intent;scheme=https;end",
         );
         expect(
-            androidEscapeLink("https://birthday-beats.vercel.app/?week=1983-06-11&year=1983&kind=born&share=1"),
+            androidEscapeLink("https://birthdaybeats.net/?week=1983-06-11&year=1983&kind=born&share=1"),
         ).toBe(
-            "intent://birthday-beats.vercel.app/?week=1983-06-11&year=1983&kind=born&share=1#Intent;scheme=https;end",
+            "intent://birthdaybeats.net/?week=1983-06-11&year=1983&kind=born&share=1#Intent;scheme=https;end",
         );
     });
 

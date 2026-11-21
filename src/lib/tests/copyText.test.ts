@@ -3,7 +3,7 @@
  */
 import { copyText } from "../copyText";
 
-const LINK = "https://birthday-beats.vercel.app/17";
+const LINK = "https://birthdaybeats.net/17";
 
 const linkField = () => {
     const field = document.createElement("input");

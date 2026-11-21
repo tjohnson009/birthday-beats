@@ -7,6 +7,7 @@ import { getHeroTitles } from "@/lib/showcase";
 export const metadata: Metadata = {
     // link previews need full addresses; the preview picture is ./opengraph-image.tsx
     metadataBase: new URL(SITE_URL),
+    alternates: { canonical: "/17" },
     title: "What was the #1 song on your 17th birthday? · Birthday Beats",
     description:
         "Will 2027 be a party anthem or a breakup song? The trend says it's whatever hit #1 when you turned 17. Enter your birthday to see yours.",

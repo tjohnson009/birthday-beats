@@ -2,7 +2,8 @@ import { FIRST_CHART_DATE, TREND_AGE } from "@/lib/dates";
 
 // safe for the browser: nothing here imports the chart file (that lives in shareCard.ts, server only)
 
-export const SITE_URL = "https://birthday-beats.vercel.app";
+// the main address; birthday-beats.vercel.app serves the same site, and pages name this one as canonical
+export const SITE_URL = "https://birthdaybeats.net";
 
 export type ShareKind = "seventeen" | "born";
 
