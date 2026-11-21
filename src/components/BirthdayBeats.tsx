@@ -439,8 +439,6 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
                         year={shareTarget.year}
                         kind={shareTarget.kind}
                         title={songData.title}
-                        artist={songData.artist}
-                        spotifyId={songData.spotify?.id ?? null}
                         onClose={() => setSharing(false)}
                     />
                 )}

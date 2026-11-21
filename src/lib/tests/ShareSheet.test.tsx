@@ -4,14 +4,17 @@
 import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import ShareSheet from "@/components/ShareSheet";
 
-// the share sheet's rules from the share flow spec: which buttons each screen shows, the one-thing clipboard,
-// the return reminder, and what each share sends. phones are faked by their user agent
+// the share sheet's rules: the same short sheet on every screen, with the main button picked by where the
+// person is, the one-thing clipboard, and what each share sends. phones are faked by their user agent
 
 const LINK = "https://birthday-beats.vercel.app/17";
 const TITLE = "Lady Marmalade";
-const AGAIN_LINE = "Your link isn't copied anymore. Copy it for the Link sticker.";
+const STORY_LINE = "Post it to your Story, then add the song so it plays.";
+const COMPUTER_LINE = "Save it, then post it from your phone. Add the song so it plays.";
+const HOLD_LINE = "Press and hold the picture to save it.";
 
-type Phone = { userAgent: string; platform: string; maxTouchPoints: number; canShare: boolean };
+// share: navigator.share exists. files: it can also share a picture file
+type Phone = { userAgent: string; platform: string; maxTouchPoints: number; share: boolean; files: boolean };
 
 const PHONES: Record<"A" | "B" | "C" | "D" | "E", Phone> = {
     // A: iPhone, inside Instagram
@@ -20,7 +23,8 @@ const PHONES: Record<"A" | "B" | "C" | "D" | "E", Phone> = {
             "Mozilla/5.0 (iPhone; CPU iPhone OS 18_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/22B83 Instagram 356.0.0.32.111 (iPhone15,3; iOS 18_1; en_US; en; scale=3.00; 1290x2796; 654891233)",
         platform: "iPhone",
         maxTouchPoints: 5,
-        canShare: true,
+        share: true,
+        files: true,
     },
     // B: iPhone, Safari
     B: {
@@ -28,7 +32,8 @@ const PHONES: Record<"A" | "B" | "C" | "D" | "E", Phone> = {
             "Mozilla/5.0 (iPhone; CPU iPhone OS 18_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.1 Mobile/15E148 Safari/604.1",
         platform: "iPhone",
         maxTouchPoints: 5,
-        canShare: true,
+        share: true,
+        files: true,
     },
     // C: Android, inside Instagram, which has no share menu
     C: {
@@ -36,7 +41,8 @@ const PHONES: Record<"A" | "B" | "C" | "D" | "E", Phone> = {
             "Mozilla/5.0 (Linux; Android 14; Pixel 8 Build/AP2A.240805.005; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/127.0.6533.103 Mobile Safari/537.36 Instagram 343.0.0.38.94 Android (34/14; 420dpi; 1080x2205; Google/google; Pixel 8; shiba; shiba; en_US; 630156200)",
         platform: "Linux armv8l",
         maxTouchPoints: 5,
-        canShare: false,
+        share: false,
+        files: false,
     },
     // D: Android, Chrome
     D: {
@@ -44,7 +50,8 @@ const PHONES: Record<"A" | "B" | "C" | "D" | "E", Phone> = {
             "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36",
         platform: "Linux armv8l",
         maxTouchPoints: 5,
-        canShare: true,
+        share: true,
+        files: true,
     },
     // E: a computer
     E: {
@@ -52,7 +59,8 @@ const PHONES: Record<"A" | "B" | "C" | "D" | "E", Phone> = {
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
         platform: "MacIntel",
         maxTouchPoints: 0,
-        canShare: true,
+        share: true,
+        files: true,
     },
 };
 
@@ -61,6 +69,7 @@ const setNavigator = (name: string, value: unknown) =>
 
 let share: jest.Mock;
 let writeText: jest.Mock;
+let onClose: jest.Mock;
 
 // waits for the picture fetch too, so its update lands inside the test
 const openSheet = async (phone: Phone) => {
@@ -68,34 +77,19 @@ const openSheet = async (phone: Phone) => {
     setNavigator("platform", phone.platform);
     setNavigator("maxTouchPoints", phone.maxTouchPoints);
     share = jest.fn(async () => {});
-    setNavigator("share", phone.canShare ? share : undefined);
-    setNavigator("canShare", phone.canShare ? () => true : undefined);
+    setNavigator("share", phone.share ? share : undefined);
+    setNavigator("canShare", phone.share ? (data: ShareData) => !data.files || phone.files : undefined);
     writeText = jest.fn(async () => {});
     setNavigator("clipboard", { writeText });
-    render(
-        <ShareSheet
-            week="2001-06-09"
-            year="2001"
-            kind="seventeen"
-            title={TITLE}
-            artist="Christina Aguilera, Lil' Kim, Mya & P!nk"
-            spotifyId="4uLU6hMCjMI75M1A2tKUQC"
-            onClose={() => {}}
-        />,
-    );
+    onClose = jest.fn();
+    render(<ShareSheet week="2001-06-09" year="2001" kind="seventeen" title={TITLE} onClose={onClose} />);
     await act(async () => {});
 };
 
-const stepThree = () => screen.getByRole("heading", { name: "3. In Instagram" }).closest("section")!;
-const stepOne = () => screen.getByRole("heading", { name: "1. Copy the link" }).closest("section")!;
 const button = (name: string) => screen.getByRole("button", { name });
+const noButton = (name: string) => screen.queryByRole("button", { name });
+const link = (name: string) => screen.getByRole("link", { name });
 const hasText = (text: string) => (document.body.textContent ?? "").includes(text);
-
-// they switch to Instagram and come back to the page
-const leaveAndComeBack = () =>
-    act(() => {
-        document.dispatchEvent(new Event("visibilitychange"));
-    });
 
 beforeAll(() => {
     // jsdom has no modal dialogs
@@ -106,11 +100,10 @@ beforeAll(() => {
         this.removeAttribute("open");
         this.dispatchEvent(new Event("close"));
     };
-    Object.defineProperty(document, "visibilityState", { value: "visible", configurable: true });
 });
 
 beforeEach(() => {
-    // the story picture, fetched ahead of the tap for Send to Instagram
+    // the story picture, fetched ahead of the tap for Share picture
     global.fetch = jest.fn(async () => ({
         ok: true,
         blob: async () => new Blob(["png"], { type: "image/png" }),
@@ -119,67 +112,190 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-describe("ShareSheet screens", () => {
-    it("A (iPhone, inside Instagram): no Save picture, no Send to Instagram, no song button in step 3", async () => {
-        await openSheet(PHONES.A);
-
-        expect(screen.queryByText("Save picture")).toBeNull();
-        expect(screen.queryByRole("button", { name: "Send to Instagram" })).toBeNull();
-        expect(within(stepThree()).queryByRole("button", { name: "Copy song name" })).toBeNull();
-        expect(hasText("This replaces the copied link")).toBe(false);
-        expect(hasText("Close this page (tap X at the top). Then:")).toBe(true);
-    });
-
-    it("C (Android, inside Instagram): never says to press and hold the picture, and leaves by a tapped link", async () => {
-        await openSheet(PHONES.C);
-
-        expect(hasText("Press and hold the picture")).toBe(false);
-        expect(screen.queryByText("Save picture")).toBeNull();
-        expect(screen.getByRole("link", { name: "Open in your browser" }).getAttribute("href")).toMatch(
-            /^intent:\/\/.*#Intent;scheme=http;end$/,
-        );
-        // no share menu here, so no Send to a friend either
-        expect(screen.queryByRole("button", { name: "Send to a friend" })).toBeNull();
-    });
-
-    it.each(["B", "D"] as const)(
-        "%s (a real browser): step 3 has Copy song name and the warning under it",
-        async (key) => {
-            await openSheet(PHONES[key]);
-
-            expect(within(stepThree()).getByRole("button", { name: "Copy song name" })).toBeTruthy();
-            expect(within(stepThree()).getByText(/This replaces the copied link\./)).toBeTruthy();
-        },
-    );
-
-    // iPhones with a Home button (SE) take screenshots with side and Home
-    it.each([
-        ["A", "press the side and volume up buttons together, or the side and Home buttons"],
-        ["B", "press the side and volume up buttons together, or the side and Home buttons"],
-        ["C", "hold the power and volume down buttons"],
-        ["D", "hold the power and volume down buttons"],
-    ] as const)("%s: the Full screen hint names that phone's screenshot buttons", async (key, buttons) => {
+describe("ShareSheet, the same short sheet everywhere", () => {
+    it.each(["A", "B", "C", "D", "E"] as const)("%s: title and an X at the top that closes it", async (key) => {
         await openSheet(PHONES[key]);
 
-        expect(hasText(`Take a screenshot (${buttons}). Tap to close.`)).toBe(true);
+        const header = screen.getByRole("heading", { name: "Share your song" }).parentElement!;
+        const close = within(header).getByRole("button", { name: "Close" });
+        // one way to close, and it's the X
+        expect(screen.getAllByRole("button", { name: "Close" })).toHaveLength(1);
+        expect(header.className).toMatch(/\bsticky\b/);
+        expect(header.className).toMatch(/\btop-0\b/);
+        expect(close.className).toMatch(/\bsize-11\b/);
+        expect(close.className).toMatch(/focus-visible:outline/);
+
+        fireEvent.click(close);
+
+        expect(onClose).toHaveBeenCalledTimes(1);
     });
 
-    it("E (a computer): download and copy, with the Instagram steps folded away", async () => {
+    // focus on the X would show its ring the moment a shared link opens the sheet
+    it.each(["A", "C", "E"] as const)("%s: opens with focus on the sheet itself, not the X", async (key) => {
+        await openSheet(PHONES[key]);
+
+        const dialog = screen.getByRole("dialog", { name: "Share your song" });
+        expect(document.activeElement).toBe(dialog);
+        expect(dialog.className).toMatch(/\boutline-none\b/);
+    });
+
+    it.each(["A", "B", "C", "D", "E"] as const)("%s: the picture is a plain image in no link", async (key) => {
+        await openSheet(PHONES[key]);
+
+        const picture = screen.getByRole("img", { name: "Your song as a Story picture" });
+        expect(picture.getAttribute("src")).toBe("/api/share-image?week=2001-06-09&year=2001&kind=seventeen");
+        expect(picture.closest("a")).toBeNull();
+    });
+
+    it.each(["A", "B", "C", "D"] as const)("%s: the one line says to post it and add the song", async (key) => {
+        await openSheet(PHONES[key]);
+
+        expect(screen.getByText(STORY_LINE)).toBeTruthy();
+        expect(hasText(COMPUTER_LINE)).toBe(false);
+    });
+
+    it.each(["A", "B", "C", "D", "E"] as const)("%s: the long instructions are gone", async (key) => {
+        await openSheet(PHONES[key]);
+
+        for (const gone of [
+            "That's the whole trend",
+            "Full screen",
+            "Having trouble?",
+            "Add Yours",
+            "TikTok:",
+            "Open in Spotify",
+            "Copy link again",
+            "Tap the music note",
+            "Send to Instagram",
+            "isn't copied anymore",
+        ]) {
+            expect([gone, hasText(gone)]).toEqual([gone, false]);
+        }
+        expect(screen.queryAllByRole("heading", { level: 3 })).toHaveLength(0);
+    });
+
+    it.each(["A", "B", "C", "D", "E"] as const)("%s: New to this? folds three short lines", async (key) => {
+        await openSheet(PHONES[key]);
+
+        const help = screen.getByText("New to this?").closest("details")!;
+        expect(help.open).toBe(false);
+        expect(
+            within(help)
+                .getAllByRole("listitem")
+                .map((li) => li.textContent),
+        ).toEqual([
+            "Save the picture.",
+            "In Instagram or TikTok, start a Story and pick the picture.",
+            `Add music and search "${TITLE}". On Instagram, add a Link sticker and paste the link.`,
+        ]);
+    });
+
+    it.each(["A", "B", "C", "D", "E"] as const)("%s: Copy link and Copy song name sit side by side", async (key) => {
+        await openSheet(PHONES[key]);
+
+        const copyLink = button("Copy link");
+        expect(copyLink.parentElement).toBe(button("Copy song name").parentElement);
+    });
+});
+
+describe("ShareSheet screens", () => {
+    it("A (iPhone, inside Instagram): press and hold, Share picture when it can, and a way out", async () => {
+        await openSheet(PHONES.A);
+
+        expect(screen.getByText(HOLD_LINE)).toBeTruthy();
+        expect(button("Share picture").className).toMatch(/bg-brand-blue/);
+        expect(screen.queryByRole("link", { name: "Save picture" })).toBeNull();
+        expect(link("Can't save? Open in your browser").getAttribute("href")).toBe(
+            "instagram://extbrowser/?url=" +
+                encodeURIComponent("http://localhost/17?week=2001-06-09&year=2001&kind=seventeen&share=1"),
+        );
+    });
+
+    it("A without picture sharing: no main button, the press and hold line covers it", async () => {
+        await openSheet({ ...PHONES.A, share: false, files: false });
+
+        expect(screen.getByText(HOLD_LINE)).toBeTruthy();
+        expect(noButton("Share picture")).toBeNull();
+        expect(screen.queryByRole("link", { name: "Save picture" })).toBeNull();
+        expect(noButton("Send to a friend")).toBeNull();
+    });
+
+    it("B (iPhone, Safari): Share picture is the main button, and no escape links", async () => {
+        await openSheet(PHONES.B);
+
+        expect(button("Share picture").className).toMatch(/bg-brand-blue/);
+        expect(hasText(HOLD_LINE)).toBe(false);
+        expect(screen.queryByRole("link", { name: "Save picture" })).toBeNull();
+        expect(hasText("Open in your browser")).toBe(false);
+    });
+
+    // a Save picture link on an iPhone lands in Files, which Instagram can't pick from
+    it("B without picture sharing: falls back to press and hold, not a download", async () => {
+        await openSheet({ ...PHONES.B, files: false });
+
+        expect(noButton("Share picture")).toBeNull();
+        expect(screen.getByText(HOLD_LINE)).toBeTruthy();
+        expect(screen.queryByRole("link", { name: "Save picture" })).toBeNull();
+    });
+
+    it("C (Android, inside Instagram): leaving is the main button, and nothing says press and hold", async () => {
+        await openSheet(PHONES.C);
+
+        const escape = link("Open in your browser");
+        expect(escape.getAttribute("href")).toMatch(/^intent:\/\/.*#Intent;scheme=http;end$/);
+        expect(escape.className).toMatch(/bg-brand-blue/);
+        expect(screen.getByText("Instagram's browser here can't save pictures.")).toBeTruthy();
+        expect(hasText("Press and hold the picture")).toBe(false);
+        expect(noButton("Share picture")).toBeNull();
+        expect(screen.queryByRole("link", { name: "Save picture" })).toBeNull();
+        // no share menu here, so no Send to a friend either
+        expect(noButton("Send to a friend")).toBeNull();
+    });
+
+    it("D (Android, Chrome): Share picture is the main button", async () => {
+        await openSheet(PHONES.D);
+
+        expect(button("Share picture").className).toMatch(/bg-brand-blue/);
+        expect(screen.queryByRole("link", { name: "Save picture" })).toBeNull();
+        expect(hasText(HOLD_LINE)).toBe(false);
+        expect(hasText("Open in your browser")).toBe(false);
+    });
+
+    it("D without picture sharing: Save picture downloads it", async () => {
+        await openSheet({ ...PHONES.D, files: false });
+
+        expect(noButton("Share picture")).toBeNull();
+        const save = link("Save picture");
+        expect(save.getAttribute("download")).toBe("my-2027-song.png");
+        expect(save.getAttribute("href")).toBe("/api/share-image?week=2001-06-09&year=2001&kind=seventeen");
+        expect(save.className).toMatch(/bg-brand-blue/);
+    });
+
+    // a failed picture fetch leaves nothing to share, so the download comes back
+    it("D: a failed picture fetch falls back to Save picture", async () => {
+        global.fetch = jest.fn(async () => ({ ok: false })) as unknown as typeof fetch;
+        await openSheet(PHONES.D);
+
+        expect(noButton("Share picture")).toBeNull();
+        expect(link("Save picture").getAttribute("download")).toBe("my-2027-song.png");
+    });
+
+    it("E (a computer): Save picture, the computer line, and no Share picture even when it could", async () => {
         await openSheet(PHONES.E);
 
-        expect(screen.getByRole("link", { name: "Download picture" }).getAttribute("download")).toBe(
-            "my-2027-song.png",
-        );
-        expect(button("Copy link")).toBeTruthy();
-        expect(screen.getByText("What to do in Instagram")).toBeTruthy();
-        expect(hasText("Having trouble?")).toBe(false);
+        expect(screen.getByText(COMPUTER_LINE)).toBeTruthy();
+        expect(hasText(STORY_LINE)).toBe(false);
+        expect(link("Save picture").getAttribute("download")).toBe("my-2027-song.png");
+        expect(noButton("Share picture")).toBeNull();
+        expect(hasText(HOLD_LINE)).toBe(false);
+        expect(hasText("Open in your browser")).toBe(false);
     });
 });
 
 describe("ShareSheet clipboard", () => {
     it("says Link copied only after the link was copied", async () => {
         await openSheet(PHONES.B);
-        expect(screen.queryByRole("button", { name: "Link copied" })).toBeNull();
+        expect(noButton("Link copied")).toBeNull();
 
         await act(async () => fireEvent.click(button("Copy link")));
 
@@ -187,72 +303,58 @@ describe("ShareSheet clipboard", () => {
         expect(button("Link copied")).toBeTruthy();
     });
 
-    it("drops Link copied once the song name takes its place", async () => {
+    it("after the song name, Copy link just says Copy link so it can be copied again", async () => {
         await openSheet(PHONES.B);
         await act(async () => fireEvent.click(button("Copy link")));
 
-        await act(async () => fireEvent.click(within(stepThree()).getByRole("button", { name: "Copy song name" })));
+        await act(async () => fireEvent.click(button("Copy song name")));
 
         expect(writeText).toHaveBeenLastCalledWith(TITLE);
-        expect(screen.queryByRole("button", { name: "Link copied" })).toBeNull();
-        expect(within(stepOne()).getByRole("button", { name: "Copy link" })).toBeTruthy();
-        expect(within(stepThree()).getByRole("button", { name: "Song name copied" })).toBeTruthy();
-    });
+        expect(button("Song name copied")).toBeTruthy();
+        expect(noButton("Link copied")).toBeNull();
 
-    it("doesn't nag on return while the link is still the thing copied", async () => {
-        await openSheet(PHONES.B);
         await act(async () => fireEvent.click(button("Copy link")));
 
-        leaveAndComeBack();
-
-        expect(screen.queryByRole("button", { name: "Copy link again" })).toBeNull();
-        expect(hasText(AGAIN_LINE)).toBe(false);
+        expect(writeText).toHaveBeenLastCalledWith(LINK);
+        expect(button("Link copied")).toBeTruthy();
+        expect(button("Copy song name")).toBeTruthy();
     });
 
-    it.each(["B", "D"] as const)(
-        "%s: after the song name, coming back asks for the link again in step 1",
-        async (key) => {
-            await openSheet(PHONES[key]);
-            await act(async () => fireEvent.click(within(stepThree()).getByRole("button", { name: "Copy song name" })));
+    it("no reminder shows up when they come back after copying the song", async () => {
+        await openSheet(PHONES.D);
+        await act(async () => fireEvent.click(button("Copy song name")));
 
-            leaveAndComeBack();
+        act(() => {
+            document.dispatchEvent(new Event("visibilitychange"));
+        });
 
-            const again = within(stepOne()).getByRole("button", { name: "Copy link again" });
-            expect(again.className).toMatch(/bg-brand-blue/);
-            expect(within(stepOne()).getByText(AGAIN_LINE)).toBeTruthy();
-        },
-    );
+        expect(button("Copy link")).toBeTruthy();
+        expect(hasText("isn't copied anymore")).toBe(false);
+    });
 
-    // they come back to the song step, a long way under step 1, so the reminder has to be there too
-    it.each(["B", "D"] as const)(
-        "%s: the reminder and a main Copy link again also show in step 3, where they come back",
-        async (key) => {
-            await openSheet(PHONES[key]);
-            await act(async () => fireEvent.click(within(stepThree()).getByRole("button", { name: "Copy song name" })));
+    it("when copying fails, shows the link and says to press and hold it", async () => {
+        await openSheet(PHONES.A);
+        const field = screen.getByDisplayValue(LINK);
+        // there to select for the old copy command, out of sight until it's needed
+        expect(field.className).toMatch(/\bsr-only\b/);
+        expect(hasText("Press and hold the link to copy it.")).toBe(false);
+        writeText.mockRejectedValue(new Error("no clipboard"));
+        document.execCommand = () => false;
 
-            leaveAndComeBack();
+        await act(async () => fireEvent.click(button("Copy link")));
 
-            const again = within(stepThree()).getByRole("button", { name: "Copy link again" });
-            expect(again.className).toMatch(/bg-brand-blue/);
-            expect(within(stepThree()).getByText(AGAIN_LINE)).toBeTruthy();
-
-            await act(async () => fireEvent.click(again));
-
-            expect(writeText).toHaveBeenLastCalledWith(LINK);
-            // the tap is answered where it happened, and the line goes away
-            expect(within(stepThree()).getByRole("button", { name: "Link copied" })).toBeTruthy();
-            expect(within(stepOne()).getByRole("button", { name: "Link copied" })).toBeTruthy();
-            expect(hasText(AGAIN_LINE)).toBe(false);
-        },
-    );
+        expect(field.className).not.toMatch(/\bsr-only\b/);
+        expect(screen.getByText("Press and hold the link to copy it.")).toBeTruthy();
+        expect(noButton("Link copied")).toBeNull();
+    });
 });
 
 describe("ShareSheet share menu", () => {
-    it("Send to Instagram sends the picture alone", async () => {
-        await openSheet(PHONES.B);
-        const send = await screen.findByRole("button", { name: "Send to Instagram" });
+    it.each(["A", "B", "D"] as const)("%s: Share picture sends the picture alone, right in the tap", async (key) => {
+        await openSheet(PHONES[key]);
 
-        await act(async () => fireEvent.click(send));
+        // no act: share() has to run before the tap handler awaits anything
+        fireEvent.click(button("Share picture"));
 
         expect(share).toHaveBeenCalledTimes(1);
         const data = share.mock.calls[0][0];
@@ -260,6 +362,7 @@ describe("ShareSheet share menu", () => {
         expect(data.files).toHaveLength(1);
         expect(data.files[0]).toBeInstanceOf(File);
         expect([data.files[0].name, data.files[0].type]).toEqual(["my-2027-song.png", "image/png"]);
+        await act(async () => {});
     });
 
     it("Send to a friend sends the link and the question, no picture", async () => {
