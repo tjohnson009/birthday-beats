@@ -49,6 +49,9 @@ export default function ShareSheet({ week, year, kind, title, artist, onClose }:
     const dialogRef = useRef<HTMLDialogElement>(null);
     const linkRef = useRef<HTMLInputElement>(null);
     const songRef = useRef<HTMLInputElement>(null);
+    // did the last tap go down outside the sheet? near the sheet's edge, a phone's browser can move a tap onto
+    // a nearby link and send its click just outside, onto the backdrop, so the click alone can't tell
+    const pressedOutside = useRef(false);
     // checked once, when the sheet opens (it only ever renders in the browser)
     const [screen] = useState<ShareScreen>(() =>
         shareScreen({
@@ -182,8 +185,13 @@ export default function ShareSheet({ week, year, kind, title, artist, onClose }:
         <dialog
             ref={dialogRef}
             onClose={onClose}
-            // a tap on the dimmed backdrop lands on the dialog itself
-            onClick={(e) => e.target === dialogRef.current && dialogRef.current.close()}
+            onPointerDown={(e) => {
+                const box = e.currentTarget.getBoundingClientRect();
+                pressedOutside.current =
+                    e.clientX < box.left || e.clientX > box.right || e.clientY < box.top || e.clientY > box.bottom;
+            }}
+            // a tap on the dimmed backdrop lands on the dialog itself. it closes only if the finger went down there too
+            onClick={(e) => e.target === dialogRef.current && pressedOutside.current && dialogRef.current.close()}
             aria-labelledby="share-title"
             tabIndex={-1}
             className={`${roboto.className} m-auto ${edgeRoom} w-[calc(100%-2rem)] max-w-md overflow-y-auto overscroll-contain rounded-3xl bg-background p-0 text-foreground shadow-2xl outline-none backdrop:bg-black/70`}

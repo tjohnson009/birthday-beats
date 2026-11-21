@@ -564,3 +564,58 @@ describe("ShareSheet share menu", () => {
         expect(Object.keys(share.mock.calls[0][0]).sort()).toEqual(["text", "url"]);
     });
 });
+
+// a tap on the dimmed backdrop closes the sheet. near the sheet's edge, a phone's browser can move a tap onto a
+// nearby link and send the click to a point just outside the sheet, so where the finger went down decides it
+describe("ShareSheet backdrop", () => {
+    // the sheet on a 375x667 phone: 16px clear at each side, 24px above and below
+    const BOX = { left: 16, right: 359, top: 24, bottom: 643, x: 16, y: 24, width: 343, height: 619 } as DOMRect;
+
+    // jsdom has no PointerEvent, so a MouseEvent with its name stands in, carrying where the finger went down
+    const press = (target: Element, x: number, y: number) =>
+        fireEvent(target, new MouseEvent("pointerdown", { bubbles: true, clientX: x, clientY: y }));
+
+    const openOnPhone = async () => {
+        await openSheet(PHONES.A);
+        const dialog = screen.getByRole("dialog", { name: "Share your song" });
+        jest.spyOn(dialog, "getBoundingClientRect").mockReturnValue(BOX);
+        return dialog;
+    };
+
+    it.each([
+        ["above the sheet", 188, 12],
+        ["below the sheet", 188, 655],
+        ["left of the sheet", 8, 300],
+        ["right of the sheet", 367, 300],
+    ])("a tap on the backdrop %s closes it", async (_, x, y) => {
+        const dialog = await openOnPhone();
+
+        press(dialog, x, y);
+        fireEvent.click(dialog, { clientX: x, clientY: y });
+
+        expect(onClose).toHaveBeenCalledTimes(1);
+    });
+
+    // seen in Chrome: blank space 6px above the bottom edge, the click moved toward "Can't save? Open in your browser"
+    // and sent to the backdrop
+    it("a tap just inside the bottom edge stays open, even when its click lands on the backdrop", async () => {
+        const dialog = await openOnPhone();
+
+        press(dialog, 188, 637);
+        fireEvent.click(dialog, { clientX: 187, clientY: 644 });
+
+        expect(onClose).not.toHaveBeenCalled();
+        expect(dialog.hasAttribute("open")).toBe(true);
+    });
+
+    it("a tap inside the sheet never closes it", async () => {
+        const dialog = await openOnPhone();
+        const line = screen.getByText(STORY_LINE);
+
+        press(line, 188, 300);
+        fireEvent.click(line, { clientX: 188, clientY: 300 });
+
+        expect(onClose).not.toHaveBeenCalled();
+        expect(dialog.hasAttribute("open")).toBe(true);
+    });
+});
