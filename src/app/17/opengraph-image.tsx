@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
+import LogoMark from "@/components/LogoMark";
 import { TREND_AGE } from "@/lib/dates";
 import { shareLink } from "@/lib/share";
 
@@ -39,20 +40,7 @@ export default function Image() {
             }}
         >
             <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-                {/* same drawing as LogoMark */}
-                <svg viewBox="0 0 32 32" width={64} height={64}>
-                    <defs>
-                        <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-                            <stop offset="0" stopColor={BLUE} />
-                            <stop offset="1" stopColor={GREEN} />
-                        </linearGradient>
-                    </defs>
-                    <rect x="1" y="1" width="30" height="30" rx="8" fill="url(#g)" />
-                    <rect x="6.6" y="19" width="4.6" height="7.4" rx="1.3" fill="#fff" fillOpacity=".6" />
-                    <rect x="13.7" y="14.6" width="4.6" height="11.8" rx="1.3" fill="#fff" fillOpacity=".8" />
-                    <rect x="20.8" y="11" width="4.6" height="15.4" rx="1.3" fill="#fff" />
-                    <path d="M20.4 9.2V5.4L21.9 6.9L23.1 4.4L24.3 6.9L25.8 5.4V9.2Z" fill="#fff" />
-                </svg>
+                <LogoMark size={64} />
                 <div style={{ fontSize: 36, fontWeight: 800 }}>Birthday Beats</div>
             </div>
 
