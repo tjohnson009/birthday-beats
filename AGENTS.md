@@ -40,7 +40,9 @@ and `.env.local` stay at the project root.
 - `src/lib/billboard.ts` — local Billboard dataset lookup (`getNumberOneSong`)
 - `src/lib/youtube.ts` — YouTube music-video search (preview fallback)
 - `src/app/17/page.tsx`: the 17th-birthday trend page (`BirthdayBeats` with `trend`)
-- `src/lib/share.ts` + `src/app/api/share-image/route.tsx`: story-size share image (next/og), chart data only, year only
+- `src/lib/share.ts` + `src/app/api/share-image/route.tsx`: story-size share image (next/og), chart data only, year only.
+  The 17th birthday picture comes in four styles and eight colors, drawn by `src/app/api/share-image/cards/`
+  and picked in the share sheet (`src/components/ShareSheet.tsx`)
 - `src/lib/spotifyGuard.ts`: Redis-counted Spotify budget (500 calls / 3 h site-wide, 10 lookups / min per visitor)
 - `src/scripts/prefillSongCache.ts`: slow cache head start through the live site's guard (`npm run prefill:cache`)
 - `data/` — Billboard Hot 100 dataset (gitignored if large)

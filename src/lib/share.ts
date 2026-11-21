@@ -10,10 +10,46 @@ export type ShareKind = "seventeen" | "born";
 
 export const shareLink = (kind: ShareKind): string => (kind === "seventeen" ? `${SITE_URL}/${TREND_AGE}` : SITE_URL);
 
+// the 17th birthday picture comes in these styles, in the order the share sheet lists them
+export const SHARE_STYLES = ["now-playing", "player", "record", "cassette"] as const;
+export type ShareStyle = (typeof SHARE_STYLES)[number];
+
+export const SHARE_STYLE_NAMES: Record<ShareStyle, string> = {
+    "now-playing": "Now playing",
+    player: "Player",
+    record: "Record",
+    cassette: "Cassette",
+};
+
+// the card colors a person can pick, in the share sheet's order. each style decides where its color goes
+export const SHARE_COLORS = {
+    blue: "#2F6BFF",
+    green: "#16C79A",
+    pink: "#FF4FA0",
+    orange: "#FF7A1A",
+    purple: "#7B4DFF",
+    red: "#E8364F",
+    ink: "#0F1E2E",
+    cream: "#F3ECDF",
+} as const;
+export type ShareColor = keyof typeof SHARE_COLORS;
+
+export type ShareLook = { style: ShareStyle; color: ShareColor };
+
+export const DEFAULT_LOOK: ShareLook = { style: "now-playing", color: "blue" };
+
+// the style and color from an image address, or null if the sheet doesn't offer them
+export const parseShareLook = (style: string, color: string): ShareLook | null =>
+    (SHARE_STYLES as readonly string[]).includes(style) && Object.hasOwn(SHARE_COLORS, color)
+        ? { style: style as ShareStyle, color: color as ShareColor }
+        : null;
+
 // keyed by chart week and year, never the exact date: the image only shows the year, the CDN can reuse one
-// image for a whole week, and the address doesn't carry anyone's birthday. the route accepts only this form
-export const shareImagePath = (week: string, year: string, kind: ShareKind): string =>
-    `/api/share-image?week=${week}&year=${year}&kind=${kind}`;
+// image for a whole week, and the address doesn't carry anyone's birthday. the route accepts only this form.
+// only the 17th birthday picture has a style and color to pick (the birthday one has one design for now)
+export const shareImagePath = (week: string, year: string, kind: ShareKind, look: ShareLook = DEFAULT_LOOK): string =>
+    `/api/share-image?week=${week}&year=${year}&kind=${kind}` +
+    (kind === "seventeen" ? `&style=${look.style}&color=${look.color}` : "");
 
 // a result someone opened from a share link: the page shows that week's song and opens the share sheet
 export type SharedResult = { week: string; year: string; kind: ShareKind };

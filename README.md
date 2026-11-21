@@ -98,7 +98,7 @@ npm run build:youtube
 - [x] Auto-refresh chart data via scheduled GitHub Action
 - [x] Visit + play tracking in a Postgres event log
 - [x] Redis cache in front of Spotify search (60-day TTL)
-- [x] `/17` trend page ("the #1 on your 17th birthday is how your 2027 will go"), a switch between your birthday and 17th birthday #1, and a story-size share image
+- [x] `/17` trend page ("the #1 on your 17th birthday is how your 2027 will go"), a switch between your birthday and 17th birthday #1, and a story-size share image (the 17th birthday one comes in four styles and eight colors, drawn by `src/app/api/share-image/cards/`)
 - [ ] Polish: scroll-to-results, art-driven color scheme
 
 ## Chart data

@@ -3,13 +3,19 @@ import { MouseEvent, ReactElement, useEffect, useRef, useState } from "react";
 import { display, roboto } from "@/lib/fonts";
 import { copyText } from "@/lib/copyText";
 import {
+    DEFAULT_LOOK,
+    SHARE_COLORS,
+    SHARE_STYLE_NAMES,
+    SHARE_STYLES,
     androidEscapeLink,
     friendShareText,
     instagramEscapeLink,
     shareImagePath,
     shareLink,
     sharedResultUrl,
+    type ShareColor,
     type ShareKind,
+    type ShareLook,
 } from "@/lib/share";
 import { shareScreen, type ShareScreen } from "@/lib/shareEnvironment";
 import { songSearchText } from "@/lib/songSearch";
@@ -43,6 +49,70 @@ const computerLine = "Save it, then post it from your phone. Add the song so it 
 // “The Happy Organ Dave ‘Baby’ Cortez”. what gets copied keeps the plain text
 const quoted = (text: string) => `“${text.replace(/(^|[\s([{])"/g, "$1‘").replace(/"/g, "’")}”`;
 
+const SHARE_COLOR_KEYS = Object.keys(SHARE_COLORS) as ShareColor[];
+// each dot's name for screen readers: "Blue", "Cream"
+const colorName = (color: ShareColor) => color[0].toUpperCase() + color.slice(1);
+
+// real radio groups, so arrow keys and screen readers work. each radio sits out of sight, and the box or dot
+// right after it shows which one is picked
+function LookPicker({ look, onChange }: { look: ShareLook; onChange: (look: ShareLook) => void }): ReactElement {
+    return (
+        <div className="flex w-full flex-col gap-3 text-left">
+            <fieldset className="min-w-0">
+                <legend className="pb-1.5 text-xs font-semibold text-muted">Style</legend>
+                <div className="grid grid-cols-4 gap-1.5">
+                    {SHARE_STYLES.map((style) => (
+                        <label key={style} className="flex">
+                            <input
+                                type="radio"
+                                name="share-style"
+                                value={style}
+                                checked={look.style === style}
+                                onChange={() => onChange({ ...look, style })}
+                                className="peer sr-only"
+                            />
+                            <span className="flex min-h-11 w-full items-center justify-center rounded-xl border-2 border-line bg-surface px-1 text-center text-sm leading-tight font-medium hover:cursor-pointer hover:border-brand-blue/60 peer-checked:border-brand-blue peer-checked:bg-brand-blue/10 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-brand-blue">
+                                {SHARE_STYLE_NAMES[style]}
+                            </span>
+                        </label>
+                    ))}
+                </div>
+            </fieldset>
+            {/* eight dots don't fit in one row inside the sheet's padding on a small phone, so this row reaches
+                a little into it. narrower than 320px, they drop to two rows of four */}
+            <fieldset className="-mx-3 min-w-0">
+                <legend className="px-3 pb-1.5 text-xs font-semibold text-muted">Color</legend>
+                <div className="@container">
+                    <div className="grid grid-cols-4 @xs:grid-cols-8">
+                        {SHARE_COLOR_KEYS.map((color) => (
+                            <label
+                                key={color}
+                                className="flex min-h-11 items-center justify-center hover:cursor-pointer"
+                            >
+                                <input
+                                    type="radio"
+                                    name="share-color"
+                                    value={color}
+                                    checked={look.color === color}
+                                    onChange={() => onChange({ ...look, color })}
+                                    className="peer sr-only"
+                                />
+                                <span className="sr-only">{colorName(color)}</span>
+                                {/* a faint edge, so cream shows on the light sheet and ink on the dark one */}
+                                <span
+                                    aria-hidden="true"
+                                    style={{ backgroundColor: SHARE_COLORS[color] }}
+                                    className="size-8 rounded-full border border-foreground/20 peer-checked:ring-2 peer-checked:ring-foreground peer-checked:ring-offset-2 peer-checked:ring-offset-background peer-focus-visible:outline-2 peer-focus-visible:outline-offset-[5px] peer-focus-visible:outline-brand-blue"
+                                />
+                            </label>
+                        ))}
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    );
+}
+
 // websites can't post into a Story or add its song, so this hands over the pieces: the picture to save or
 // share, the link and the song name to copy. most people know the rest; "New to this?" covers the ones who don't
 export default function ShareSheet({ week, year, kind, title, artist, onClose }: ShareSheetProps): ReactElement {
@@ -60,7 +130,13 @@ export default function ShareSheet({ week, year, kind, title, artist, onClose }:
             maxTouchPoints: navigator.maxTouchPoints,
         }),
     );
-    const imagePath = shareImagePath(week, year, kind);
+    // only the 17th birthday picture has a style and color to pick
+    const [look, setLook] = useState<ShareLook>(DEFAULT_LOOK);
+    // the preview, Save picture, and Share picture all use this one address
+    const imagePath = shareImagePath(week, year, kind, look);
+    // the last address the preview finished loading. after a new look, the old picture shows faded until then
+    const [loadedPath, setLoadedPath] = useState<string | null>(null);
+    const previewLoading = loadedPath !== null && loadedPath !== imagePath;
     const link = shareLink(kind);
     // "Break Your Heart Taio Cruz": what Copy song name copies, ready to paste into Spotify, Instagram or TikTok
     const songText = songSearchText(title, artist);
@@ -77,7 +153,10 @@ export default function ShareSheet({ week, year, kind, title, artist, onClose }:
             navigator.canShare?.({ files: [new File([], fileName, { type: "image/png" })] }) === true,
     );
     const [canShareLink] = useState(() => typeof navigator.share === "function");
-    const [file, setFile] = useState<File | null>(null);
+    // the fetched picture, with the address it came from: a new look drops the old one at once, so Share
+    // picture waits for the new picture instead of sending the old one
+    const [fetched, setFetched] = useState<{ path: string; file: File } | null>(null);
+    const file = fetched?.path === imagePath ? fetched.file : null;
     // a phone's clipboard holds one thing, so "Link copied" only shows while the link is that thing
     const [lastCopied, setLastCopied] = useState<"link" | "song" | null>(null);
     const [linkFailed, setLinkFailed] = useState(false);
@@ -91,24 +170,23 @@ export default function ShareSheet({ week, year, kind, title, artist, onClose }:
     }, []);
 
     // fetched ahead of time: the share menu only opens when the tap calls it right away. if the picture
-    // can't be had, the sheet falls back to saving it
+    // can't be had, the sheet falls back to saving it. a new look stops the old fetch, so a slow old picture
+    // can't land after the new one
     useEffect(() => {
         if (!canShareFiles) return;
-        let cancelled = false;
-        fetch(imagePath)
+        const controller = new AbortController();
+        fetch(imagePath, { signal: controller.signal })
             .then((response) => (response.ok ? response.blob() : null))
             .then((blob) => {
-                if (cancelled) return;
+                if (controller.signal.aborted) return;
                 const image = blob && new File([blob], fileName, { type: "image/png" });
-                if (image && navigator.canShare?.({ files: [image] })) setFile(image);
+                if (image && navigator.canShare?.({ files: [image] })) setFetched({ path: imagePath, file: image });
                 else setCanShareFiles(false);
             })
             .catch(() => {
-                if (!cancelled) setCanShareFiles(false);
+                if (!controller.signal.aborted) setCanShareFiles(false);
             });
-        return () => {
-            cancelled = true;
-        };
+        return () => controller.abort();
     }, [canShareFiles, imagePath, fileName]);
 
     const copyLink = async (e: MouseEvent<HTMLButtonElement>) => {
@@ -226,16 +304,21 @@ export default function ShareSheet({ week, year, kind, title, artist, onClose }:
             <div className="flex flex-col items-center gap-4 px-5 pb-5 text-center text-sm">
                 <div className="flex flex-col items-center gap-2">
                     {/* a plain image, in no link and with nothing over it, so press and hold offers Save to Photos.
-                        a set height keeps its space before it loads and leaves room for the buttons */}
+                        a set height keeps its space before it loads and leaves room for the buttons. the 17th
+                        birthday one is a little shorter, to make room for the style and color pickers */}
                     <img
                         src={imagePath}
                         alt="Your song as a Story picture"
                         width={1080}
                         height={1920}
-                        className="h-[min(40dvh,26rem)] w-auto max-w-full rounded-xl object-contain shadow-lg ring-1 ring-line"
+                        onLoad={() => setLoadedPath(imagePath)}
+                        onError={() => setLoadedPath(imagePath)}
+                        className={`${kind === "seventeen" ? "h-[min(34dvh,26rem)]" : "h-[min(40dvh,26rem)]"} w-auto max-w-full rounded-xl object-contain shadow-lg ring-1 ring-line transition-opacity duration-200 ${previewLoading ? "opacity-40" : ""}`}
                     />
                     {holdToSave && <p className="text-xs text-muted">Press and hold the picture to save it.</p>}
                 </div>
+
+                {kind === "seventeen" && <LookPicker look={look} onChange={setLook} />}
 
                 <p className="text-base font-medium text-balance">{screen === "computer" ? computerLine : storyLine}</p>
 

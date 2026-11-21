@@ -3,6 +3,7 @@
  */
 import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import ShareSheet from "@/components/ShareSheet";
+import type { ShareKind } from "@/lib/share";
 import { songSearchText } from "@/lib/songSearch";
 
 // the share sheet's rules: the same short sheet on every screen, with the main button picked by where the
@@ -78,7 +79,7 @@ let writeText: jest.Mock;
 let onClose: jest.Mock;
 
 // waits for the picture fetch too, so its update lands inside the test
-const openSheet = async (phone: Phone, song = { title: TITLE, artist: ARTIST }) => {
+const openSheet = async (phone: Phone, song = { title: TITLE, artist: ARTIST }, kind: ShareKind = "seventeen") => {
     setNavigator("userAgent", phone.userAgent);
     setNavigator("platform", phone.platform);
     setNavigator("maxTouchPoints", phone.maxTouchPoints);
@@ -92,7 +93,7 @@ const openSheet = async (phone: Phone, song = { title: TITLE, artist: ARTIST }) 
         <ShareSheet
             week="2001-06-09"
             year="2001"
-            kind="seventeen"
+            kind={kind}
             title={song.title}
             artist={song.artist}
             onClose={onClose}
@@ -181,7 +182,9 @@ describe("ShareSheet, the same short sheet everywhere", () => {
         await openSheet(PHONES[key]);
 
         const picture = screen.getByRole("img", { name: "Your song as a Story picture" });
-        expect(picture.getAttribute("src")).toBe("/api/share-image?week=2001-06-09&year=2001&kind=seventeen");
+        expect(picture.getAttribute("src")).toBe(
+            "/api/share-image?week=2001-06-09&year=2001&kind=seventeen&style=now-playing&color=blue",
+        );
         expect(picture.closest("a")).toBeNull();
         // a thin edge, so a dark picture doesn't melt into the dark sheet
         expect(picture.className).toMatch(/\bring-1\b/);
@@ -323,7 +326,9 @@ describe("ShareSheet screens", () => {
         expect(noButton("Share picture")).toBeNull();
         const save = link("Save picture");
         expect(save.getAttribute("download")).toBe("my-2027-song.png");
-        expect(save.getAttribute("href")).toBe("/api/share-image?week=2001-06-09&year=2001&kind=seventeen");
+        expect(save.getAttribute("href")).toBe(
+            "/api/share-image?week=2001-06-09&year=2001&kind=seventeen&style=now-playing&color=blue",
+        );
         expect(save.className).toMatch(/bg-brand-blue/);
     });
 
@@ -562,6 +567,161 @@ describe("ShareSheet share menu", () => {
 
         expect(share).toHaveBeenCalledWith({ url: LINK, text: "What was #1 on your 17th birthday?" });
         expect(Object.keys(share.mock.calls[0][0]).sort()).toEqual(["text", "url"]);
+    });
+});
+
+// the 17th birthday picture comes in four styles and eight colors, picked in the sheet. the birthday picture
+// has one design for now, so its sheet stays as it was
+describe("ShareSheet look picker", () => {
+    const STYLE_NAMES = ["Now playing", "Player", "Record", "Cassette"];
+    const COLOR_NAMES = ["Blue", "Green", "Pink", "Orange", "Purple", "Red", "Ink", "Cream"];
+    const IMAGE = "/api/share-image?week=2001-06-09&year=2001&kind=seventeen";
+
+    const group = (name: string) => screen.getByRole("group", { name });
+    const radio = (groupName: string, name: string) =>
+        within(group(groupName)).getByRole("radio", { name }) as HTMLInputElement;
+    const picture = () => screen.getByRole("img", { name: "Your song as a Story picture" });
+
+    it("the 17th birthday sheet offers the four styles and eight named colors, in order", async () => {
+        await openSheet(PHONES.E);
+
+        // names and order both: each named radio, in the order the group holds them
+        expect(within(group("Style")).getAllByRole("radio")).toEqual(STYLE_NAMES.map((name) => radio("Style", name)));
+        expect(within(group("Color")).getAllByRole("radio")).toEqual(COLOR_NAMES.map((name) => radio("Color", name)));
+    });
+
+    it.each(["B", "E"] as const)("%s: the birthday sheet has no style or color picker", async (key) => {
+        await openSheet(PHONES[key], undefined, "born");
+
+        expect(screen.queryAllByRole("radio")).toHaveLength(0);
+        expect(screen.queryByRole("group", { name: "Style" })).toBeNull();
+        expect(picture().getAttribute("src")).toBe("/api/share-image?week=2001-06-09&year=2001&kind=born");
+    });
+
+    it("starts on Now playing and blue", async () => {
+        await openSheet(PHONES.E);
+
+        expect(STYLE_NAMES.filter((name) => radio("Style", name).checked)).toEqual(["Now playing"]);
+        expect(COLOR_NAMES.filter((name) => radio("Color", name).checked)).toEqual(["Blue"]);
+        expect(picture().getAttribute("src")).toBe(`${IMAGE}&style=now-playing&color=blue`);
+    });
+
+    it.each(["E", "D without picture sharing"] as const)(
+        "%s: picking a style, then a color, moves the preview and Save picture to that look",
+        async (key) => {
+            await openSheet(key === "E" ? PHONES.E : { ...PHONES.D, files: false });
+
+            fireEvent.click(radio("Style", "Record"));
+
+            expect(radio("Style", "Record").checked).toBe(true);
+            expect(radio("Style", "Now playing").checked).toBe(false);
+            expect(picture().getAttribute("src")).toBe(`${IMAGE}&style=record&color=blue`);
+            expect(link("Save picture").getAttribute("href")).toBe(`${IMAGE}&style=record&color=blue`);
+
+            fireEvent.click(radio("Color", "Pink"));
+
+            expect(radio("Color", "Pink").checked).toBe(true);
+            expect(radio("Style", "Record").checked).toBe(true);
+            expect(picture().getAttribute("src")).toBe(`${IMAGE}&style=record&color=pink`);
+            expect(link("Save picture").getAttribute("href")).toBe(`${IMAGE}&style=record&color=pink`);
+            expect(link("Save picture").getAttribute("download")).toBe("my-2027-song.png");
+        },
+    );
+
+    // each picture fetch waits until the test answers it, so answers can come back late or out of order.
+    // the body is a word naming the look, so the test can tell which picture got shared
+    const holdFetches = () => {
+        const waiting = new Map<string, (body: string) => void>();
+        global.fetch = jest.fn(
+            (url: string) =>
+                new Promise((resolve) => {
+                    waiting.set(url, (body) =>
+                        resolve({ ok: true, blob: async () => new Blob([body], { type: "image/png" }) }),
+                    );
+                }),
+        ) as unknown as typeof fetch;
+        return (url: string, body: string) => act(async () => waiting.get(url)!(body));
+    };
+
+    // taps Share picture and reads back the picture it sent. jsdom's File has no text(), so a FileReader reads it
+    const sharedPicture = async () => {
+        fireEvent.click(button("Share picture"));
+        expect(share).toHaveBeenCalledTimes(1);
+        const sent: File = share.mock.calls[0][0].files[0];
+        const body = await new Promise<string>((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result as string);
+            reader.readAsText(sent);
+        });
+        return [sent.name, body];
+    };
+
+    it("after a new look, Share picture waits for the new picture and never shares the old one", async () => {
+        const answer = holdFetches();
+        await openSheet(PHONES.B);
+        await answer(`${IMAGE}&style=now-playing&color=blue`, "now playing, blue");
+        expect(button("Share picture").getAttribute("aria-disabled")).toBeNull();
+
+        fireEvent.click(radio("Style", "Cassette"));
+
+        // the old picture is dropped at once: the button waits, and a tap shares nothing
+        const waiting = button("Share picture");
+        expect(waiting.getAttribute("aria-disabled")).toBe("true");
+        expect(waiting.className).toMatch(/\bopacity-60\b/);
+        fireEvent.click(waiting);
+        expect(share).not.toHaveBeenCalled();
+        expect(global.fetch).toHaveBeenLastCalledWith(`${IMAGE}&style=cassette&color=blue`, expect.anything());
+
+        await answer(`${IMAGE}&style=cassette&color=blue`, "cassette, blue");
+
+        expect(button("Share picture").getAttribute("aria-disabled")).toBeNull();
+        expect(await sharedPicture()).toEqual(["my-2027-song.png", "cassette, blue"]);
+    });
+
+    it("slow answers for older looks never replace the newest picture", async () => {
+        const answer = holdFetches();
+        await openSheet(PHONES.D);
+
+        // two quick picks while the first picture is still on its way
+        fireEvent.click(radio("Style", "Record"));
+        fireEvent.click(radio("Color", "Purple"));
+
+        await answer(`${IMAGE}&style=record&color=purple`, "record, purple");
+        await answer(`${IMAGE}&style=record&color=blue`, "record, blue");
+        await answer(`${IMAGE}&style=now-playing&color=blue`, "now playing, blue");
+
+        expect(button("Share picture").getAttribute("aria-disabled")).toBeNull();
+        expect(await sharedPicture()).toEqual(["my-2027-song.png", "record, purple"]);
+    });
+
+    // the same image element gets the new address, so the browser keeps showing the old picture in the same
+    // box until the new one is ready. faded, so it's clear a new one is coming
+    it("while a new look loads, the old preview stays in place, faded, until the new one shows", async () => {
+        await openSheet(PHONES.E);
+        const shown = picture();
+        fireEvent.load(shown);
+        expect(shown.className).not.toMatch(/\bopacity-40\b/);
+
+        fireEvent.click(radio("Style", "Player"));
+
+        expect(picture()).toBe(shown);
+        expect(shown.getAttribute("src")).toBe(`${IMAGE}&style=player&color=blue`);
+        expect(shown.className).toMatch(/\bopacity-40\b/);
+
+        fireEvent.load(shown);
+
+        expect(shown.className).not.toMatch(/\bopacity-40\b/);
+    });
+
+    it("a new look whose picture fails to load doesn't stay faded", async () => {
+        await openSheet(PHONES.E);
+        fireEvent.load(picture());
+
+        fireEvent.click(radio("Color", "Ink"));
+        expect(picture().className).toMatch(/\bopacity-40\b/);
+        fireEvent.error(picture());
+
+        expect(picture().className).not.toMatch(/\bopacity-40\b/);
     });
 });
 

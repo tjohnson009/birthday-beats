@@ -2,8 +2,10 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { NextRequest, NextResponse } from "next/server";
-import { shareImagePath, type ShareKind } from "@/lib/share";
+import LogoMark from "@/components/LogoMark";
+import { parseShareLook, shareImagePath, type ShareKind } from "@/lib/share";
 import { artistFontSize, shareCard, titleFontSize } from "@/lib/shareCard";
+import { STORY_CARDS } from "./cards";
 
 // a story-size image of someone's song, made from the chart file only (no Spotify, no album art)
 const SIZE = { width: 1080, height: 1920 };
@@ -15,17 +17,38 @@ const GREEN = "#16c79a";
 
 const font = (file: string) => readFile(join(process.cwd(), "src/assets/fonts", file));
 
+// a week, year, kind, style, and color always draw the same image, so browsers and the CDN can keep it
+const CACHE_HEADERS = { "Cache-Control": "public, max-age=86400, s-maxage=604800, stale-while-revalidate=604800" };
+
 export async function GET(request: NextRequest) {
     const params = request.nextUrl.searchParams;
-    const [week, year, kind] = ["week", "year", "kind"].map((name) => params.get(name) ?? "");
+    const [week, year, kind, style, color] = ["week", "year", "kind", "style", "color"].map(
+        (name) => params.get(name) ?? "",
+    );
     const card = shareCard(week, year, kind);
+    // the style and color picked in the share sheet. only the 17th birthday picture has them
+    const look = kind === "seventeen" ? parseShareLook(style, color) : null;
 
     // only the exact address the site builds gets drawn: extra or reordered params would each skip the CDN
     // cache and cost a fresh render
     const canonical =
-        request.nextUrl.pathname + request.nextUrl.search === shareImagePath(week, year, kind as ShareKind);
-    if (!card || !canonical) {
-        return NextResponse.json({ message: "Missing or invalid week, year, or kind." }, { status: 400 });
+        request.nextUrl.pathname + request.nextUrl.search ===
+        shareImagePath(week, year, kind as ShareKind, look ?? undefined);
+    if (!card || (kind === "seventeen" && !look) || !canonical) {
+        return NextResponse.json({ message: "Missing or invalid week, year, kind, style, or color." }, { status: 400 });
+    }
+
+    if (look) {
+        const { default: design } = await STORY_CARDS[look.style]();
+        const fonts = await Promise.all(
+            design.fonts.map(async ({ name, file, weight }) => ({
+                name,
+                data: await font(file),
+                weight,
+                style: "normal" as const,
+            })),
+        );
+        return new ImageResponse(design.draw(card, look.color), { ...SIZE, fonts, headers: CACHE_HEADERS });
     }
 
     const [semiBold, extraBold] = await Promise.all([
@@ -62,20 +85,7 @@ export async function GET(request: NextRequest) {
                 }}
             >
                 <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
-                    {/* same drawing as LogoMark */}
-                    <svg viewBox="0 0 32 32" width={96} height={96}>
-                        <defs>
-                            <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-                                <stop offset="0" stopColor={BLUE} />
-                                <stop offset="1" stopColor={GREEN} />
-                            </linearGradient>
-                        </defs>
-                        <rect x="1" y="1" width="30" height="30" rx="8" fill="url(#g)" />
-                        <rect x="6.6" y="19" width="4.6" height="7.4" rx="1.3" fill="#fff" fillOpacity=".6" />
-                        <rect x="13.7" y="14.6" width="4.6" height="11.8" rx="1.3" fill="#fff" fillOpacity=".8" />
-                        <rect x="20.8" y="11" width="4.6" height="15.4" rx="1.3" fill="#fff" />
-                        <path d="M20.4 9.2V5.4L21.9 6.9L23.1 4.4L24.3 6.9L25.8 5.4V9.2Z" fill="#fff" />
-                    </svg>
+                    <LogoMark size={96} />
                     <div style={{ fontSize: 52, fontWeight: 800 }}>Birthday Beats</div>
                 </div>
 
@@ -87,7 +97,7 @@ export async function GET(request: NextRequest) {
                     <div style={{ fontSize: artistFontSize(card.artist), fontWeight: 600, color: GREEN }}>
                         {card.artist}
                     </div>
-                    <div style={{ fontSize: 44, fontWeight: 600, color: MUTED, marginTop: 8 }}>{card.detail}</div>
+                    <div style={{ fontSize: 44, fontWeight: 600, color: MUTED, marginTop: 8 }}>{card.year}</div>
                 </div>
             </div>
 
@@ -134,8 +144,7 @@ export async function GET(request: NextRequest) {
                 { name: "Bricolage", data: semiBold, weight: 600, style: "normal" },
                 { name: "Bricolage", data: extraBold, weight: 800, style: "normal" },
             ],
-            // a week, year, and kind always draw the same image, so browsers and the CDN can keep it
-            headers: { "Cache-Control": "public, max-age=86400, s-maxage=604800, stale-while-revalidate=604800" },
+            headers: CACHE_HEADERS,
         },
     );
 }

@@ -6,10 +6,10 @@ import { shareLink } from "@/lib/share";
 // never the full birth date
 export type ShareCard = {
     heading: string;
+    subheading: string; // the line under the heading. the birthday card has none for now
     title: string;
     artist: string;
-    detail: string;
-    cta: string;
+    year: string;
     link: string;
 };
 
@@ -27,19 +27,19 @@ export const shareCard = (week: string, year: string, kind: string): ShareCard |
 
     return kind === "seventeen"
         ? {
-              heading: "My 2027 is going to sound like...",
+              heading: "How my 2027 is going to go:",
+              subheading: `The #1 song when I was ${TREND_AGE}`,
               title: song.song,
               artist: song.artist,
-              detail: `the #1 song on my ${TREND_AGE}th birthday · ${year}`,
-              cta: "Find YOUR 2027 song",
+              year,
               link,
           }
         : {
               heading: "The #1 song the week I was born",
+              subheading: "",
               title: song.song,
               artist: song.artist,
-              detail: year,
-              cta: "Find yours",
+              year,
               link,
           };
 };
