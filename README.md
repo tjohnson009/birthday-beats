@@ -2,7 +2,7 @@
 
 **What was the #1 song in America the day you were born?**
 
-**Live: [birthday-beats.vercel.app](https://birthday-beats.vercel.app)** — type your birthday, press Go, and you're listening to the answer.
+**Live: [birthdaybeats.net](https://www.birthdaybeats.net)** (also at [birthday-beats.vercel.app](https://birthday-beats.vercel.app)) — type your birthday, press Go, and you're listening to the answer.
 
 Birthday Beats knows the Billboard Hot 100 #1 for every single week since the chart began on **August 4, 1958** — all 3,555 of them and counting, from Ricky Nelson's "Poor Little Fool" to whatever's on top right now — and pairs each one with album art, Spotify playback, and the official music video.
 
@@ -19,7 +19,7 @@ your birthday
 └─────────┬───────────┘
           ▼
 ┌─────────────────────┐     "Find this song."
-│  lib/songCache.ts    │ ◄── Redis cache (40-day TTL) → Spotify Web API on a miss
+│  lib/songCache.ts    │ ◄── Redis cache (60-day TTL) → Spotify Web API on a miss
 └─────────┬───────────┘
           ▼
 ┌─────────────────────┐     "Find the music video."
@@ -33,7 +33,7 @@ The interesting part: **there is no "Billboard API."** Chart history lives in th
 
 The YouTube side works the same way, for a different reason: YouTube's search API allows ~100 searches per day, so the app never searches at runtime. A resumable backfill script resolved the videos for all 1,194 distinct #1 songs offline (write-after-every-resolve crash safety, quota-aware clean exits), and runtime lookups hit the committed manifest for free.
 
-Spotify gets the same treatment from a third angle: search results are cached in Redis with a 40-day expiry, so each of the 1,194 songs costs Spotify at most one API call per TTL window — and because cached entries age out on their own, album-art URLs can never go stale for longer than the window. If Redis is ever unreachable, the cache just steps aside and live search carries on.
+Spotify gets the same treatment from a third angle: search results are cached in Redis with a 60-day expiry, so each of the 1,194 songs costs Spotify at most one API call per TTL window — and because cached entries age out on their own, album-art URLs can never go stale for longer than the window. If Redis is ever unreachable, the site stops calling Spotify (the guard can't count calls without it) and shows the song, artist, and video without album details. Songs Spotify can't match are remembered for a day, so they don't spend the budget again.
 
 A weekly GitHub Action keeps it all current: every Wednesday it rebuilds the chart data, resolves the video for any new #1, and commits — which redeploys the site. No human involved.
 
@@ -56,7 +56,8 @@ The things a code reviewer would actually care about:
 - **Third-party data lies** YouTube's API reports Vevo-blocked videos as embeddable; the truth only shows when a real browser loads the embed from your domain. A headless-browser audit found and replaced 14 of them. Search now filters on `videoSyndicated` + region.
 - **Graceful degradation, two layers deep** If Spotify is down, the API returns a friendly 503 and the UI says so. If the stats database is down, songs still play and the footer simply omits its numbers — analytics are never allowed to break the product.
 - **Derive, don't store** Visits and plays live as rows in a Postgres event log (Neon), not as counters — the footer's numbers are `count(*)` at read time, and the stored events can answer questions that haven't been asked yet. Aggregates only; nothing identifying is logged.
-- **Three stores, three lifetimes** The Postgres event log never expires (facts are forever), the YouTube manifest only changes on purpose (videos are pinned deliberately), and cached Spotify results age out on a 40-day TTL (copies of someone else's data should refresh themselves). Each store was picked by access pattern: query-inside → Postgres, lookup-by-key → Redis, read-only-at-runtime → committed JSON.
+- **Three stores, three lifetimes** The Postgres event log never expires (facts are forever), the YouTube manifest only changes on purpose (videos are pinned deliberately), and cached Spotify results age out on a 60-day TTL (copies of someone else's data should refresh themselves). Each store was picked by access pattern: query-inside → Postgres, lookup-by-key → Redis, read-only-at-runtime → committed JSON.
+- **A Spotify budget that fails closed** Spotify's dev-mode quota is unpublished and a lockout lasts three hours, so a Redis-backed guard caps the site at 500 calls per 3 hours and 10 lookups a minute per visitor. If Redis can't count, the site stops calling Spotify and shows the song without album details instead of calling blind. Every Spotify call also gives up after 5 seconds.
 - **Token caching that's actually tested** The Spotify Client Credentials token is cached at module scope with an expiry cushion — and a Jest test proves two searches produce exactly one token request.
 - **An idempotent, rerunnable data pipeline** Both data scripts rebuild from source at any time, exit cleanly at quota limits, and resume where they left off.
 
@@ -96,8 +97,9 @@ npm run build:youtube
 - [x] Deployed on Vercel
 - [x] Auto-refresh chart data via scheduled GitHub Action
 - [x] Visit + play tracking in a Postgres event log
-- [x] Redis cache in front of Spotify search (40-day TTL)
-- [ ] Polish: scroll-to-results, art-driven color scheme, share button
+- [x] Redis cache in front of Spotify search (60-day TTL)
+- [x] `/17` trend page ("the #1 on your 17th birthday is how your 2027 will go"), a switch between your birthday and 17th birthday #1, and a story-size share image
+- [ ] Polish: scroll-to-results, art-driven color scheme
 
 ## Chart data
 

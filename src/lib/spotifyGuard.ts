@@ -3,7 +3,7 @@
 // than a few lookups a minute, and the whole site stops well short of Spotify's limit
 
 export const VISITOR_LOOKUPS_PER_MINUTE = 10;
-export const SITE_CALLS_PER_3_HOURS = 400;
+export const SITE_CALLS_PER_3_HOURS = 500;
 export const CALLS_PER_LOOKUP = 3; // a search can take up to 3 calls: the search, a retry, a free-text fallback
 
 export type GuardResult = "ok" | "visitor-limit" | "site-budget";
