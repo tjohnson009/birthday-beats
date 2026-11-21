@@ -311,7 +311,10 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
                         </h1>
                         <p id="intro" className="mt-3 text-muted">
                             {trend ? (
-                                <>The trend says it&apos;s how your 2027 will go. Enter your birthday to find yours.</>
+                                <>
+                                    Will 2027 be a party anthem or a breakup song? The trend says it&apos;s whatever hit
+                                    #1 when you turned 17. Enter your birthday to see yours.
+                                </>
                             ) : (
                                 <>
                                     Or the day you graduated, said &quot;I do,&quot; or got your first car? Pick any

@@ -476,7 +476,7 @@ export default function ShareSheet({
             // a tap on the dimmed backdrop lands on the dialog itself
             onClick={(e) => e.target === dialogRef.current && dialogRef.current.close()}
             aria-labelledby="share-title"
-            className={`${roboto.className} m-auto max-h-[100dvh] w-[calc(100%-2rem)] max-w-md overflow-y-auto rounded-3xl bg-background p-0 text-foreground shadow-2xl backdrop:bg-black/70`}
+            className={`${roboto.className} m-auto max-h-[100dvh] w-[calc(100%-2rem)] max-w-md overflow-y-auto overscroll-contain rounded-3xl bg-background p-0 text-foreground shadow-2xl backdrop:bg-black/70`}
         >
             {/* the padding lives here, not on the dialog, so a tap inside the card never counts as a backdrop tap */}
             <div className="flex flex-col items-center gap-5 p-5 text-center text-sm">

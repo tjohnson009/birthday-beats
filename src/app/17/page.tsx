@@ -9,10 +9,11 @@ export const metadata: Metadata = {
     metadataBase: new URL(SITE_URL),
     title: "What was the #1 song on your 17th birthday? · Birthday Beats",
     description:
-        "The trend says the #1 song on your 17th birthday is how your 2027 will go. Enter your birthday to hear yours.",
+        "Will 2027 be a party anthem or a breakup song? The trend says it's whatever hit #1 when you turned 17. Enter your birthday to see yours.",
     openGraph: {
         title: "What was the #1 song on your 17th birthday?",
-        description: "The trend says it's how your 2027 will go. Enter your birthday to hear yours.",
+        description:
+            "Will 2027 be a party anthem or a breakup song? The trend says it's whatever hit #1 when you turned 17. Enter your birthday to see yours.",
         url: "/17",
         siteName: "Birthday Beats",
         type: "website",
