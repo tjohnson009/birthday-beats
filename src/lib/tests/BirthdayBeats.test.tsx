@@ -120,6 +120,52 @@ describe("the chart strip waits for Go", () => {
         expect(stripSays()).toMatch(/^July 13, 1985: A View To A Kill by Duran Duran/);
     });
 
+    it("doesn't give the song away while the result is still loading", async () => {
+        // hold the song's answer until the test lets it go
+        let release = () => {};
+        global.fetch = jest.fn(async (input: RequestInfo | URL) => {
+            if (String(input).startsWith("/api/song")) await new Promise<void>((resolve) => (release = resolve));
+            return fakeFetch(input);
+        }) as unknown as typeof fetch;
+        await renderPage();
+
+        pickDate("1985-07-15");
+        go();
+        await act(async () => {});
+        expect(strip()).toBeNull();
+        expect(screen.queryByText(/A View To A Kill/)).toBeNull();
+
+        await act(async () => release());
+        expect(await song("A View To A Kill")).toBeTruthy();
+        expect(stripSays()).toMatch(/^July 13, 1985: A View To A Kill/);
+
+        // a second Go keeps the strip on the song still on screen until the new one arrives
+        pickDate("1999-06-14");
+        go();
+        await act(async () => {});
+        expect(stripSays()).toMatch(/^July 13, 1985: A View To A Kill/);
+        expect(screen.queryByText(/If You Had My Love/)).toBeNull();
+
+        await act(async () => release());
+        expect(await song("If You Had My Love")).toBeTruthy();
+        expect(stripSays()).toMatch(/^June 12, 1999: If You Had My Love/);
+    });
+
+    it("doesn't give a shared song away while it is still loading", async () => {
+        let release = () => {};
+        global.fetch = jest.fn(async (input: RequestInfo | URL) => {
+            if (String(input).startsWith("/api/song")) await new Promise<void>((resolve) => (release = resolve));
+            return fakeFetch(input);
+        }) as unknown as typeof fetch;
+        window.history.replaceState(null, "", "/?week=1985-07-13&year=1985&kind=born&share=1");
+        await renderPage();
+        expect(strip()).toBeNull();
+
+        await act(async () => release());
+        expect(await song("A View To A Kill")).toBeTruthy();
+        expect(stripSays()).toMatch(/^July 13, 1985: A View To A Kill/);
+    });
+
     it("shows up after a quick pick too", async () => {
         await renderPage();
         expect(strip()).toBeNull();
@@ -156,7 +202,8 @@ describe("the chart strip waits for Go", () => {
         go();
 
         expect(await song("If You Had My Love")).toBeTruthy();
-        expect(stripSays()).toMatch(/^June 12, 1999: If You Had My Love/);
+        // the strip slides over once the new song is on screen
+        await waitFor(() => expect(stripSays()).toMatch(/^June 12, 1999: If You Had My Love/));
         expect(songRequests.at(-1)).toBe("/api/song?date=1999-06-14");
     });
 
@@ -195,7 +242,7 @@ describe("the chart strip waits for Go", () => {
         fireEvent.click(screen.getByRole("button", { name: "Back to the day you were born" }));
 
         expect(await song("This Guy's In Love With You")).toBeTruthy();
-        expect(stripSays()).toMatch(/^July 13, 1968: This Guy's In Love With You/);
+        await waitFor(() => expect(stripSays()).toMatch(/^July 13, 1968: This Guy's In Love With You/));
     });
 
     it("still loads a song when the person moves the strip", async () => {

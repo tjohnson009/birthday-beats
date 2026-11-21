@@ -99,8 +99,8 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
     const pickerMatchesResult = birthday !== null && selectedDate === birthday;
     const searched = hasSearched || shared !== null;
     const sharedLoading = shared !== null && !songData && !error;
-    // a shared link counts as the first search
-    const stripAt = stripDate ?? shared?.week ?? null;
+    // a shared link counts as the first search, once its song is on screen
+    const stripAt = stripDate ?? (shared && songData ? shared.week : null);
     // what Share hands over: the shared result, or the birthday result on screen
     const shareTarget = shared
         ? { year: shared.year, kind: shared.kind }
@@ -140,7 +140,6 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
         const controller = new AbortController();
         songRequest.current = controller;
         setHasSearched(true);
-        setStripDate(lookupDate);
         setLoading(true);
         setError(null);
         setSongData(null);
@@ -158,6 +157,8 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
             savedResults.current[nextView] = result;
             scrollToResult.current = true;
             setSongData(result);
+            // only now: moving the strip any earlier would name the song before its reveal
+            setStripDate(lookupDate);
         } catch {
             if (!controller.signal.aborted) setError({ kind: "network" });
         } finally {
