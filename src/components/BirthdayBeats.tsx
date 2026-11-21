@@ -1,6 +1,6 @@
 "use client";
 import Loading from "@/components/Loading";
-import React, { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import React, { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import ErrorMessage, { type SearchError } from "@/components/ErrorMessage";
 import SongInfo from "@/components/SongInfo";
 import DatePicker from "@/components/DatePicker";
@@ -22,6 +22,7 @@ import {
 } from "@/lib/dates";
 import { weekForDate, type StripData } from "@/lib/chartStrip";
 import type { SongResult } from "@/lib/songResult";
+import { parseSharedResult } from "@/lib/share";
 
 type BirthdayBeatsProps = {
     heroTitles: string[];
@@ -41,6 +42,10 @@ const getToday = () => {
 };
 
 const getServerToday = () => "";
+
+const getAddressSearch = () => window.location.search;
+
+const getServerAddressSearch = () => "";
 
 const toSearchError = async (response: Response, searchDate: string): Promise<SearchError> => {
     if (response.status === 404 && searchDate < FIRST_CHART_DATE) return { kind: "too-early" };
@@ -69,6 +74,10 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
     const [birthday, setBirthday] = useState<string | null>(null);
     const [view, setView] = useState<BirthdayView>("born");
     const [sharing, setSharing] = useState(false);
+    // the share sheet's escape buttons reopen this page with ?week=&year=&kind=&share=1: that week's song,
+    // with the sheet open. read in the browser, so the page itself stays static
+    const addressSearch = useSyncExternalStore(subscribe, getAddressSearch, getServerAddressSearch);
+    const shared = useMemo(() => parseSharedResult(addressSearch), [addressSearch]);
     // results already fetched for this birthday, so switching back doesn't ask again
     const savedResults = useRef<Partial<Record<BirthdayView, SongResult>>>({});
     // one lookup at a time: a newer search, switch, or strip stop cancels the one before it
@@ -87,6 +96,14 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
     const earliestDate = trend ? nthBirthday(FIRST_CHART_DATE, -TREND_AGE) : FIRST_CHART_DATE;
     // the switch and Share belong to the birthday on screen; once the picker moves to another date, they wait for Go
     const pickerMatchesResult = birthday !== null && selectedDate === birthday;
+    const searched = hasSearched || shared !== null;
+    const sharedLoading = shared !== null && !songData && !error;
+    // what Share hands over: the shared result, or the birthday result on screen
+    const shareTarget = shared
+        ? { year: shared.year, kind: shared.kind }
+        : birthday && seventeenth
+          ? { year: (view === "seventeen" ? seventeenth : birthday).slice(0, 4), kind: view }
+          : null;
 
     // on phones the result sits below the picker and strip, so bring a new Go or switch result into view
     useEffect(() => {
@@ -149,8 +166,36 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
         }
     };
 
+    // load the shared week's song, then open the sheet. until it comes back, the page already looks like a
+    // result is on its way (see searched and sharedLoading)
+    useEffect(() => {
+        if (!shared) return;
+        const controller = new AbortController();
+        songRequest.current = controller;
+        lastLookup.current = { date: shared.week, view: shared.kind };
+        fetch(`/api/song?date=${shared.week}`, { signal: controller.signal })
+            .then(async (response) => {
+                if (!response.ok) return setError(await toSearchError(response, shared.week));
+                const result: SongResult = await response.json();
+                scrollToResult.current = true;
+                setSongData(result);
+                setSharing(true);
+            })
+            .catch(() => {
+                if (!controller.signal.aborted) setError({ kind: "network" });
+            });
+        return () => controller.abort();
+    }, [shared]);
+
+    // a new search or strip stop leaves the shared result behind. dropping it from the address is enough:
+    // the next render reads the address again
+    const leaveSharedResult = () => {
+        if (shared) window.history.replaceState(null, "", window.location.pathname);
+    };
+
     // on /17, Go jumps straight to the 17th birthday, unless it hasn't happened yet
     const search = (searchDate: string) => {
+        leaveSharedResult();
         pickDate(searchDate);
         setBirthday(searchDate);
         savedResults.current = {};
@@ -176,6 +221,7 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
     const loadFromStrip = async (week: number) => {
         if (!stripData) return;
         cancelSongLoad();
+        leaveSharedResult();
         const stopDate = stripData.dates[week];
         const controller = new AbortController();
         songRequest.current = controller;
@@ -245,12 +291,12 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
         <div className="flex flex-col flex-1 items-center justify-center font-sans">
             {/* isolate: the title wall's -z-10 stays behind everything in main, but no further back than main */}
             <main className="relative isolate flex flex-col flex-1 items-center justify-center w-full py-8 gap-6">
-                <HeroTitles titles={heroTitles} hidden={hasSearched} />
+                <HeroTitles titles={heroTitles} hidden={searched} />
 
                 {/* intro: fades and slides up, collapsing its space, once the first search is submitted */}
                 <div
                     className={`${roboto.className} grid w-full max-w-lg px-4 text-center transition-all transition-discrete duration-500 ease-out ${
-                        hasSearched ? "grid-rows-[0fr] opacity-0 -translate-y-2 hidden" : "grid-rows-[1fr] opacity-100"
+                        searched ? "grid-rows-[0fr] opacity-0 -translate-y-2 hidden" : "grid-rows-[1fr] opacity-100"
                     }`}
                 >
                     <div className="overflow-hidden">
@@ -320,7 +366,7 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
                         />
                     )}
                     {/* the picks are dates, not birthdays, so the trend page leaves them out */}
-                    {!hasSearched && !trend && <QuickPicks today={today} onPick={search} />}
+                    {!searched && !trend && <QuickPicks today={today} onPick={search} />}
                 </form>
 
                 {birthday && seventeenth && pickerMatchesResult && (
@@ -364,11 +410,31 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
                     </div>
                 )}
 
-                {sharing && birthday && seventeenth && songData && (
+                {shared && songData && !loading && (
+                    <div
+                        ref={resultTopRef}
+                        className={`${roboto.className} flex scroll-mt-4 flex-col items-center gap-3 px-4 text-center`}
+                    >
+                        <button
+                            type="button"
+                            onClick={() => setSharing(true)}
+                            className="rounded-2xl bg-brand-blue px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-blue/90 hover:cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue"
+                        >
+                            Share to your Story
+                        </button>
+                        <p className={`${display.className} text-lg font-semibold text-balance`}>
+                            {shared.kind === "seventeen"
+                                ? `#1 on your ${TREND_AGE}th birthday · ${shared.year}`
+                                : `#1 the week you were born · ${shared.year}`}
+                        </p>
+                    </div>
+                )}
+
+                {sharing && shareTarget && songData && (
                     <ShareSheet
                         week={songData.chartDate}
-                        year={(view === "seventeen" ? seventeenth : birthday).slice(0, 4)}
-                        kind={view}
+                        year={shareTarget.year}
+                        kind={shareTarget.kind}
                         title={songData.title}
                         artist={songData.artist}
                         spotifyId={songData.spotify?.id ?? null}
@@ -376,7 +442,7 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
                     />
                 )}
 
-                {loading && <Loading />}
+                {(loading || sharedLoading) && <Loading />}
 
                 <div className={`results w-full transition-opacity duration-200 ${refreshing ? "opacity-60" : ""}`}>
                     {songData && (
