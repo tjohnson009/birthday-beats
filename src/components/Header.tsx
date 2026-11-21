@@ -12,7 +12,7 @@ export default function Header(): ReactElement {
                     while a full load always lands on the fresh home page */}
                 {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
                 <a href="/" className={`${display.className} flex items-center gap-2 text-lg font-extrabold`}>
-                    <LogoMark className="h-7 w-7" />
+                    <LogoMark className="h-8 w-8" />
                     Birthday Beats
                 </a>
             </div>
