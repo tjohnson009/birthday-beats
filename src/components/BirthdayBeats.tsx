@@ -369,6 +369,9 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
                         week={songData.chartDate}
                         year={(view === "seventeen" ? seventeenth : birthday).slice(0, 4)}
                         kind={view}
+                        title={songData.title}
+                        artist={songData.artist}
+                        spotifyId={songData.spotify?.id ?? null}
                         onClose={() => setSharing(false)}
                     />
                 )}
