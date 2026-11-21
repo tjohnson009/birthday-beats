@@ -22,7 +22,8 @@ export const shareCard = (week: string, year: string, kind: string): ShareCard |
     const song = chartWeeks.get(week);
     if (!song || !/^\d{4}$/.test(year) || Math.abs(Number(year) - Number(week.slice(0, 4))) > 1) return null;
 
-    const link = shareLink(kind).replace("https://", "");
+    // printed without www: shorter to read and type, and Vercel sends it to the www address
+    const link = shareLink(kind).replace("https://www.", "");
 
     return kind === "seventeen"
         ? {

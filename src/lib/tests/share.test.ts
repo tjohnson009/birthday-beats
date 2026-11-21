@@ -48,8 +48,8 @@ describe("shareCard", () => {
 
 describe("share links", () => {
     it("points the 17th birthday card at the trend page", () => {
-        expect(shareLink("seventeen")).toBe("https://birthdaybeats.net/17");
-        expect(shareLink("born")).toBe("https://birthdaybeats.net");
+        expect(shareLink("seventeen")).toBe("https://www.birthdaybeats.net/17");
+        expect(shareLink("born")).toBe("https://www.birthdaybeats.net");
     });
 
     it("builds the one image address the route accepts: chart week, year, kind", () => {

@@ -19,8 +19,8 @@ falling back to an embedded YouTube video when Spotify has no preview.
 ## Tech Stack
 
 Next.js (App Router), TypeScript, Tailwind, Spotify Web API, YouTube Data API.
-Deployed on Vercel at birthdaybeats.net (birthday-beats.vercel.app serves the same
-site). The main address lives in one place: `SITE_URL` in `src/lib/share.ts`.
+Deployed on Vercel at www.birthdaybeats.net (birthdaybeats.net redirects there, and
+birthday-beats.vercel.app serves the same site). The main address lives in one place: `SITE_URL` in `src/lib/share.ts`.
 
 ## Architecture
 

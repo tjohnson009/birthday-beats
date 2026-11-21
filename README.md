@@ -2,7 +2,7 @@
 
 **What was the #1 song in America the day you were born?**
 
-**Live: [birthdaybeats.net](https://birthdaybeats.net)** (also at [birthday-beats.vercel.app](https://birthday-beats.vercel.app)) — type your birthday, press Go, and you're listening to the answer.
+**Live: [birthdaybeats.net](https://www.birthdaybeats.net)** (also at [birthday-beats.vercel.app](https://birthday-beats.vercel.app)) — type your birthday, press Go, and you're listening to the answer.
 
 Birthday Beats knows the Billboard Hot 100 #1 for every single week since the chart began on **August 4, 1958** — all 3,555 of them and counting, from Ricky Nelson's "Poor Little Fool" to whatever's on top right now — and pairs each one with album art, Spotify playback, and the official music video.
 

@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-    // both domains serve the site; search engines are pointed at birthdaybeats.net
+    // both domains serve the site; search engines are pointed at www.birthdaybeats.net
     metadataBase: new URL(SITE_URL),
     alternates: { canonical: "/" },
     title: "Birthday Beats",
