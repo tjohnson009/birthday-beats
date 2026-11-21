@@ -50,12 +50,14 @@ function InstagramSteps({
     artist,
     kind,
     songButton,
+    linkAgain,
 }: {
     opening: string;
     title: string;
     artist: string;
     kind: ShareKind;
     songButton?: ReactNode;
+    linkAgain?: ReactNode;
 }): ReactElement {
     return (
         <div className="flex flex-col gap-2">
@@ -76,6 +78,7 @@ function InstagramSteps({
                                 This replaces the copied link. Come back here and copy the link again before the Link
                                 step.
                             </span>
+                            {linkAgain}
                         </span>
                     )}
                 </li>
@@ -125,6 +128,8 @@ export default function ShareSheet({
     const [linkFailed, setLinkFailed] = useState(false);
     const [songFailed, setSongFailed] = useState(false);
     const [remind, setRemind] = useState(false);
+    // set the first time they come back to a wiped link: from then on step 3 keeps its own copy button
+    const [cameBack, setCameBack] = useState(false);
     const [fullScreen, setFullScreen] = useState(false);
     const imagePath = shareImagePath(week, year, kind);
     const link = shareLink(kind);
@@ -160,7 +165,11 @@ export default function ShareSheet({
     // copying the song name wiped the link. when they come back from Instagram, ask for the link again
     useEffect(() => {
         if (lastCopied !== "song") return;
-        const onReturn = () => document.visibilityState === "visible" && setRemind(true);
+        const onReturn = () => {
+            if (document.visibilityState !== "visible") return;
+            setRemind(true);
+            setCameBack(true);
+        };
         document.addEventListener("visibilitychange", onReturn);
         return () => document.removeEventListener("visibilitychange", onReturn);
     }, [lastCopied]);
@@ -205,14 +214,20 @@ export default function ShareSheet({
         />
     );
 
+    const linkCopied = lastCopied === "link";
+    const copyLinkButton = (
+        <button type="button" onClick={copyLink} className={linkCopied ? doneButton : mainButton}>
+            {linkCopied ? "Link copied" : remind ? "Copy link again" : "Copy link"}
+        </button>
+    );
+    const linkGoneLine = "Your link isn't copied anymore. Copy it for the Link sticker.";
+
     const copyLinkBlock = (
         <div className="flex flex-col gap-2">
-            <button type="button" onClick={copyLink} className={lastCopied === "link" ? doneButton : mainButton}>
-                {lastCopied === "link" ? "Link copied" : remind ? "Copy link again" : "Copy link"}
-            </button>
-            {remind && lastCopied !== "link" && (
+            {copyLinkButton}
+            {remind && !linkCopied && (
                 <p role="status" className="font-medium">
-                    Your link isn&apos;t copied anymore. Copy it for the Link sticker.
+                    {linkGoneLine}
                 </p>
             )}
             <input
@@ -240,6 +255,16 @@ export default function ShareSheet({
         </span>
     );
 
+    // coming back from Instagram puts them at the song step, far below step 1, so the reminder shows here too.
+    // it stays once the link is copied, so the tap gets its "Link copied" where it happened
+    const linkAgain = (remind || (cameBack && linkCopied)) && (
+        <span className="mt-2 flex flex-col items-start gap-1">
+            {copyLinkButton}
+            {/* no role="status": step 1's copy of this line already announces it */}
+            {remind && !linkCopied && <span className="font-medium">{linkGoneLine}</span>}
+        </span>
+    );
+
     const iphoneEscape = (
         <a href={instagramEscapeLink(resultUrl)} className={plainButton}>
             Open in your browser
@@ -253,7 +278,7 @@ export default function ShareSheet({
             </button>
             <p className="text-xs text-muted">
                 {onIPhone
-                    ? "Take a screenshot (press the side button and volume up together). Tap to close."
+                    ? "Take a screenshot (press the side and volume up buttons together, or the side and Home buttons). Tap to close."
                     : "Take a screenshot (hold the power and volume down buttons). Tap to close."}
             </p>
         </div>
@@ -266,6 +291,7 @@ export default function ShareSheet({
             artist={artist}
             kind={kind}
             songButton={withSongButton ? songButton : undefined}
+            linkAgain={withSongButton ? linkAgain : undefined}
         />
     );
 
