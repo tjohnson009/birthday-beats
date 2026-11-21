@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
 
@@ -29,14 +30,29 @@ jobs:
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
 
-      - name: Commit refreshed data
+      # main only takes changes through a pull request Tim approves, so the new data goes on its own branch and
+      # asks for his review (GitHub emails him). one branch holds every waiting week: if a week's pull request
+      # is still open, the next run adds to it and comments instead of opening another
+      - name: Open or update the refresh pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/number-ones.json data/youtube-videos.json
           if git diff --cached --quiet; then
             echo "No chart changes this week"
+            exit 0
+          fi
+          week=$(node -e 'const d = require("./data/number-ones.json"); console.log(d[d.length - 1].date)')
+          git commit -m "Weekly chart data refresh - CI"
+          git push --force origin HEAD:chart-data-refresh
+          body="New Billboard chart data, through the week of $week. Approve and merge to put it on the site."
+          open=$(gh pr list --head chart-data-refresh --state open --json number --jq '.[0].number')
+          if [ -z "$open" ]; then
+            gh pr create --base main --head chart-data-refresh --title "Weekly chart data refresh" \
+              --body "$body" --reviewer tjohnson009 --assignee tjohnson009
           else
-            git commit -m "Weekly chart data refresh - CI"
-            git push
+            gh pr edit "$open" --body "$body"
+            gh pr comment "$open" --body "@tjohnson009 this now includes the week of $week, and it's still waiting on your review."
           fi
