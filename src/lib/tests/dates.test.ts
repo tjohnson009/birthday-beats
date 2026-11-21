@@ -1,9 +1,11 @@
 import {
     FIRST_CHART_DATE,
+    checkNthBirthday,
     clampIsoDate,
     daysInMonth,
     formatLongDate,
     formatShortDate,
+    nthBirthday,
     randomIsoDateBetween,
     withDatePart,
 } from "../dates";
@@ -77,5 +79,33 @@ describe("formatLongDate", () => {
 
     it("does not shift the day for viewers west of UTC", () => {
         expect(formatLongDate("1958-08-04")).toBe("August 4, 1958");
+    });
+});
+
+describe("nthBirthday", () => {
+    it("moves the year and keeps the day", () => {
+        expect(nthBirthday("1991-11-20", 17)).toBe("2008-11-20");
+    });
+
+    it("uses Feb 28 for a Feb 29 birthday when that year isn't a leap year", () => {
+        expect(nthBirthday("1992-02-29", 17)).toBe("2009-02-28");
+        expect(nthBirthday("1992-02-29", 16)).toBe("2008-02-29");
+    });
+});
+
+describe("checkNthBirthday", () => {
+    it("is ok once the birthday has happened, including today", () => {
+        expect(checkNthBirthday("1991-11-20", 17, "2026-11-20")).toBe("ok");
+        expect(checkNthBirthday("2009-11-20", 17, "2026-11-20")).toBe("ok");
+    });
+
+    it("is future when it hasn't happened yet, even by one day", () => {
+        expect(checkNthBirthday("2009-11-21", 17, "2026-11-20")).toBe("future");
+        expect(checkNthBirthday("2014-03-02", 17, "2026-11-20")).toBe("future");
+    });
+
+    it("is too-early when it came before the first chart", () => {
+        expect(checkNthBirthday("1941-08-03", 17, "2026-11-20")).toBe("too-early");
+        expect(checkNthBirthday("1941-08-04", 17, "2026-11-20")).toBe("ok");
     });
 });

@@ -34,6 +34,23 @@ export const withDatePart = (
     return clampIsoDate(toIsoDate(year, month, day), min, max);
 };
 
+// the age the "#1 on your 17th birthday is how your 2027 will go" trend asks about
+export const TREND_AGE = 17;
+
+// the date someone turns `years` old. a Feb 29 birthday falls on Feb 28 in years without one
+export const nthBirthday = (birthday: string, years: number): string => {
+    const { year, month, day } = parseIsoDate(birthday);
+    return toIsoDate(year + years, month, Math.min(day, daysInMonth(year + years, month)));
+};
+
+export type BirthdayCheck = "ok" | "future" | "too-early";
+
+// whether that birthday has a chart: it may not have happened yet, or may predate the Hot 100
+export const checkNthBirthday = (birthday: string, years: number, today: string): BirthdayCheck => {
+    const date = nthBirthday(birthday, years);
+    return date > today ? "future" : date < FIRST_CHART_DATE ? "too-early" : "ok";
+};
+
 export const randomIsoDateBetween = (min: string, max: string, random: () => number = Math.random): string => {
     const start = Date.parse(`${min}T00:00:00Z`);
     const totalDays = Math.round((Date.parse(`${max}T00:00:00Z`) - start) / DAY_MS);

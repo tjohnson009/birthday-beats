@@ -1,0 +1,402 @@
+"use client";
+import { MouseEvent, ReactElement, useEffect, useRef, useState } from "react";
+import { display, roboto } from "@/lib/fonts";
+import { copyText } from "@/lib/copyText";
+import {
+    DEFAULT_LOOK,
+    SHARE_COLORS,
+    SHARE_STYLE_NAMES,
+    SHARE_STYLES,
+    androidEscapeLink,
+    friendShareText,
+    instagramEscapeLink,
+    shareImagePath,
+    shareLink,
+    sharedResultUrl,
+    type ShareColor,
+    type ShareKind,
+    type ShareLook,
+} from "@/lib/share";
+import { shareScreen, type ShareScreen } from "@/lib/shareEnvironment";
+import { songSearchText } from "@/lib/songSearch";
+
+type ShareSheetProps = {
+    week: string; // the chart week of the song on screen
+    year: string; // the year printed on the image
+    kind: ShareKind;
+    title: string; // the song as the chart prints it, also on the image
+    artist: string; // the chart's artist, for the text people paste into a music search
+    onClose: () => void;
+};
+
+const focusRing = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue";
+const buttonBase = `inline-flex w-full items-center justify-center rounded-2xl text-center font-medium leading-tight ${focusRing}`;
+const mainLook = `${buttonBase} min-h-12 px-4 py-3 bg-brand-blue text-base text-white`;
+const mainButton = `${mainLook} hover:cursor-pointer hover:bg-brand-blue/90`;
+// Share picture before its picture has loaded: faded, with no hover, so it doesn't look ready
+const waitingButton = `${mainLook} opacity-60`;
+const plainButton = `${buttonBase} min-h-11 px-2 py-2 border border-line bg-surface text-sm hover:cursor-pointer hover:border-brand-blue`;
+const doneButton = `${buttonBase} min-h-11 px-2 py-2 border border-brand-green bg-surface text-sm hover:cursor-pointer`;
+
+// Instagram's close X and menu sit right above the page, and an iPhone has its notch and home bar, so the sheet
+// stops 24px short of the top and bottom, plus the safe area. taller content scrolls inside it
+const edgeRoom = "max-h-[calc(100dvh-2*(24px+max(env(safe-area-inset-top),env(safe-area-inset-bottom))))]";
+
+const storyLine = "Post it to your Story, then add the song so it plays.";
+const computerLine = "Save it, then post it from your phone. Add the song so it plays.";
+
+// the song search text as the sheet prints it, in curly quotes. its own quotes turn single so they don't nest:
+// “The Happy Organ Dave ‘Baby’ Cortez”. what gets copied keeps the plain text
+const quoted = (text: string) => `“${text.replace(/(^|[\s([{])"/g, "$1‘").replace(/"/g, "’")}”`;
+
+const SHARE_COLOR_KEYS = Object.keys(SHARE_COLORS) as ShareColor[];
+// each dot's name for screen readers: "Blue", "Cream"
+const colorName = (color: ShareColor) => color[0].toUpperCase() + color.slice(1);
+
+// real radio groups, so arrow keys and screen readers work. each radio sits out of sight, and the box or dot
+// right after it shows which one is picked
+function LookPicker({ look, onChange }: { look: ShareLook; onChange: (look: ShareLook) => void }): ReactElement {
+    return (
+        <div className="flex w-full flex-col gap-3 text-left">
+            <fieldset className="min-w-0">
+                <legend className="pb-1.5 text-xs font-semibold text-muted">Style</legend>
+                <div className="grid grid-cols-4 gap-1.5">
+                    {SHARE_STYLES.map((style) => (
+                        <label key={style} className="flex">
+                            <input
+                                type="radio"
+                                name="share-style"
+                                value={style}
+                                checked={look.style === style}
+                                onChange={() => onChange({ ...look, style })}
+                                className="peer sr-only"
+                            />
+                            <span className="flex min-h-11 w-full items-center justify-center rounded-xl border-2 border-line bg-surface px-1 text-center text-sm leading-tight font-medium hover:cursor-pointer hover:border-brand-blue/60 peer-checked:border-brand-blue peer-checked:bg-brand-blue/10 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-brand-blue">
+                                {SHARE_STYLE_NAMES[style]}
+                            </span>
+                        </label>
+                    ))}
+                </div>
+            </fieldset>
+            {/* eight dots don't fit in one row inside the sheet's padding on a small phone, so this row reaches
+                a little into it. narrower than 320px, they drop to two rows of four */}
+            <fieldset className="-mx-3 min-w-0">
+                <legend className="px-3 pb-1.5 text-xs font-semibold text-muted">Color</legend>
+                <div className="@container">
+                    <div className="grid grid-cols-4 @xs:grid-cols-8">
+                        {SHARE_COLOR_KEYS.map((color) => (
+                            <label
+                                key={color}
+                                className="flex min-h-11 items-center justify-center hover:cursor-pointer"
+                            >
+                                <input
+                                    type="radio"
+                                    name="share-color"
+                                    value={color}
+                                    checked={look.color === color}
+                                    onChange={() => onChange({ ...look, color })}
+                                    className="peer sr-only"
+                                />
+                                <span className="sr-only">{colorName(color)}</span>
+                                {/* a faint edge, so cream shows on the light sheet and ink on the dark one */}
+                                <span
+                                    aria-hidden="true"
+                                    style={{ backgroundColor: SHARE_COLORS[color] }}
+                                    className="size-8 rounded-full border border-foreground/20 peer-checked:ring-2 peer-checked:ring-foreground peer-checked:ring-offset-2 peer-checked:ring-offset-background peer-focus-visible:outline-2 peer-focus-visible:outline-offset-[5px] peer-focus-visible:outline-brand-blue"
+                                />
+                            </label>
+                        ))}
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    );
+}
+
+// websites can't post into a Story or add its song, so this hands over the pieces: the picture to save or
+// share, the link and the song name to copy. most people know the rest; "New to this?" covers the ones who don't
+export default function ShareSheet({ week, year, kind, title, artist, onClose }: ShareSheetProps): ReactElement {
+    const dialogRef = useRef<HTMLDialogElement>(null);
+    const linkRef = useRef<HTMLInputElement>(null);
+    const songRef = useRef<HTMLInputElement>(null);
+    // did the last tap go down outside the sheet? near the sheet's edge, a phone's browser can move a tap onto
+    // a nearby link and send its click just outside, onto the backdrop, so the click alone can't tell
+    const pressedOutside = useRef(false);
+    // checked once, when the sheet opens (it only ever renders in the browser)
+    const [screen] = useState<ShareScreen>(() =>
+        shareScreen({
+            userAgent: navigator.userAgent,
+            platform: navigator.platform,
+            maxTouchPoints: navigator.maxTouchPoints,
+        }),
+    );
+    // only the 17th birthday picture has a style and color to pick
+    const [look, setLook] = useState<ShareLook>(DEFAULT_LOOK);
+    // the preview, Save picture, and Share picture all use this one address
+    const imagePath = shareImagePath(week, year, kind, look);
+    // the last address the preview finished loading. after a new look, the old picture shows faded until then
+    const [loadedPath, setLoadedPath] = useState<string | null>(null);
+    const previewLoading = loadedPath !== null && loadedPath !== imagePath;
+    const link = shareLink(kind);
+    // "Break Your Heart Taio Cruz": what Copy song name copies, ready to paste into Spotify, Instagram or TikTok
+    const songText = songSearchText(title, artist);
+    // where the escape links land: this result, with the sheet open, on the site this page came from
+    const resultUrl = sharedResultUrl(week, year, kind, window.location.origin);
+    const fileName = kind === "seventeen" ? "my-2027-song.png" : "my-birthday-song.png";
+    const onIPhone = screen === "iphone-instagram" || screen === "iphone";
+    // phones can hand the picture to the share menu. not from Instagram's Android browser, which has none, and
+    // not from a computer, where saving the file is the useful thing. asked with an empty file, so the main
+    // button is right from the start and doesn't jump when the real picture arrives
+    const [canShareFiles, setCanShareFiles] = useState(
+        () =>
+            (onIPhone || screen === "android") &&
+            navigator.canShare?.({ files: [new File([], fileName, { type: "image/png" })] }) === true,
+    );
+    const [canShareLink] = useState(() => typeof navigator.share === "function");
+    // the fetched picture, with the address it came from: a new look drops the old one at once, so Share
+    // picture waits for the new picture instead of sending the old one
+    const [fetched, setFetched] = useState<{ path: string; file: File } | null>(null);
+    const file = fetched?.path === imagePath ? fetched.file : null;
+    // a phone's clipboard holds one thing, so "Link copied" only shows while the link is that thing
+    const [lastCopied, setLastCopied] = useState<"link" | "song" | null>(null);
+    const [linkFailed, setLinkFailed] = useState(false);
+    const [songFailed, setSongFailed] = useState(false);
+
+    // the sheet takes focus itself, not the X: opened from a shared link, before any tap, the browser would
+    // show the X's keyboard ring. Tab still goes to the X first
+    useEffect(() => {
+        dialogRef.current?.showModal();
+        dialogRef.current?.focus();
+    }, []);
+
+    // fetched ahead of time: the share menu only opens when the tap calls it right away. if the picture
+    // can't be had, the sheet falls back to saving it. a new look stops the old fetch, so a slow old picture
+    // can't land after the new one
+    useEffect(() => {
+        if (!canShareFiles) return;
+        const controller = new AbortController();
+        fetch(imagePath, { signal: controller.signal })
+            .then((response) => (response.ok ? response.blob() : null))
+            .then((blob) => {
+                if (controller.signal.aborted) return;
+                const image = blob && new File([blob], fileName, { type: "image/png" });
+                if (image && navigator.canShare?.({ files: [image] })) setFetched({ path: imagePath, file: image });
+                else setCanShareFiles(false);
+            })
+            .catch(() => {
+                if (!controller.signal.aborted) setCanShareFiles(false);
+            });
+        return () => controller.abort();
+    }, [canShareFiles, imagePath, fileName]);
+
+    const copyLink = async (e: MouseEvent<HTMLButtonElement>) => {
+        const tapped = e.currentTarget;
+        // on a fail, focus stays on the link's field, which shows now with the link selected
+        if (!(await copyText(link, linkRef.current))) return setLinkFailed(true);
+        // the fallback focuses the link's field, which hides again once it worked, so focus goes back to the button
+        if (document.activeElement === linkRef.current) tapped.focus();
+        setLinkFailed(false);
+        setLastCopied("link");
+    };
+
+    const copySong = async (e: MouseEvent<HTMLButtonElement>) => {
+        const tapped = e.currentTarget;
+        const copied = await copyText(songText, songRef.current);
+        // the fallback focuses the song's field, which stays out of sight, so focus goes back to the button
+        if (document.activeElement === songRef.current) tapped.focus();
+        if (!copied) return setSongFailed(true);
+        setSongFailed(false);
+        setLastCopied("song");
+    };
+
+    // the file goes alone: with text or a link along, the app may take those and skip the picture.
+    // share() comes first, with nothing awaited before it, or Safari won't open the menu
+    const sharePicture = async () => {
+        if (!file) return; // still loading, a moment after the sheet opens
+        try {
+            await navigator.share({ files: [file] });
+        } catch {
+            // closed the menu, or the app said no
+        }
+    };
+
+    // the link alone, so the chat shows the page's preview
+    const sendToFriend = async () => {
+        try {
+            await navigator.share({ url: link, text: friendShareText(kind) });
+        } catch {}
+    };
+
+    // A always gets this line; an iPhone browser that can't share the picture gets it too, since a download
+    // lands in Files, where Instagram can't pick it from
+    const holdToSave = screen === "iphone-instagram" || (onIPhone && !canShareFiles);
+
+    const mainAction =
+        screen === "android-instagram" ? (
+            // C: Instagram's Android browser can't save or share, so the way out comes first
+            <div className="flex w-full flex-col gap-1.5">
+                <a href={androidEscapeLink(resultUrl)} className={mainButton}>
+                    Open in your browser
+                </a>
+                <p className="text-xs text-muted">Instagram&apos;s browser here can&apos;t save pictures.</p>
+            </div>
+        ) : canShareFiles ? (
+            // shows right away, waiting until the picture is in hand (a tap does nothing until then)
+            <button
+                type="button"
+                onClick={sharePicture}
+                aria-disabled={file ? undefined : true}
+                className={file ? mainButton : waitingButton}
+            >
+                Share picture
+            </button>
+        ) : onIPhone ? null : (
+            <a href={imagePath} download={fileName} className={mainButton}>
+                Save picture
+            </a>
+        );
+
+    const linkCopied = lastCopied === "link";
+    const songCopied = lastCopied === "song";
+
+    return (
+        <dialog
+            ref={dialogRef}
+            onClose={onClose}
+            onPointerDown={(e) => {
+                const box = e.currentTarget.getBoundingClientRect();
+                pressedOutside.current =
+                    e.clientX < box.left || e.clientX > box.right || e.clientY < box.top || e.clientY > box.bottom;
+            }}
+            // a tap on the dimmed backdrop lands on the dialog itself. it closes only if the finger went down there too
+            onClick={(e) => e.target === dialogRef.current && pressedOutside.current && dialogRef.current.close()}
+            aria-labelledby="share-title"
+            tabIndex={-1}
+            className={`${roboto.className} m-auto ${edgeRoom} w-[calc(100%-2rem)] max-w-md overflow-y-auto overscroll-contain rounded-3xl bg-background p-0 text-foreground shadow-2xl outline-none backdrop:bg-black/70`}
+        >
+            {/* stays at the top while the sheet scrolls, so the X is always in reach. the first column is empty and
+                as wide as the X, so the title sits in the middle of the sheet */}
+            <div className="sticky top-0 z-10 grid grid-cols-[2.75rem_1fr_2.75rem] items-center bg-background px-3 pt-3 pb-2">
+                <h2 id="share-title" className={`${display.className} col-start-2 text-center text-xl font-extrabold`}>
+                    Share your song
+                </h2>
+                <button
+                    type="button"
+                    aria-label="Close"
+                    onClick={() => dialogRef.current?.close()}
+                    className={`col-start-3 flex size-11 items-center justify-center rounded-full hover:cursor-pointer hover:bg-line/60 ${focusRing}`}
+                >
+                    <svg
+                        aria-hidden="true"
+                        viewBox="0 0 24 24"
+                        className="size-6"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2.25}
+                        strokeLinecap="round"
+                    >
+                        <path d="M6 6l12 12M18 6L6 18" />
+                    </svg>
+                </button>
+            </div>
+
+            {/* the padding lives here, not on the dialog, so a tap inside the card never counts as a backdrop tap */}
+            <div className="flex flex-col items-center gap-4 px-5 pb-5 text-center text-sm">
+                <div className="flex flex-col items-center gap-2">
+                    {/* a plain image, in no link and with nothing over it, so press and hold offers Save to Photos.
+                        a set height keeps its space before it loads and leaves room for the buttons. the 17th
+                        birthday one is a little shorter, to make room for the style and color pickers */}
+                    <img
+                        src={imagePath}
+                        alt="Your song as a Story picture"
+                        width={1080}
+                        height={1920}
+                        onLoad={() => setLoadedPath(imagePath)}
+                        onError={() => setLoadedPath(imagePath)}
+                        className={`${kind === "seventeen" ? "h-[min(34dvh,26rem)]" : "h-[min(40dvh,26rem)]"} w-auto max-w-full rounded-xl object-contain shadow-lg ring-1 ring-line transition-opacity duration-200 ${previewLoading ? "opacity-40" : ""}`}
+                    />
+                    {holdToSave && <p className="text-xs text-muted">Press and hold the picture to save it.</p>}
+                </div>
+
+                {kind === "seventeen" && <LookPicker look={look} onChange={setLook} />}
+
+                <p className="text-base font-medium text-balance">{screen === "computer" ? computerLine : storyLine}</p>
+
+                {mainAction}
+
+                <div className="relative w-full">
+                    <div className="grid grid-cols-2 gap-2">
+                        <button type="button" onClick={copyLink} className={linkCopied ? doneButton : plainButton}>
+                            {linkCopied ? "Link copied" : "Copy link"}
+                        </button>
+                        <button type="button" onClick={copySong} className={songCopied ? doneButton : plainButton}>
+                            {songCopied ? "Song name copied" : "Copy song name"}
+                        </button>
+                    </div>
+                    {/* out of sight but there for the old copy command to select. the link's field shows when
+                        copying the link fails. 16px text, or focusing it zooms the page on an iPhone */}
+                    <input
+                        ref={linkRef}
+                        readOnly
+                        value={link}
+                        aria-label="Link to share"
+                        tabIndex={linkFailed ? undefined : -1}
+                        onFocus={(e) => e.currentTarget.select()}
+                        className={
+                            linkFailed
+                                ? `mt-2 w-full rounded-xl border border-line bg-surface px-3 py-2 text-center text-base text-muted ${focusRing}`
+                                : "sr-only text-base"
+                        }
+                    />
+                    <input
+                        ref={songRef}
+                        readOnly
+                        value={songText}
+                        aria-label="Song name to search"
+                        tabIndex={-1}
+                        className="sr-only text-base"
+                    />
+                    {linkFailed && (
+                        <p role="status" className="mt-2 font-medium">
+                            Press and hold the link to copy it.
+                        </p>
+                    )}
+                    {songFailed && (
+                        <p role="status" className="mt-2 font-medium">
+                            Copy didn&apos;t work. Type {quoted(songText)} instead.
+                        </p>
+                    )}
+                </div>
+
+                {canShareLink && (
+                    <button type="button" onClick={sendToFriend} className={plainButton}>
+                        Send to a friend
+                    </button>
+                )}
+
+                {screen === "iphone-instagram" && (
+                    <a
+                        href={instagramEscapeLink(resultUrl)}
+                        className={`inline-flex min-h-11 items-center rounded-lg px-2 font-medium text-brand-blue underline ${focusRing}`}
+                    >
+                        Can&apos;t save? Open in your browser
+                    </a>
+                )}
+
+                <details className="w-full text-left">
+                    <summary className={`min-h-11 cursor-pointer rounded-lg py-3 font-semibold ${focusRing}`}>
+                        New to this?
+                    </summary>
+                    <ol className="flex list-decimal flex-col gap-1.5 pt-1 pl-6">
+                        <li>Save the picture.</li>
+                        <li>In Instagram or TikTok, start a Story and pick the picture.</li>
+                        <li>
+                            Add music and search {quoted(songText)}. On Instagram, add a Link sticker and paste the
+                            link.
+                        </li>
+                    </ol>
+                </details>
+            </div>
+        </dialog>
+    );
+}

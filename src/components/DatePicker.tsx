@@ -40,7 +40,7 @@ const Chevron = (): ReactElement => (
 );
 
 const selectClass =
-    "appearance-none bg-transparent py-2 pl-2 pr-6 rounded-lg font-medium hover:cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue disabled:text-muted max-[359px]:pl-1.5 max-[359px]:pr-5";
+    "appearance-none min-h-11 bg-transparent py-2 pl-2 pr-6 rounded-lg font-medium hover:cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue disabled:text-muted max-[359px]:pl-1.5 max-[359px]:pr-5";
 
 // month / day / year as three native selects: phones open their own wheel for each,
 // and on a computer you can jump straight to a year instead of paging a calendar back decades

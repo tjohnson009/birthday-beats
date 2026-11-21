@@ -1,8 +1,11 @@
 <!-- BEGIN:nextjs-agent-rules -->
 
-# This is NOT the Next.js you know
+## This is NOT the Next.js you know
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
 <!-- END:nextjs-agent-rules -->
 
 # Birthday Beats
@@ -16,7 +19,8 @@ falling back to an embedded YouTube video when Spotify has no preview.
 ## Tech Stack
 
 Next.js (App Router), TypeScript, Tailwind, Spotify Web API, YouTube Data API.
-Deployed on Vercel.
+Deployed on Vercel at www.birthdaybeats.net (birthdaybeats.net redirects there, and
+birthday-beats.vercel.app serves the same site). The main address lives in one place: `SITE_URL` in `src/lib/share.ts`.
 
 ## Architecture
 
@@ -35,6 +39,12 @@ and `.env.local` stay at the project root.
 - `src/lib/spotify.ts` — Client Credentials token management + track search
 - `src/lib/billboard.ts` — local Billboard dataset lookup (`getNumberOneSong`)
 - `src/lib/youtube.ts` — YouTube music-video search (preview fallback)
+- `src/app/17/page.tsx`: the 17th-birthday trend page (`BirthdayBeats` with `trend`)
+- `src/lib/share.ts` + `src/app/api/share-image/route.tsx`: story-size share image (next/og), chart data only, year only.
+  The 17th birthday picture comes in four styles and eight colors, drawn by `src/app/api/share-image/cards/`
+  and picked in the share sheet (`src/components/ShareSheet.tsx`)
+- `src/lib/spotifyGuard.ts`: Redis-counted Spotify budget (500 calls / 3 h site-wide, 10 lookups / min per visitor)
+- `src/scripts/prefillSongCache.ts`: slow cache head start through the live site's guard (`npm run prefill:cache`)
 - `data/` — Billboard Hot 100 dataset (gitignored if large)
 - `data/spotify-overrides.json` — per-song fixes for Spotify searches the rules get
   wrong: a corrected `artist`/`title` for the query, or a pinned `trackId`
@@ -68,5 +78,6 @@ and `.env.local` stay at the project root.
   3-hour lockout that takes the live site down. Never run bulk searches
   from this account; keep any batch under ~100 calls/hour (a 1,195-song
   audit at 30 s/song ran clean). Fix single songs via `spotify-overrides.json`.
+  The site enforces this with `spotifyGuard.ts`, which fails closed: if Redis errors, no Spotify call is made.
 - Secrets live in `.env.local` (`SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`,
   `YOUTUBE_API_KEY`) — never commit them.

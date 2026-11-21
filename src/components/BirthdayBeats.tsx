@@ -1,24 +1,36 @@
 "use client";
 import Loading from "@/components/Loading";
-import React, { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import React, { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import ErrorMessage, { type SearchError } from "@/components/ErrorMessage";
 import SongInfo from "@/components/SongInfo";
 import DatePicker from "@/components/DatePicker";
 import QuickPicks from "@/components/QuickPicks";
 import HeroTitles from "@/components/HeroTitles";
 import ChartStrip from "@/components/ChartStrip";
+import BirthdaySwitch, { type BirthdayView } from "@/components/BirthdaySwitch";
+import ShareSheet from "@/components/ShareSheet";
 import { resultArea, resultGrid } from "@/components/resultLayout";
 import { display, roboto } from "@/lib/fonts";
-import { FIRST_CHART_DATE, clampIsoDate, randomIsoDateBetween } from "@/lib/dates";
+import {
+    FIRST_CHART_DATE,
+    TREND_AGE,
+    checkNthBirthday,
+    clampIsoDate,
+    formatShortDate,
+    nthBirthday,
+    randomIsoDateBetween,
+} from "@/lib/dates";
 import { weekForDate, type StripData } from "@/lib/chartStrip";
 import type { SongResult } from "@/lib/songResult";
+import { parseSharedResult } from "@/lib/share";
 
 type BirthdayBeatsProps = {
     heroTitles: string[];
+    trend?: boolean; // the /17 page: Go shows the #1 from the 17th birthday
 };
 
 // a strip stop on a song that isn't saved yet waits this long, still, before asking Spotify for its details
-const DETAILS_DELAY_MS = 1500;
+const DETAILS_DELAY_MS = 2000;
 const PLACEHOLDER_ART = "/audio-placeholder.png";
 
 const subscribe = () => {
@@ -31,17 +43,22 @@ const getToday = () => {
 
 const getServerToday = () => "";
 
+const getAddressSearch = () => window.location.search;
+
+const getServerAddressSearch = () => "";
+
 const toSearchError = async (response: Response, searchDate: string): Promise<SearchError> => {
     if (response.status === 404 && searchDate < FIRST_CHART_DATE) return { kind: "too-early" };
 
     let message = "Something went wrong. Please try again in a minute.";
     try {
-        message = (await response.json()).message;
+        const body = await response.json();
+        if (typeof body?.message === "string" && body.message) message = body.message;
     } catch {}
     return { kind: "other", message };
 };
 
-export default function BirthdayBeats({ heroTitles }: BirthdayBeatsProps) {
+export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBeatsProps) {
     const today = useSyncExternalStore(subscribe, getToday, getServerToday);
 
     const [date, setDate] = useState<string | null>(null);
@@ -53,10 +70,50 @@ export default function BirthdayBeats({ heroTitles }: BirthdayBeatsProps) {
     const [stripData, setStripData] = useState<StripData | null>(null);
     // set while the strip is moving; otherwise the strip follows the picked date
     const [stripWeek, setStripWeek] = useState<number | null>(null);
-    const stripRequest = useRef<AbortController | null>(null);
+    // the birthday behind the result on screen, and whether it shows that day's #1 or the 17th birthday's
+    const [birthday, setBirthday] = useState<string | null>(null);
+    const [view, setView] = useState<BirthdayView>("born");
+    const [sharing, setSharing] = useState(false);
+    // the share sheet's escape buttons reopen this page with ?week=&year=&kind=&share=1: that week's song,
+    // with the sheet open. read in the browser, so the page itself stays static
+    const addressSearch = useSyncExternalStore(subscribe, getAddressSearch, getServerAddressSearch);
+    const shared = useMemo(() => parseSharedResult(addressSearch), [addressSearch]);
+    // results already fetched for this birthday, so switching back doesn't ask again
+    const savedResults = useRef<Partial<Record<BirthdayView, SongResult>>>({});
+    // one lookup at a time: a newer search, switch, or strip stop cancels the one before it
+    const songRequest = useRef<AbortController | null>(null);
+    // the last Go or switch lookup, so "Try again" repeats that one (strip stops leave it empty)
+    const lastLookup = useRef<{ date: string; view: BirthdayView } | null>(null);
+    // set by Go and the switch so the new song gets scrolled into view; strip stops don't scroll
+    const scrollToResult = useRef(false);
+    const resultTopRef = useRef<HTMLDivElement | null>(null);
     const detailsTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
     const selectedDate = date ?? today;
-    // const resultsRef = useRef<HTMLDivElement | null>(null)
+    const seventeenth = birthday && nthBirthday(birthday, TREND_AGE);
+    const seventeenthCheck = birthday && today ? checkNthBirthday(birthday, TREND_AGE, today) : "future";
+    const futureNote = trend && view === "born" && seventeenthCheck === "future";
+    // /17 takes birthdays from 17 years before the first chart, whose 17th birthday does have one
+    const earliestDate = trend ? nthBirthday(FIRST_CHART_DATE, -TREND_AGE) : FIRST_CHART_DATE;
+    // the switch and Share belong to the birthday on screen; once the picker moves to another date, they wait for Go
+    const pickerMatchesResult = birthday !== null && selectedDate === birthday;
+    const searched = hasSearched || shared !== null;
+    const sharedLoading = shared !== null && !songData && !error;
+    // what Share hands over: the shared result, or the birthday result on screen
+    const shareTarget = shared
+        ? { year: shared.year, kind: shared.kind }
+        : birthday && seventeenth
+          ? { year: (view === "seventeen" ? seventeenth : birthday).slice(0, 4), kind: view }
+          : null;
+
+    // on phones the result sits below the picker and strip, so bring a new Go or switch result into view
+    useEffect(() => {
+        if (!songData || !scrollToResult.current) return;
+        scrollToResult.current = false;
+        const top = resultTopRef.current;
+        if (!top || top.getBoundingClientRect().top < window.innerHeight * 0.4) return;
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        top.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+    }, [songData]);
 
     // the strip is extra: if its data can't load, the date picker works on its own
     useEffect(() => {
@@ -66,10 +123,11 @@ export default function BirthdayBeats({ heroTitles }: BirthdayBeatsProps) {
             .catch(() => {});
     }, []);
 
-    const cancelStripLoad = () => {
+    const cancelSongLoad = () => {
         clearTimeout(detailsTimer.current);
-        stripRequest.current?.abort();
-        stripRequest.current = null;
+        songRequest.current?.abort();
+        songRequest.current = null;
+        setLoading(false);
         setRefreshing(false);
     };
 
@@ -78,38 +136,100 @@ export default function BirthdayBeats({ heroTitles }: BirthdayBeatsProps) {
         setStripWeek(null);
     };
 
-    const search = async (searchDate: string) => {
-        cancelStripLoad();
-        pickDate(searchDate);
+    // looks up one date for Go or the switch, and shows it as the given view
+    const showSong = async (lookupDate: string, nextView: BirthdayView) => {
+        cancelSongLoad();
+        const controller = new AbortController();
+        songRequest.current = controller;
         setHasSearched(true);
         setLoading(true);
         setError(null);
         setSongData(null);
+        setView(nextView);
+        lastLookup.current = { date: lookupDate, view: nextView };
         try {
-            const response = await fetch(`/api/song?date=${searchDate}`);
+            const response = await fetch(`/api/song?date=${lookupDate}`, { signal: controller.signal });
 
             if (!response.ok) {
-                setError(await toSearchError(response, searchDate));
+                setError(await toSearchError(response, lookupDate));
                 return;
             }
 
-            setSongData(await response.json());
-            // resultsRef.current?.scrollIntoView({ behavior: "smooth" })
+            const result: SongResult = await response.json();
+            savedResults.current[nextView] = result;
+            scrollToResult.current = true;
+            setSongData(result);
         } catch {
-            setError({ kind: "network" });
+            if (!controller.signal.aborted) setError({ kind: "network" });
         } finally {
-            setLoading(false);
+            if (!controller.signal.aborted) setLoading(false);
         }
+    };
+
+    // load the shared week's song, then open the sheet. until it comes back, the page already looks like a
+    // result is on its way (see searched and sharedLoading)
+    useEffect(() => {
+        if (!shared) return;
+        const controller = new AbortController();
+        songRequest.current = controller;
+        lastLookup.current = { date: shared.week, view: shared.kind };
+        fetch(`/api/song?date=${shared.week}`, { signal: controller.signal })
+            .then(async (response) => {
+                if (!response.ok) return setError(await toSearchError(response, shared.week));
+                const result: SongResult = await response.json();
+                scrollToResult.current = true;
+                setSongData(result);
+                setSharing(true);
+            })
+            .catch(() => {
+                if (!controller.signal.aborted) setError({ kind: "network" });
+            });
+        return () => controller.abort();
+    }, [shared]);
+
+    // a new search or strip stop leaves the shared result behind. dropping it from the address is enough:
+    // the next render reads the address again
+    const leaveSharedResult = () => {
+        if (shared) window.history.replaceState(null, "", window.location.pathname);
+    };
+
+    // on /17, Go jumps straight to the 17th birthday, unless it hasn't happened yet
+    const search = (searchDate: string) => {
+        leaveSharedResult();
+        pickDate(searchDate);
+        setBirthday(searchDate);
+        savedResults.current = {};
+        if (trend && today && checkNthBirthday(searchDate, TREND_AGE, today) === "ok")
+            showSong(nthBirthday(searchDate, TREND_AGE), "seventeen");
+        else showSong(searchDate, "born");
+    };
+
+    const toggleView = () => {
+        if (!birthday || !seventeenth) return;
+        const next = view === "born" ? "seventeen" : "born";
+        const saved = savedResults.current[next];
+        if (!saved) return showSong(next === "seventeen" ? seventeenth : birthday, next);
+        cancelSongLoad();
+        setError(null);
+        scrollToResult.current = true;
+        setSongData(saved);
+        setView(next);
     };
 
     // a strip stop: show the song right away from a cache-only peek, which never calls Spotify. if its
     // details aren't saved yet, ask Spotify only once the strip has stayed put a moment longer
     const loadFromStrip = async (week: number) => {
         if (!stripData) return;
-        cancelStripLoad();
+        cancelSongLoad();
+        leaveSharedResult();
         const stopDate = stripData.dates[week];
         const controller = new AbortController();
-        stripRequest.current = controller;
+        songRequest.current = controller;
+        // browsing the strip treats each stop as the birthday
+        setBirthday(clampIsoDate(stopDate, FIRST_CHART_DATE, today));
+        setView("born");
+        savedResults.current = {};
+        lastLookup.current = null;
         setHasSearched(true);
         setError(null);
         if (songData) setRefreshing(true);
@@ -129,11 +249,16 @@ export default function BirthdayBeats({ heroTitles }: BirthdayBeatsProps) {
             const peek = await get("&mode=peek");
             if (!peek) return;
             setSongData(peek);
-            if (peek.spotify || peek.spotifyStatus !== "not-cached") return;
+            if (peek.spotify || peek.spotifyStatus !== "not-cached") {
+                savedResults.current.born = peek;
+                return;
+            }
             detailsTimer.current = setTimeout(async () => {
                 try {
                     const full = await get("");
-                    if (full) setSongData(full);
+                    if (!full) return;
+                    savedResults.current.born = full;
+                    setSongData(full);
                 } catch {
                     // moved on, or offline: the peeked song stays on screen
                 }
@@ -149,7 +274,7 @@ export default function BirthdayBeats({ heroTitles }: BirthdayBeatsProps) {
     };
 
     const moveStrip = (week: number) => {
-        cancelStripLoad();
+        cancelSongLoad();
         setStripWeek(week);
         // chart weeks are dated ahead, so the newest one can be after today
         setDate(clampIsoDate(stripData!.dates[week], FIRST_CHART_DATE, today));
@@ -166,12 +291,12 @@ export default function BirthdayBeats({ heroTitles }: BirthdayBeatsProps) {
         <div className="flex flex-col flex-1 items-center justify-center font-sans">
             {/* isolate: the title wall's -z-10 stays behind everything in main, but no further back than main */}
             <main className="relative isolate flex flex-col flex-1 items-center justify-center w-full py-8 gap-6">
-                <HeroTitles titles={heroTitles} hidden={hasSearched} />
+                <HeroTitles titles={heroTitles} hidden={searched} />
 
                 {/* intro: fades and slides up, collapsing its space, once the first search is submitted */}
                 <div
                     className={`${roboto.className} grid w-full max-w-lg px-4 text-center transition-all transition-discrete duration-500 ease-out ${
-                        hasSearched ? "grid-rows-[0fr] opacity-0 -translate-y-2 hidden" : "grid-rows-[1fr] opacity-100"
+                        searched ? "grid-rows-[0fr] opacity-0 -translate-y-2 hidden" : "grid-rows-[1fr] opacity-100"
                     }`}
                 >
                     <div className="overflow-hidden">
@@ -182,11 +307,20 @@ export default function BirthdayBeats({ heroTitles }: BirthdayBeatsProps) {
                             <span className="whitespace-nowrap bg-linear-to-r from-brand-blue to-brand-green bg-clip-text text-transparent">
                                 #1 song
                             </span>{" "}
-                            in the US on the day you were born?
+                            {trend ? `on your ${TREND_AGE}th birthday?` : "in the US on the day you were born?"}
                         </h1>
                         <p id="intro" className="mt-3 text-muted">
-                            Or the day you graduated, said &quot;I do,&quot; or got your first car? Pick any date back
-                            to August 1958, press Go, and hear that week&apos;s Billboard #1.
+                            {trend ? (
+                                <>
+                                    Will 2027 be a party anthem or a breakup song? The trend says it&apos;s whatever hit
+                                    #1 when you turned 17. Enter your birthday to see yours.
+                                </>
+                            ) : (
+                                <>
+                                    Or the day you graduated, said &quot;I do,&quot; or got your first car? Pick any
+                                    date back to August 1958, press Go, and hear that week&apos;s Billboard #1.
+                                </>
+                            )}
                         </p>
                     </div>
                 </div>
@@ -204,20 +338,22 @@ export default function BirthdayBeats({ heroTitles }: BirthdayBeatsProps) {
                         className="flex flex-col items-center gap-2"
                     >
                         <p id="date-label" className="text-center text-sm text-muted text-balance">
-                            Your birthday, or any day that matters to you
+                            {trend ? "Your birthday" : "Your birthday, or any day that matters to you"}
                         </p>
                         {/* under 360px the date and the Go button don't fit on one line, so Go drops below at full width */}
                         <div className="flex flex-wrap items-center justify-center gap-1 rounded-3xl border border-line bg-surface p-2 shadow-sm">
                             <DatePicker
                                 value={selectedDate}
-                                min={FIRST_CHART_DATE}
+                                min={earliestDate}
                                 max={today}
                                 onChange={pickDate}
                                 className="text-base sm:text-lg"
                             />
+                            {/* off until the page is ready: before that, a tap would only reload the page */}
                             <button
                                 type="submit"
-                                className="ml-1 rounded-2xl px-5 py-2.5 text-lg text-white font-medium bg-green-600 hover:bg-green-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 hover:cursor-pointer sm:px-6 max-[359px]:ml-0 max-[359px]:w-full"
+                                disabled={!today}
+                                className="ml-1 rounded-2xl px-5 py-2.5 text-lg text-white font-medium bg-green-700 hover:bg-green-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-700 hover:cursor-pointer disabled:opacity-60 disabled:hover:bg-green-700 disabled:cursor-wait sm:px-6 max-[359px]:ml-0 max-[359px]:w-full"
                                 form="date"
                             >
                                 Go!
@@ -232,10 +368,83 @@ export default function BirthdayBeats({ heroTitles }: BirthdayBeatsProps) {
                             onRest={loadFromStrip}
                         />
                     )}
-                    {!hasSearched && <QuickPicks today={today} onPick={search} />}
+                    {/* the picks are dates, not birthdays, so the trend page leaves them out */}
+                    {!searched && !trend && <QuickPicks today={today} onPick={search} />}
                 </form>
 
-                {loading && <Loading />}
+                {birthday && seventeenth && pickerMatchesResult && (
+                    <div
+                        ref={resultTopRef}
+                        className={`${roboto.className} flex scroll-mt-4 flex-col items-center gap-3 px-4 text-center`}
+                    >
+                        <div className="flex flex-wrap justify-center gap-2">
+                            {/* on /17 the note below already says when they turn 17 */}
+                            {!futureNote && (
+                                <BirthdaySwitch
+                                    view={view}
+                                    check={seventeenthCheck}
+                                    turnsYear={Number(seventeenth.slice(0, 4))}
+                                    bornHasChart={birthday >= FIRST_CHART_DATE}
+                                    busy={loading}
+                                    onToggle={toggleView}
+                                />
+                            )}
+                            {songData && !loading && !refreshing && (
+                                <button
+                                    type="button"
+                                    onClick={() => setSharing(true)}
+                                    className="rounded-2xl bg-brand-blue px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-blue/90 hover:cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue"
+                                >
+                                    Share to your Story
+                                </button>
+                            )}
+                        </div>
+                        {view === "seventeen" && (
+                            <p className={`${display.className} text-lg font-semibold text-balance`}>
+                                #1 on your {TREND_AGE}th birthday · {formatShortDate(seventeenth)}
+                            </p>
+                        )}
+                        {futureNote && songData && (
+                            <p className="text-sm text-muted text-balance">
+                                You turn {TREND_AGE} in {seventeenth.slice(0, 4)}. Here&apos;s the #1 from the day you
+                                were born.
+                            </p>
+                        )}
+                    </div>
+                )}
+
+                {shared && songData && !loading && (
+                    <div
+                        ref={resultTopRef}
+                        className={`${roboto.className} flex scroll-mt-4 flex-col items-center gap-3 px-4 text-center`}
+                    >
+                        <button
+                            type="button"
+                            onClick={() => setSharing(true)}
+                            className="rounded-2xl bg-brand-blue px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-brand-blue/90 hover:cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue"
+                        >
+                            Share to your Story
+                        </button>
+                        <p className={`${display.className} text-lg font-semibold text-balance`}>
+                            {shared.kind === "seventeen"
+                                ? `#1 on your ${TREND_AGE}th birthday · ${shared.year}`
+                                : `#1 the week you were born · ${shared.year}`}
+                        </p>
+                    </div>
+                )}
+
+                {sharing && shareTarget && songData && (
+                    <ShareSheet
+                        week={songData.chartDate}
+                        year={shareTarget.year}
+                        kind={shareTarget.kind}
+                        title={songData.title}
+                        artist={songData.artist}
+                        onClose={() => setSharing(false)}
+                    />
+                )}
+
+                {(loading || sharedLoading) && <Loading />}
 
                 <div className={`results w-full transition-opacity duration-200 ${refreshing ? "opacity-60" : ""}`}>
                     {songData && (
@@ -289,7 +498,11 @@ export default function BirthdayBeats({ heroTitles }: BirthdayBeatsProps) {
                     {error && (
                         <ErrorMessage
                             error={error}
-                            onRetry={() => search(selectedDate)}
+                            onRetry={() =>
+                                lastLookup.current
+                                    ? showSong(lastLookup.current.date, lastLookup.current.view)
+                                    : search(selectedDate)
+                            }
                             onTryDate={search}
                             onSurprise={surprise}
                         />

@@ -6,6 +6,7 @@
         "dev": "next dev",
         "build": "next build",
         "build:youtube": "node --experimental-strip-types --env-file=.env.local src/scripts/buildYoutubeData.ts",
+        "prefill:cache": "node --experimental-strip-types src/scripts/prefillSongCache.ts",
         "start": "next start",
         "lint": "eslint",
         "format": "prettier --write",
@@ -16,7 +17,7 @@
     "dependencies": {
         "@neondatabase/serverless": "^1.2.0",
         "@upstash/redis": "^1.39.0",
-        "next": "16.4.5",
+        "next": "16.4.6",
         "react": "19.2.4",
         "react-dom": "19.2.4"
     },
@@ -29,7 +30,7 @@
         "@types/react": "^19",
         "@types/react-dom": "^19",
         "eslint": "^9",
-        "eslint-config-next": "16.2.12",
+        "eslint-config-next": "16.4.6",
         "eslint-config-prettier": "10.1.8",
         "jest": "^30.4.2",
         "jest-environment-jsdom": "^30.4.1",
