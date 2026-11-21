@@ -3,12 +3,16 @@
  */
 import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import ShareSheet from "@/components/ShareSheet";
+import { songSearchText } from "@/lib/songSearch";
 
 // the share sheet's rules: the same short sheet on every screen, with the main button picked by where the
 // person is, the one-thing clipboard, and what each share sends. phones are faked by their user agent
 
 const LINK = "https://birthday-beats.vercel.app/17";
 const TITLE = "Lady Marmalade";
+const ARTIST = "Christina Aguilera, Lil' Kim, Mya & P!nk";
+// what Copy song name copies and the help says to search: title and lead artist, cleaned up like the Spotify search
+const SEARCH = songSearchText(TITLE, ARTIST);
 const STORY_LINE = "Post it to your Story, then add the song so it plays.";
 const COMPUTER_LINE = "Save it, then post it from your phone. Add the song so it plays.";
 const HOLD_LINE = "Press and hold the picture to save it.";
@@ -72,7 +76,7 @@ let writeText: jest.Mock;
 let onClose: jest.Mock;
 
 // waits for the picture fetch too, so its update lands inside the test
-const openSheet = async (phone: Phone) => {
+const openSheet = async (phone: Phone, song = { title: TITLE, artist: ARTIST }) => {
     setNavigator("userAgent", phone.userAgent);
     setNavigator("platform", phone.platform);
     setNavigator("maxTouchPoints", phone.maxTouchPoints);
@@ -82,7 +86,16 @@ const openSheet = async (phone: Phone) => {
     writeText = jest.fn(async () => {});
     setNavigator("clipboard", { writeText });
     onClose = jest.fn();
-    render(<ShareSheet week="2001-06-09" year="2001" kind="seventeen" title={TITLE} onClose={onClose} />);
+    render(
+        <ShareSheet
+            week="2001-06-09"
+            year="2001"
+            kind="seventeen"
+            title={song.title}
+            artist={song.artist}
+            onClose={onClose}
+        />,
+    );
     await act(async () => {});
 };
 
@@ -145,6 +158,9 @@ describe("ShareSheet, the same short sheet everywhere", () => {
         const picture = screen.getByRole("img", { name: "Your song as a Story picture" });
         expect(picture.getAttribute("src")).toBe("/api/share-image?week=2001-06-09&year=2001&kind=seventeen");
         expect(picture.closest("a")).toBeNull();
+        // a thin edge, so a dark picture doesn't melt into the dark sheet
+        expect(picture.className).toMatch(/\bring-1\b/);
+        expect(picture.className).toMatch(/\bring-line\b/);
     });
 
     it.each(["A", "B", "C", "D"] as const)("%s: the one line says to post it and add the song", async (key) => {
@@ -186,8 +202,10 @@ describe("ShareSheet, the same short sheet everywhere", () => {
         ).toEqual([
             "Save the picture.",
             "In Instagram or TikTok, start a Story and pick the picture.",
-            `Add music and search "${TITLE}". On Instagram, add a Link sticker and paste the link.`,
+            `Add music and search "${SEARCH}". On Instagram, add a Link sticker and paste the link.`,
         ]);
+        // big enough to tap
+        expect(within(help).getByText("New to this?").className).toMatch(/\bmin-h-11\b/);
     });
 
     it.each(["A", "B", "C", "D", "E"] as const)("%s: Copy link and Copy song name sit side by side", async (key) => {
@@ -235,6 +253,19 @@ describe("ShareSheet screens", () => {
 
         expect(noButton("Share picture")).toBeNull();
         expect(screen.getByText(HOLD_LINE)).toBeTruthy();
+        expect(screen.queryByRole("link", { name: "Save picture" })).toBeNull();
+    });
+
+    // nothing to share, and a download would land in Files, so press and hold it is
+    it.each([
+        ["answers with an error", async () => ({ ok: false })],
+        ["can't connect", async () => Promise.reject(new Error("offline"))],
+    ])("B when the picture fetch %s: press and hold, no Save picture", async (_, fail) => {
+        global.fetch = jest.fn(fail) as unknown as typeof fetch;
+        await openSheet(PHONES.B);
+
+        expect(screen.getByText(HOLD_LINE)).toBeTruthy();
+        expect(noButton("Share picture")).toBeNull();
         expect(screen.queryByRole("link", { name: "Save picture" })).toBeNull();
     });
 
@@ -309,7 +340,7 @@ describe("ShareSheet clipboard", () => {
 
         await act(async () => fireEvent.click(button("Copy song name")));
 
-        expect(writeText).toHaveBeenLastCalledWith(TITLE);
+        expect(writeText).toHaveBeenLastCalledWith(SEARCH);
         expect(button("Song name copied")).toBeTruthy();
         expect(noButton("Link copied")).toBeNull();
 
@@ -347,6 +378,61 @@ describe("ShareSheet clipboard", () => {
         expect(screen.getByText("Press and hold the link to copy it.")).toBeTruthy();
         expect(noButton("Link copied")).toBeNull();
     });
+
+    // pasted straight into Spotify, Instagram or TikTok's music search
+    it("Copy song name copies the title and lead artist, cleaned up the same as the Spotify search", async () => {
+        await openSheet(PHONES.B, { title: "Break Your Heart", artist: "Taio Cruz Featuring Ludacris" });
+
+        await act(async () => fireEvent.click(button("Copy song name")));
+
+        expect(writeText).toHaveBeenLastCalledWith("Break Your Heart Taio Cruz");
+        expect(button("Song name copied")).toBeTruthy();
+        const help = screen.getByText("New to this?").closest("details")!;
+        expect(within(help).getAllByRole("listitem")[2].textContent).toBe(
+            'Add music and search "Break Your Heart Taio Cruz". On Instagram, add a Link sticker and paste the link.',
+        );
+    });
+
+    it("with no clipboard, the song copies from its own hidden field with the old copy command", async () => {
+        await openSheet(PHONES.A);
+        const field = screen.getByDisplayValue(SEARCH) as HTMLInputElement;
+        // out of sight, never a Tab stop, and 16px so focusing it doesn't zoom an iPhone
+        expect(field.readOnly).toBe(true);
+        expect(field.tabIndex).toBe(-1);
+        expect(field.className).toMatch(/\bsr-only\b/);
+        expect(field.className).toMatch(/\btext-base\b/);
+        writeText.mockRejectedValue(new Error("no clipboard"));
+        let selected = "";
+        document.execCommand = jest.fn(() => {
+            const active = document.activeElement as HTMLInputElement;
+            selected = active.value.slice(active.selectionStart ?? 0, active.selectionEnd ?? 0);
+            return true;
+        });
+
+        await act(async () => fireEvent.click(button("Copy song name")));
+
+        expect(document.execCommand).toHaveBeenCalledWith("copy");
+        expect(selected).toBe(SEARCH);
+        expect(button("Song name copied")).toBeTruthy();
+        // the field it used can't be seen, so focus goes back to the button
+        expect(document.activeElement).toBe(button("Song name copied"));
+    });
+
+    it("when copying the song fails, says to type it, with the text to type", async () => {
+        await openSheet(PHONES.A);
+        writeText.mockRejectedValue(new Error("no clipboard"));
+        document.execCommand = () => false;
+
+        await act(async () => fireEvent.click(button("Copy song name")));
+
+        expect(screen.getByText(`Copy didn't work. Type "${SEARCH}" instead.`)).toBeTruthy();
+        expect(noButton("Song name copied")).toBeNull();
+        expect(screen.getByDisplayValue(SEARCH).className).toMatch(/\bsr-only\b/);
+        expect(document.activeElement).toBe(button("Copy song name"));
+        // the link's field stays hidden: only the song failed
+        expect(screen.getByDisplayValue(LINK).className).toMatch(/\bsr-only\b/);
+        expect(hasText("Press and hold the link to copy it.")).toBe(false);
+    });
 });
 
 describe("ShareSheet share menu", () => {
@@ -362,6 +448,35 @@ describe("ShareSheet share menu", () => {
         expect(data.files).toHaveLength(1);
         expect(data.files[0]).toBeInstanceOf(File);
         expect([data.files[0].name, data.files[0].type]).toEqual(["my-2027-song.png", "image/png"]);
+        await act(async () => {});
+    });
+
+    // the picture is fetched when the sheet opens, so for a moment there's nothing to share yet
+    it("Share picture waits for the picture: same label, faded, no hover, and a tap does nothing", async () => {
+        let arrive = () => {};
+        global.fetch = jest.fn(
+            () =>
+                new Promise((resolve) => {
+                    arrive = () => resolve({ ok: true, blob: async () => new Blob(["png"], { type: "image/png" }) });
+                }),
+        ) as unknown as typeof fetch;
+        await openSheet(PHONES.B);
+
+        const waiting = button("Share picture");
+        expect(waiting.getAttribute("aria-disabled")).toBe("true");
+        expect(waiting.className).toMatch(/\bopacity-60\b/);
+        expect(waiting.className).not.toMatch(/hover:/);
+        fireEvent.click(waiting);
+        expect(share).not.toHaveBeenCalled();
+
+        await act(async () => arrive());
+
+        const ready = button("Share picture");
+        expect(ready.getAttribute("aria-disabled")).toBeNull();
+        expect(ready.className).not.toMatch(/\bopacity-60\b/);
+        expect(ready.className).toMatch(/hover:bg-brand-blue/);
+        fireEvent.click(ready);
+        expect(share).toHaveBeenCalledTimes(1);
         await act(async () => {});
     });
 

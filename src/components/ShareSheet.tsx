@@ -1,5 +1,5 @@
 "use client";
-import { ReactElement, useEffect, useRef, useState } from "react";
+import { MouseEvent, ReactElement, useEffect, useRef, useState } from "react";
 import { display, roboto } from "@/lib/fonts";
 import { copyText } from "@/lib/copyText";
 import {
@@ -12,29 +12,35 @@ import {
     type ShareKind,
 } from "@/lib/share";
 import { shareScreen, type ShareScreen } from "@/lib/shareEnvironment";
+import { songSearchText } from "@/lib/songSearch";
 
 type ShareSheetProps = {
     week: string; // the chart week of the song on screen
     year: string; // the year printed on the image
     kind: ShareKind;
     title: string; // the song as the chart prints it, also on the image
+    artist: string; // the chart's artist, for the text people paste into a music search
     onClose: () => void;
 };
 
 const focusRing = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue";
-const buttonBase = `inline-flex w-full items-center justify-center rounded-2xl text-center font-medium leading-tight hover:cursor-pointer ${focusRing}`;
-const mainButton = `${buttonBase} min-h-12 px-4 py-3 bg-brand-blue text-base text-white hover:bg-brand-blue/90`;
-const plainButton = `${buttonBase} min-h-11 px-2 py-2 border border-line bg-surface text-sm hover:border-brand-blue`;
-const doneButton = `${buttonBase} min-h-11 px-2 py-2 border border-brand-green bg-surface text-sm`;
+const buttonBase = `inline-flex w-full items-center justify-center rounded-2xl text-center font-medium leading-tight ${focusRing}`;
+const mainLook = `${buttonBase} min-h-12 px-4 py-3 bg-brand-blue text-base text-white`;
+const mainButton = `${mainLook} hover:cursor-pointer hover:bg-brand-blue/90`;
+// Share picture before its picture has loaded: faded, with no hover, so it doesn't look ready
+const waitingButton = `${mainLook} opacity-60`;
+const plainButton = `${buttonBase} min-h-11 px-2 py-2 border border-line bg-surface text-sm hover:cursor-pointer hover:border-brand-blue`;
+const doneButton = `${buttonBase} min-h-11 px-2 py-2 border border-brand-green bg-surface text-sm hover:cursor-pointer`;
 
 const storyLine = "Post it to your Story, then add the song so it plays.";
 const computerLine = "Save it, then post it from your phone. Add the song so it plays.";
 
 // websites can't post into a Story or add its song, so this hands over the pieces: the picture to save or
 // share, the link and the song name to copy. most people know the rest; "New to this?" covers the ones who don't
-export default function ShareSheet({ week, year, kind, title, onClose }: ShareSheetProps): ReactElement {
+export default function ShareSheet({ week, year, kind, title, artist, onClose }: ShareSheetProps): ReactElement {
     const dialogRef = useRef<HTMLDialogElement>(null);
     const linkRef = useRef<HTMLInputElement>(null);
+    const songRef = useRef<HTMLInputElement>(null);
     // checked once, when the sheet opens (it only ever renders in the browser)
     const [screen] = useState<ShareScreen>(() =>
         shareScreen({
@@ -45,6 +51,8 @@ export default function ShareSheet({ week, year, kind, title, onClose }: ShareSh
     );
     const imagePath = shareImagePath(week, year, kind);
     const link = shareLink(kind);
+    // "Break Your Heart Taio Cruz": what Copy song name copies, ready to paste into Spotify, Instagram or TikTok
+    const songText = songSearchText(title, artist);
     // where the escape links land: this result, with the sheet open, on the site this page came from
     const resultUrl = sharedResultUrl(week, year, kind, window.location.origin);
     const fileName = kind === "seventeen" ? "my-2027-song.png" : "my-birthday-song.png";
@@ -98,8 +106,12 @@ export default function ShareSheet({ week, year, kind, title, onClose }: ShareSh
         setLastCopied("link");
     };
 
-    const copySong = async () => {
-        if (!(await copyText(title, null))) return setSongFailed(true);
+    const copySong = async (e: MouseEvent<HTMLButtonElement>) => {
+        const tapped = e.currentTarget;
+        const copied = await copyText(songText, songRef.current);
+        // the fallback focuses the song's field, which stays out of sight, so focus goes back to the button
+        if (document.activeElement === songRef.current) tapped.focus();
+        if (!copied) return setSongFailed(true);
         setSongFailed(false);
         setLastCopied("song");
     };
@@ -136,7 +148,13 @@ export default function ShareSheet({ week, year, kind, title, onClose }: ShareSh
                 <p className="text-xs text-muted">Instagram&apos;s browser here can&apos;t save pictures.</p>
             </div>
         ) : canShareFiles ? (
-            <button type="button" onClick={sharePicture} className={mainButton}>
+            // shows right away, waiting until the picture is in hand (a tap does nothing until then)
+            <button
+                type="button"
+                onClick={sharePicture}
+                aria-disabled={file ? undefined : true}
+                className={file ? mainButton : waitingButton}
+            >
                 Share picture
             </button>
         ) : onIPhone ? null : (
@@ -193,7 +211,7 @@ export default function ShareSheet({ week, year, kind, title, onClose }: ShareSh
                         alt="Your song as a Story picture"
                         width={1080}
                         height={1920}
-                        className="h-[min(40dvh,26rem)] w-auto max-w-full rounded-xl object-contain shadow-lg"
+                        className="h-[min(40dvh,26rem)] w-auto max-w-full rounded-xl object-contain shadow-lg ring-1 ring-line"
                     />
                     {holdToSave && <p className="text-xs text-muted">Press and hold the picture to save it.</p>}
                 </div>
@@ -211,8 +229,8 @@ export default function ShareSheet({ week, year, kind, title, onClose }: ShareSh
                             {songCopied ? "Song name copied" : "Copy song name"}
                         </button>
                     </div>
-                    {/* out of sight but there for the old copy command to select, and shown when copying fails.
-                        16px text, or focusing it zooms the page on an iPhone */}
+                    {/* out of sight but there for the old copy command to select. the link's field shows when
+                        copying the link fails. 16px text, or focusing it zooms the page on an iPhone */}
                     <input
                         ref={linkRef}
                         readOnly
@@ -226,6 +244,14 @@ export default function ShareSheet({ week, year, kind, title, onClose }: ShareSh
                                 : "sr-only text-base"
                         }
                     />
+                    <input
+                        ref={songRef}
+                        readOnly
+                        value={songText}
+                        aria-label="Song name to search"
+                        tabIndex={-1}
+                        className="sr-only text-base"
+                    />
                     {linkFailed && (
                         <p role="status" className="mt-2 font-medium">
                             Press and hold the link to copy it.
@@ -233,7 +259,7 @@ export default function ShareSheet({ week, year, kind, title, onClose }: ShareSh
                     )}
                     {songFailed && (
                         <p role="status" className="mt-2 font-medium">
-                            Copy didn&apos;t work. Type the song name instead.
+                            Copy didn&apos;t work. Type {`"${songText}"`} instead.
                         </p>
                     )}
                 </div>
@@ -254,14 +280,14 @@ export default function ShareSheet({ week, year, kind, title, onClose }: ShareSh
                 )}
 
                 <details className="w-full text-left">
-                    <summary className={`cursor-pointer rounded-lg py-2 font-semibold ${focusRing}`}>
+                    <summary className={`min-h-11 cursor-pointer rounded-lg py-3 font-semibold ${focusRing}`}>
                         New to this?
                     </summary>
                     <ol className="flex list-decimal flex-col gap-1.5 pt-1 pl-6">
                         <li>Save the picture.</li>
                         <li>In Instagram or TikTok, start a Story and pick the picture.</li>
                         <li>
-                            Add music and search {`"${title}"`}. On Instagram, add a Link sticker and paste the link.
+                            Add music and search {`"${songText}"`}. On Instagram, add a Link sticker and paste the link.
                         </li>
                     </ol>
                 </details>
