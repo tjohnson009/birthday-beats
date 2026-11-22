@@ -42,3 +42,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# planning notes stay on the laptop, out of the public repo
+/docs/superpowers/
+/docs/ideation/
