@@ -295,7 +295,7 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
         <div className="flex flex-col flex-1 items-center justify-center font-sans">
             {/* isolate: the title wall's -z-10 stays behind everything in main, but no further back than main */}
             <main className="relative isolate flex flex-col flex-1 items-center justify-center w-full py-8 gap-6">
-                <HeroTitles titles={heroTitles} hidden={searched} />
+                <HeroTitles titles={heroTitles} searched={searched} />
 
                 {/* intro: fades and slides up, collapsing its space, once the first search is submitted */}
                 <div
