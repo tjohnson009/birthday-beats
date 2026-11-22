@@ -42,9 +42,10 @@ export default function HeroTitles({ titles, searched }: HeroTitlesProps): React
                 className="sticky top-0 flex h-full max-h-full flex-col justify-center gap-6"
             >
                 {rows.map((row, i) => (
+                    // a bit stronger in light mode, where the faint titles were hard to see
                     <div
                         key={i}
-                        className={`flex w-max gap-10 whitespace-nowrap text-5xl font-extrabold text-foreground/[0.07] animate-marquee motion-reduce:animate-none ${
+                        className={`flex w-max gap-10 whitespace-nowrap text-5xl font-extrabold text-foreground/[0.1] dark:text-foreground/[0.07] animate-marquee motion-reduce:animate-none ${
                             i % 2 === 1 ? "[animation-direction:reverse] -translate-x-1/4" : ""
                         }`}
                     >
