@@ -5,7 +5,7 @@ import { formatLongDate } from "@/lib/dates";
 
 type ChartStripProps = {
     data: StripData;
-    week: number; // changes from outside (the date picker, a chip) slide the strip there quietly
+    week: number; // changes from outside (Go, a chip, the switch) slide the strip there quietly
     onMove: (week: number) => void; // the person is moving the strip
     onRest: (week: number) => void; // the person let the strip come to rest on a week
 };
@@ -80,7 +80,7 @@ export default function ChartStrip({ data, week, onMove, onRest }: ChartStripPro
         trackRef.current!.scrollLeft = latest.current.shown * WEEK_PX + WEEK_PX / 2;
     }, [half]);
 
-    // follow the date picker and chips without counting it as the person browsing. a fast fling reports
+    // follow Go, chips and the switch without counting it as the person browsing. a fast fling reports
     // weeks quicker than React re-renders, so a week that comes back late is our own move, not a new one
     useEffect(() => {
         const track = trackRef.current!;
