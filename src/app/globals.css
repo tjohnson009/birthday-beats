@@ -54,6 +54,44 @@
     }
 }
 
+/* the title wall's mask: a clear middle --wall-clear wide each side of center, then --wall-fade of fade.
+   the intro keeps 28% to 72% clear, and never less than the intro text (max-w-lg) on narrow desktops.
+   a result keeps clear the whole result grid (max-w-5xl: 31rem of content each side of center) plus 2rem.
+   that part is in rem, so it holds at every width: when the margins are too narrow, no titles show.
+   registered so the mask eases between the two instead of snapping. the ease is front-loaded, so most
+   of the widening is done before a fast answer can put text there */
+@property --wall-clear {
+    syntax: "<length-percentage>";
+    inherits: false;
+    initial-value: 22%;
+}
+
+@property --wall-fade {
+    syntax: "<length-percentage>";
+    inherits: false;
+    initial-value: 22%;
+}
+
+.title-wall {
+    --wall-clear: max(22%, 16rem);
+    --wall-fade: 22%;
+    mask-image: linear-gradient(
+        to right,
+        black calc(50% - var(--wall-clear) - var(--wall-fade)),
+        transparent calc(50% - var(--wall-clear)),
+        transparent calc(50% + var(--wall-clear)),
+        black calc(50% + var(--wall-clear) + var(--wall-fade))
+    );
+    transition:
+        --wall-clear 500ms cubic-bezier(0.16, 1, 0.3, 1),
+        --wall-fade 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.title-wall-result {
+    --wall-clear: 33rem;
+    --wall-fade: 8rem;
+}
+
 @keyframes eq {
     0%,
     100% {
