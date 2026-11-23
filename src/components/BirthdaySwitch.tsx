@@ -5,18 +5,16 @@ export type BirthdayView = "born" | "seventeen";
 
 type BirthdaySwitchProps = {
     view: BirthdayView;
-    check: BirthdayCheck; // whether the 17th birthday has a chart
-    turnsYear: number;
+    check: BirthdayCheck; // whether the 17th birthday has a chart. /17 hides the switch until it has happened
     bornHasChart: boolean; // false for /17 birthdays before Aug 1958
     busy: boolean; // a lookup is loading: one at a time, so taps can't pile up Spotify lookups
     onToggle: () => void;
 };
 
-// swaps the result between the birthday's #1 and the 17th birthday's #1, in the same layout
+// on /17, swaps the result between the birthday's #1 and the 17th birthday's #1, in the same layout
 export default function BirthdaySwitch({
     view,
     check,
-    turnsYear,
     bornHasChart,
     busy,
     onToggle,
@@ -27,11 +25,9 @@ export default function BirthdaySwitch({
             ? bornHasChart
                 ? "Back to the day you were born"
                 : "No chart yet the day you were born"
-            : check === "future"
-              ? `You turn ${TREND_AGE} in ${turnsYear}`
-              : check === "too-early"
-                ? "Charts start in 1958"
-                : `Your ${TREND_AGE}th birthday #1`;
+            : check === "too-early"
+              ? "Charts start in 1958"
+              : `Your ${TREND_AGE}th birthday #1`;
 
     return (
         <button

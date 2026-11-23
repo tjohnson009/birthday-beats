@@ -382,12 +382,12 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
                         className={`${roboto.className} flex scroll-mt-4 flex-col items-center gap-3 px-4 text-center`}
                     >
                         <div className="flex flex-wrap justify-center gap-2">
-                            {/* on /17 the note below already says when they turn 17 */}
-                            {!futureNote && (
+                            {/* /17 only: the home page is for any date, and its header link leads to /17.
+                                the note below already says when they turn 17 */}
+                            {trend && !futureNote && (
                                 <BirthdaySwitch
                                     view={view}
                                     check={seventeenthCheck}
-                                    turnsYear={Number(seventeenth.slice(0, 4))}
                                     bornHasChart={birthday >= FIRST_CHART_DATE}
                                     busy={loading}
                                     onToggle={toggleView}

@@ -262,3 +262,67 @@ describe("the chart strip waits for Go", () => {
         expect(stripSays()).toMatch(/^July 27, 1985: Everytime You Go Away/);
     });
 });
+
+// the switch between the birthday's #1 and the 17th birthday's #1 lives on /17 only. the home page is for any
+// date, so its result is just that date's #1, and the header link is the way to /17
+describe("the 17th birthday switch", () => {
+    // any of the switch's labels
+    const birthdaySwitch = () =>
+        screen.queryByRole("button", { name: /17th birthday|turn 17|day you were born|Charts start/ });
+    const share = () => fireEvent.click(screen.getByRole("button", { name: "Share to your Story" }));
+    const sharePicture = () => screen.getByRole("img", { name: "Your song as a Story picture" }).getAttribute("src");
+
+    it("isn't on a home page result, which shows only that date's #1", async () => {
+        await renderPage();
+        pickDate("1968-07-15");
+        go();
+
+        expect(await song("This Guy's In Love With You")).toBeTruthy();
+        expect(screen.getByRole("button", { name: "Share to your Story" })).toBeTruthy();
+        expect(birthdaySwitch()).toBeNull();
+        expect(screen.queryByText(/#1 on your 17th birthday/)).toBeNull();
+        expect(songRequests).toEqual(["/api/song?date=1968-07-15"]);
+    });
+
+    it("isn't on the home page for a date whose 17th birthday is still to come", async () => {
+        await renderPage();
+        pickDate("2015-03-02");
+        go();
+
+        expect(await song("If You Had My Love")).toBeTruthy();
+        expect(birthdaySwitch()).toBeNull();
+        expect(screen.queryByText(/You turn 17/)).toBeNull();
+    });
+
+    it("leaves home page Share with the birthday card", async () => {
+        await renderPage();
+        pickDate("1968-07-15");
+        go();
+        await song("This Guy's In Love With You");
+
+        share();
+
+        expect(sharePicture()).toBe("/api/share-image?week=1968-07-13&year=1968&kind=born");
+    });
+
+    it("stays on /17, from the 17th birthday back to the day you were born and over again", async () => {
+        await renderPage(true);
+        pickDate("1968-07-15");
+        go();
+
+        expect(await song("A View To A Kill")).toBeTruthy();
+        expect(screen.getByText("#1 on your 17th birthday · Jul 15, 1985")).toBeTruthy();
+        fireEvent.click(screen.getByRole("button", { name: "Back to the day you were born" }));
+
+        expect(await song("This Guy's In Love With You")).toBeTruthy();
+        fireEvent.click(screen.getByRole("button", { name: /Your 17th birthday #1/ }));
+
+        expect(await song("A View To A Kill")).toBeTruthy();
+        // the second trip to the 17th birthday comes from the saved result, not a new lookup
+        expect(songRequests).toEqual(["/api/song?date=1985-07-15", "/api/song?date=1968-07-15"]);
+        share();
+        expect(sharePicture()).toBe(
+            "/api/share-image?week=1985-07-13&year=1985&kind=seventeen&style=now-playing&color=blue",
+        );
+    });
+});
