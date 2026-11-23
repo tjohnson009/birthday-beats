@@ -355,7 +355,7 @@ describe("the chart strip waits for Go", () => {
 });
 
 describe("a tap on the strip's week already showing", () => {
-    it("asks for nothing and keeps the birthday, the picker, the switch and Share", async () => {
+    it("asks for nothing and keeps the birthday, the picker, the link to /17 and Share", async () => {
         await renderPage();
         // a Monday: the result is the chart week of Saturday, July 13
         pickDate("1985-07-15");
@@ -369,7 +369,7 @@ describe("a tap on the strip's week already showing", () => {
         expect(songRequests).toHaveLength(requestsAfterGo);
         expect(stripSays()).toMatch(/^July 13, 1985: A View To A Kill/);
         expect(pickerSays()).toEqual(["1985", "7", "15"]);
-        expect(screen.getByRole("button", { name: "Your 17th birthday #1" })).toBeTruthy();
+        expect(screen.getByRole("link", { name: "What was #1 on your 17th birthday?" })).toBeTruthy();
         expect(screen.getByRole("button", { name: "Share to your Story" })).toBeTruthy();
     });
 
