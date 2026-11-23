@@ -74,6 +74,18 @@ const go = () => fireEvent.click(screen.getByRole("button", { name: "Go!" }));
 // long enough for the strip to settle (150ms) and ask for a song, if it was going to
 const waitForStripToSettle = () => act(() => new Promise((resolve) => setTimeout(resolve, 400)));
 
+// the person touches the strip (a wheel marks the scroll as theirs) and it scrolls to the given week.
+// jsdom leaves the track at the far left, so scrolling to the week it shows is a tap that moves nothing
+const scrollStripTo = (week: number) => {
+    const track = strip()!;
+    fireEvent.wheel(track);
+    track.scrollLeft = week * WEEK_PX + WEEK_PX / 2;
+    fireEvent.scroll(track);
+};
+
+const pickerSays = () =>
+    ["Year", "Month", "Day"].map((name) => (screen.getByRole("combobox", { name }) as HTMLSelectElement).value);
+
 beforeAll(() => {
     // jsdom does no layout: the strip never gets a size, and scrolling only moves when told to
     global.ResizeObserver = class {
@@ -215,20 +227,20 @@ describe("the chart strip waits for Go", () => {
         expect(stripSays()).toMatch(/^July 13, 1985: A View To A Kill/);
     });
 
-    it("stays up when the person lets go of it on a shared result without moving it", async () => {
+    it("leaves a shared result alone when the person lets go of the strip without moving it", async () => {
         window.history.replaceState(null, "", "/?week=1985-07-13&year=1985&kind=born&share=1");
         await renderPage();
         await song("A View To A Kill");
+        const requestsBefore = songRequests.length;
 
         // a click or a tiny nudge: the person touches the strip, but it stays on the shared week
-        const track = strip()!;
-        fireEvent.wheel(track);
-        track.scrollLeft = 4 * WEEK_PX + WEEK_PX / 2;
-        fireEvent.scroll(track);
-
-        await waitFor(() => expect(songRequests.at(-1)).toBe("/api/song?date=1985-07-13&source=strip&mode=peek"));
+        scrollStripTo(4);
         await waitForStripToSettle();
+
+        expect(songRequests).toHaveLength(requestsBefore);
         expect(stripSays()).toMatch(/^July 13, 1985: A View To A Kill/);
+        expect(screen.getByText("#1 the week you were born · 1985")).toBeTruthy();
+        expect(screen.getByRole("button", { name: "Share to your Story" })).toBeTruthy();
     });
 
     it("on /17, sits on the 17th birthday's week and follows the switch back to the birthday", async () => {
@@ -260,5 +272,78 @@ describe("the chart strip waits for Go", () => {
         await waitFor(() => expect(songRequests.at(-1)).toBe("/api/song?date=1985-07-27&source=strip&mode=peek"));
         expect(await song("Everytime You Go Away")).toBeTruthy();
         expect(stripSays()).toMatch(/^July 27, 1985: Everytime You Go Away/);
+    });
+});
+
+describe("a tap on the strip's week already showing", () => {
+    it("asks for nothing and keeps the birthday, the picker, the switch and Share", async () => {
+        await renderPage();
+        // a Monday: the result is the chart week of Saturday, July 13
+        pickDate("1985-07-15");
+        go();
+        await song("A View To A Kill");
+        const requestsAfterGo = songRequests.length;
+
+        scrollStripTo(4);
+        await waitForStripToSettle();
+
+        expect(songRequests).toHaveLength(requestsAfterGo);
+        expect(stripSays()).toMatch(/^July 13, 1985: A View To A Kill/);
+        expect(pickerSays()).toEqual(["1985", "7", "15"]);
+        expect(screen.getByRole("button", { name: "Your 17th birthday #1" })).toBeTruthy();
+        expect(screen.getByRole("button", { name: "Share to your Story" })).toBeTruthy();
+    });
+
+    it("on /17, keeps the 17th birthday's result", async () => {
+        await renderPage(true);
+        pickDate("1968-07-15");
+        go();
+        await song("A View To A Kill");
+        const requestsAfterGo = songRequests.length;
+
+        // the strip sits on the 17th birthday's week while the picker shows the birthday
+        scrollStripTo(4);
+        await waitForStripToSettle();
+
+        expect(songRequests).toHaveLength(requestsAfterGo);
+        expect(pickerSays()).toEqual(["1968", "7", "15"]);
+        expect(screen.getByText("#1 on your 17th birthday · Jul 15, 1985")).toBeTruthy();
+        expect(screen.getByRole("button", { name: "Back to the day you were born" })).toBeTruthy();
+    });
+
+    it("asks for nothing after Go lands while a move hadn't come to rest", async () => {
+        await renderPage();
+        pickDate("1985-07-15");
+        go();
+        await song("A View To A Kill");
+
+        // the person moves the strip, then picks a date and presses Go before the strip settles
+        scrollStripTo(6);
+        pickDate("1999-06-14");
+        go();
+        await song("If You Had My Love");
+        await waitForStripToSettle();
+        const requestsAfterGo = songRequests.length;
+
+        scrollStripTo(8);
+        await waitForStripToSettle();
+
+        expect(songRequests).toHaveLength(requestsAfterGo);
+        expect(songRequests.at(-1)).toBe("/api/song?date=1999-06-14");
+        expect(screen.getByRole("button", { name: "Share to your Story" })).toBeTruthy();
+    });
+
+    it("still loads it when the person moves the strip away and back", async () => {
+        await renderPage();
+        pickDate("1985-07-15");
+        go();
+        await song("A View To A Kill");
+
+        scrollStripTo(6);
+        scrollStripTo(4);
+
+        await waitFor(() => expect(songRequests.at(-1)).toBe("/api/song?date=1985-07-13&source=strip&mode=peek"));
+        await waitForStripToSettle();
+        expect(stripSays()).toMatch(/^July 13, 1985: A View To A Kill/);
     });
 });
