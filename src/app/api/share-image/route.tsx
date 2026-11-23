@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { NextRequest, NextResponse } from "next/server";
+import sharp from "sharp";
 import LogoMark from "@/components/LogoMark";
 import { parseShareLook, shareImagePath, type ShareKind } from "@/lib/share";
 import { artistFontSize, shareCard, titleFontSize } from "@/lib/shareCard";
@@ -19,6 +20,16 @@ const font = (file: string) => readFile(join(process.cwd(), "src/assets/fonts", 
 
 // a week, year, kind, style, and color always draw the same image, so browsers and the CDN can keep it
 const CACHE_HEADERS = { "Cache-Control": "public, max-age=86400, s-maxage=604800, stale-while-revalidate=604800" };
+
+// next/og only draws PNGs, and the busier styles come out over a megabyte. a JPEG is a fraction of that (Vercel
+// counts the bytes sent), and Instagram turns Story pictures into JPEGs anyway. 4:4:4 keeps small colored text
+// from bleeding at its edges
+const asJpeg = async (png: Response) => {
+    const jpeg = await sharp(await png.arrayBuffer())
+        .jpeg({ quality: 85, chromaSubsampling: "4:4:4", mozjpeg: true })
+        .toBuffer();
+    return new Response(jpeg, { headers: { ...CACHE_HEADERS, "Content-Type": "image/jpeg" } });
+};
 
 export async function GET(request: NextRequest) {
     const params = request.nextUrl.searchParams;
@@ -48,7 +59,7 @@ export async function GET(request: NextRequest) {
                 style: "normal" as const,
             })),
         );
-        return new ImageResponse(design.draw(card, look.color), { ...SIZE, fonts, headers: CACHE_HEADERS });
+        return asJpeg(new ImageResponse(design.draw(card, look.color), { ...SIZE, fonts }));
     }
 
     const [semiBold, extraBold] = await Promise.all([
@@ -59,7 +70,7 @@ export async function GET(request: NextRequest) {
     // laid out on a grid measured from Instagram's Story editor (y at 1080x1920): art only above 250, where
     // Instagram puts its own bar and the song's name. the message in 270 to 1140. the link band in 1230 to 1410,
     // for the Link sticker. a bare floor in 1420 to 1820, where Instagram drops the Music sticker. art only below
-    return new ImageResponse(
+    const png = new ImageResponse(
         <div
             style={{
                 width: "100%",
@@ -144,7 +155,7 @@ export async function GET(request: NextRequest) {
                 { name: "Bricolage", data: semiBold, weight: 600, style: "normal" },
                 { name: "Bricolage", data: extraBold, weight: 800, style: "normal" },
             ],
-            headers: CACHE_HEADERS,
         },
     );
+    return asJpeg(png);
 }

@@ -142,7 +142,7 @@ export default function ShareSheet({ week, year, kind, title, artist, onClose }:
     const songText = songSearchText(title, artist);
     // where the escape links land: this result, with the sheet open, on the site this page came from
     const resultUrl = sharedResultUrl(week, year, kind, window.location.origin);
-    const fileName = kind === "seventeen" ? "my-2027-song.png" : "my-birthday-song.png";
+    const fileName = kind === "seventeen" ? "my-2027-song.jpg" : "my-birthday-song.jpg";
     const onIPhone = screen === "iphone-instagram" || screen === "iphone";
     // phones can hand the picture to the share menu. not from Instagram's Android browser, which has none, and
     // not from a computer, where saving the file is the useful thing. asked with an empty file, so the main
@@ -150,7 +150,7 @@ export default function ShareSheet({ week, year, kind, title, artist, onClose }:
     const [canShareFiles, setCanShareFiles] = useState(
         () =>
             (onIPhone || screen === "android") &&
-            navigator.canShare?.({ files: [new File([], fileName, { type: "image/png" })] }) === true,
+            navigator.canShare?.({ files: [new File([], fileName, { type: "image/jpeg" })] }) === true,
     );
     const [canShareLink] = useState(() => typeof navigator.share === "function");
     // the fetched picture, with the address it came from: a new look drops the old one at once, so Share
@@ -179,7 +179,7 @@ export default function ShareSheet({ week, year, kind, title, artist, onClose }:
             .then((response) => (response.ok ? response.blob() : null))
             .then((blob) => {
                 if (controller.signal.aborted) return;
-                const image = blob && new File([blob], fileName, { type: "image/png" });
+                const image = blob && new File([blob], fileName, { type: "image/jpeg" });
                 if (image && navigator.canShare?.({ files: [image] })) setFetched({ path: imagePath, file: image });
                 else setCanShareFiles(false);
             })
