@@ -28,13 +28,13 @@ let songRequests: string[];
 const answer = (body: unknown) => ({ ok: true, status: 200, json: async () => body });
 
 // stands in for the server: the chart week on or before the date, with no Spotify details
-const fakeFetch = async (input: RequestInfo | URL) => {
+const fakeServer = (weeks: typeof WEEKS) => async (input: RequestInfo | URL) => {
     const url = String(input);
-    if (url === "/api/chart") return answer(buildStripData(WEEKS));
+    if (url === "/api/chart") return answer(buildStripData(weeks));
     if (url.startsWith("/api/song")) {
         songRequests.push(url);
         const date = new URLSearchParams(url.split("?")[1]).get("date")!;
-        const week = WEEKS.filter((w) => w.date <= date).at(-1) ?? WEEKS[0];
+        const week = weeks.filter((w) => w.date <= date).at(-1) ?? weeks[0];
         const result: SongResult = {
             chartDate: week.date,
             title: week.song,
@@ -50,13 +50,31 @@ const fakeFetch = async (input: RequestInfo | URL) => {
     }
     throw new Error(`unexpected fetch: ${url}`);
 };
+const fakeFetch = fakeServer(WEEKS);
 
 const strip = () => screen.queryByRole("slider", { name: "Browse every #1 by week" });
 // what the strip is showing, as its screen reader text: "July 13, 1985: A View To A Kill by Duran Duran, ..."
 const stripSays = () => strip()?.getAttribute("aria-valuetext");
 const stripLine = (title: string, artist: string) => screen.queryByText(`${title} · ${artist}`);
 const pressGoNote = () => screen.queryByText(/^Press Go to see the #1 for /);
+const findingNote = () => screen.queryByText(/^Finding the #1 /);
+// a note counts only inside the strip's polite status line, so screen readers hear it
+const statusNote = (text: string) => screen.queryByText(text)?.closest('[role="status"]') ?? null;
 const song = (title: string) => screen.findByRole("heading", { name: title, level: 2 });
+
+// from here on, every /api/song answer waits until the test calls release(), which lets the newest one go.
+// asked lists each held request as it is made
+const holdSongAnswers = (server = fakeFetch) => {
+    const held = { asked: [] as string[], release: () => {} };
+    global.fetch = jest.fn(async (input: RequestInfo | URL) => {
+        if (String(input).startsWith("/api/song")) {
+            held.asked.push(String(input));
+            await new Promise<void>((resolve) => (held.release = resolve));
+        }
+        return server(input);
+    }) as unknown as typeof fetch;
+    return held;
+};
 
 // the strip's chart data comes back right after the first render
 const renderPage = async (trend = false) => {
@@ -486,15 +504,31 @@ describe("the text above the strip after a new date is picked", () => {
         expect(stripLine("Everytime You Go Away", "Paul Young")).toBeTruthy();
     });
 
-    it("on /17, names the picked birthday, not its 17th", async () => {
+    it("on /17, says the 17th birthday when Go would look that up", async () => {
         await renderPage(true);
         pickDate("1968-07-15");
         go();
         await song("A View To A Kill");
 
+        // turns 17 on June 14, 1999, which has a chart
         pickDate("1982-06-14");
 
-        expect(pressGoNote()?.textContent).toBe("Press Go to see the #1 for June 14, 1982");
+        expect(statusNote("Press Go to see the #1 on your 17th birthday")).toBeTruthy();
+        expect(pressGoNote()).toBeNull();
+        expect(stripLine("A View To A Kill", "Duran Duran")).toBeNull();
+    });
+
+    it("on /17, names the picked birthday when its 17th is still to come, since Go shows that day instead", async () => {
+        await renderPage(true);
+        pickDate("1968-07-15");
+        go();
+        await song("A View To A Kill");
+
+        // turns 17 in 2032
+        pickDate("2015-06-14");
+
+        expect(pressGoNote()?.textContent).toBe("Press Go to see the #1 for June 14, 2015");
+        expect(screen.queryByText("Press Go to see the #1 on your 17th birthday")).toBeNull();
     });
 
     it("stays away on a shared result until a date is picked", async () => {
@@ -507,5 +541,218 @@ describe("the text above the strip after a new date is picked", () => {
         pickDate("1999-06-14");
 
         expect(pressGoNote()?.textContent).toBe("Press Go to see the #1 for June 14, 1999");
+    });
+});
+
+// once Go is pressed, the strip still waits on the old song until the new one is on screen. its text would
+// name that old song meanwhile, so it says what Go is looking for instead
+describe("the text above the strip while Go looks up a song", () => {
+    // A View To A Kill either way: on /17 it is the #1 on the 17th birthday of July 15, 1968
+    const showResult = async (trend = false) => {
+        await renderPage(trend);
+        pickDate(trend ? "1968-07-15" : "1985-07-15");
+        go();
+        await song("A View To A Kill");
+    };
+
+    it("says Finding for the picked date instead of the old song's text, then shows the new song's text", async () => {
+        await showResult();
+        const held = holdSongAnswers();
+        pickDate("1999-06-14");
+
+        go();
+        await act(async () => {});
+
+        expect(statusNote("Finding the #1 for June 14, 1999…")).toBeTruthy();
+        expect(pressGoNote()).toBeNull();
+        expect(stripLine("A View To A Kill", "Duran Duran")).toBeNull();
+        expect(screen.queryByText("#1 the week of July 13, 1985")).toBeNull();
+        expect(stripSays()).toMatch(/^July 13, 1985: A View To A Kill/);
+
+        await act(async () => held.release());
+
+        expect(await song("If You Had My Love")).toBeTruthy();
+        await waitFor(() => expect(stripLine("If You Had My Love", "Jennifer Lopez")).toBeTruthy());
+        expect(findingNote()).toBeNull();
+    });
+
+    it("names the new song as soon as it is on screen, before the strip has slid over to it", async () => {
+        await showResult();
+        const held = holdSongAnswers();
+        pickDate("1999-06-14");
+        go();
+        await act(async () => {});
+        // like a browser, the strip only hears where its slide got to on a later frame
+        const scrollTo = Element.prototype.scrollTo;
+        Element.prototype.scrollTo = function (this: Element, options?: ScrollToOptions | number) {
+            if (typeof options === "object" && options.left !== undefined) this.scrollLeft = options.left;
+        } as Element["scrollTo"];
+
+        try {
+            await act(async () => held.release());
+            await song("If You Had My Love");
+
+            expect(stripSays()).toMatch(/^July 13, 1985: A View To A Kill/);
+            expect(stripLine("If You Had My Love", "Jennifer Lopez")).toBeTruthy();
+            expect(screen.queryByText("#1 the week of June 12, 1999")).toBeTruthy();
+            expect(stripLine("A View To A Kill", "Duran Duran")).toBeNull();
+        } finally {
+            Element.prototype.scrollTo = scrollTo;
+        }
+    });
+
+    it("brings the Press Go note back when the lookup fails, next to the error", async () => {
+        await showResult();
+        global.fetch = jest.fn(async (input: RequestInfo | URL) => {
+            if (String(input).startsWith("/api/song")) throw new TypeError("Failed to fetch");
+            return fakeFetch(input);
+        }) as unknown as typeof fetch;
+        pickDate("1999-06-14");
+
+        go();
+
+        expect(await screen.findByText("Can't reach Birthday Beats")).toBeTruthy();
+        expect(pressGoNote()?.textContent).toBe("Press Go to see the #1 for June 14, 1999");
+        expect(findingNote()).toBeNull();
+        expect(stripLine("A View To A Kill", "Duran Duran")).toBeNull();
+    });
+
+    it("gives way to the Press Go note for a date picked before the answer comes", async () => {
+        await showResult();
+        const held = holdSongAnswers();
+        pickDate("1999-06-14");
+        go();
+        await act(async () => {});
+        expect(findingNote()).toBeTruthy();
+
+        pickDate("1968-07-20");
+
+        expect(pressGoNote()?.textContent).toBe("Press Go to see the #1 for July 20, 1968");
+        expect(findingNote()).toBeNull();
+
+        // the June 1999 answer still lands, but it isn't the picked date's #1
+        await act(async () => held.release());
+        expect(await song("If You Had My Love")).toBeTruthy();
+        expect(pressGoNote()?.textContent).toBe("Press Go to see the #1 for July 20, 1968");
+        expect(stripLine("If You Had My Love", "Jennifer Lopez")).toBeNull();
+    });
+
+    it("gives way to the strip's own text when the person moves the strip during the lookup", async () => {
+        await showResult();
+        holdSongAnswers();
+        pickDate("1999-06-14");
+        go();
+        await act(async () => {});
+        expect(findingNote()).toBeTruthy();
+
+        scrollStripTo(6);
+
+        expect(findingNote()).toBeNull();
+        expect(pressGoNote()).toBeNull();
+        expect(stripLine("Everytime You Go Away", "Paul Young")).toBeTruthy();
+    });
+
+    it("never shows up for a strip stop, even while its song loads", async () => {
+        await showResult();
+        const held = holdSongAnswers();
+
+        scrollStripTo(6);
+        await waitForStripToSettle();
+
+        expect(held.asked).toEqual(["/api/song?date=1985-07-27&source=strip&mode=peek"]);
+        expect(findingNote()).toBeNull();
+        expect(stripLine("Everytime You Go Away", "Paul Young")).toBeTruthy();
+    });
+
+    it("says Finding for today when Go starts from the newest chart week, which is dated after today", async () => {
+        const today = new Date();
+        const isoDay = (daysFromToday: number) =>
+            new Date(today.getFullYear(), today.getMonth(), today.getDate() + daysFromToday).toLocaleDateString(
+                "en-CA",
+            );
+        // chart weeks are dated ahead, so the newest one can be after today
+        const server = fakeServer([
+            ...WEEKS,
+            { date: isoDay(-2), song: "This Week's Song", artist: "Now Playing" },
+            { date: isoDay(5), song: "Next Week's Song", artist: "Coming Soon" },
+        ]);
+        global.fetch = jest.fn(server) as unknown as typeof fetch;
+        await renderPage();
+        pickDate("1999-06-14");
+        go();
+        await song("If You Had My Love");
+
+        scrollStripTo(10);
+        await waitForStripToSettle();
+        expect(await song("Next Week's Song")).toBeTruthy();
+        expect(pickerSays()).toEqual([today.getFullYear(), today.getMonth() + 1, today.getDate()].map(String));
+        expect(pressGoNote()).toBeNull();
+
+        const held = holdSongAnswers(server);
+        go();
+        await act(async () => {});
+
+        const longToday = today.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+        expect(statusNote(`Finding the #1 for ${longToday}…`)).toBeTruthy();
+        expect(stripLine("Next Week's Song", "Coming Soon")).toBeNull();
+
+        await act(async () => held.release());
+        expect(await song("This Week's Song")).toBeTruthy();
+        await waitFor(() => expect(stripLine("This Week's Song", "Now Playing")).toBeTruthy());
+        expect(findingNote()).toBeNull();
+        expect(pressGoNote()).toBeNull();
+    });
+
+    it("on /17, says Finding on your 17th birthday while Go looks that up", async () => {
+        await showResult(true);
+        const held = holdSongAnswers();
+        // turns 17 on June 14, 1999
+        pickDate("1982-06-14");
+
+        go();
+        await act(async () => {});
+
+        expect(statusNote("Finding the #1 on your 17th birthday…")).toBeTruthy();
+        expect(stripLine("A View To A Kill", "Duran Duran")).toBeNull();
+
+        await act(async () => held.release());
+        expect(await song("If You Had My Love")).toBeTruthy();
+        await waitFor(() => expect(stripLine("If You Had My Love", "Jennifer Lopez")).toBeTruthy());
+        expect(findingNote()).toBeNull();
+    });
+
+    it("on /17, says Finding for the birthday itself when its 17th is still to come", async () => {
+        await showResult(true);
+        holdSongAnswers();
+        // turns 17 in 2032, so Go shows the birthday's own week
+        pickDate("2015-06-14");
+
+        go();
+        await act(async () => {});
+
+        expect(statusNote("Finding the #1 for June 14, 2015…")).toBeTruthy();
+    });
+
+    it("on /17, says Finding while the switch looks up a song, and nothing when it shows a saved one", async () => {
+        await showResult(true);
+        const held = holdSongAnswers();
+
+        fireEvent.click(screen.getByRole("button", { name: "Back to the day you were born" }));
+        await act(async () => {});
+
+        expect(statusNote("Finding the #1 for July 15, 1968…")).toBeTruthy();
+        expect(stripLine("A View To A Kill", "Duran Duran")).toBeNull();
+
+        await act(async () => held.release());
+        expect(await song("This Guy's In Love With You")).toBeTruthy();
+        await waitFor(() => expect(stripLine("This Guy's In Love With You", "Herb Alpert")).toBeTruthy());
+
+        // the 17th birthday's song is saved, so it comes straight back
+        fireEvent.click(screen.getByRole("button", { name: "Your 17th birthday #1" }));
+
+        expect(findingNote()).toBeNull();
+        expect(held.asked).toHaveLength(1);
+        expect(await song("A View To A Kill")).toBeTruthy();
+        await waitFor(() => expect(stripLine("A View To A Kill", "Duran Duran")).toBeTruthy());
     });
 });
