@@ -3,7 +3,18 @@ import LogoMark from "@/components/LogoMark";
 import { SHARE_COLORS, type ShareColor } from "@/lib/share";
 import type { ShareCard } from "@/lib/shareCard";
 import WIDTH_DATA from "./nowPlaying.widths.json";
-import { contrast, mix, rgba, smartApostrophes, svgSrc, tableWidth } from "./shared";
+import {
+    contrast,
+    cutLines,
+    keepsParts,
+    keptSplit,
+    lineCuts,
+    mix,
+    rgba,
+    smartApostrophes,
+    svgSrc,
+    tableWidth,
+} from "./shared";
 import type { StoryCardDesign } from "./types";
 
 // the Now playing picture: a record in a thin ring, the song under it, a player row, then the logo and link.
@@ -338,7 +349,7 @@ function layout(card: ShareCard, color: ShareColor) {
     })();
     const artistH = artistFit.lines.length * Math.round(artistFit.size * LH.artist);
 
-    const titleFit = ((): Fit & { h: number } => {
+    let titleFit = ((): Fit & { h: number } => {
         for (const [s, max] of TITLE_STEPS) {
             const L = balanced(title, F.title, s, TEXT_W, tls(s));
             if (L.length > max || widest(L, F.title, s, tls(s)) > TEXT_W * SAFE) continue;
@@ -357,6 +368,20 @@ function layout(card: ShareCard, color: ShareColor) {
         const L = balanced(title, F.title, 26, TEXT_W, tls(26));
         return { size: 26, lines: L, h: L.length * Math.round(26 * LH.title) };
     })();
+    // a title that breaks inside a part in ( ), [ ] or quotes takes the biggest step whose lines keep its parts whole
+    // (see keptSplit), if one fits the room
+    const words = title.split(/\s+/).filter(Boolean);
+    const titleW = (s: number) => (a: number, b: number) => measure(words.slice(a, b).join(" "), F.title, s, tls(s));
+    const lim = TEXT_W * SAFE;
+    if (!keepsParts(words, lineCuts(titleFit.lines), (a, b) => titleW(titleFit.size)(a, b) <= lim)) {
+        for (const [s, max] of TITLE_STEPS) {
+            const r = keptSplit(words, max, titleW(s), lim);
+            const th = r ? r.n * Math.round(s * LH.title) : 0;
+            if (!r || room - (th + TITLE_GAP + artistH) < DMIN) continue;
+            titleFit = { size: s, lines: cutLines(words, r.cuts), h: th };
+            break;
+        }
+    }
 
     const textH = titleFit.h + TITLE_GAP + artistH;
     const D = Math.max(DMIN - 40, Math.min(DMAX, room - textH));

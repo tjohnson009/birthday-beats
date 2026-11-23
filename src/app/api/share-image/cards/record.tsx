@@ -3,7 +3,18 @@ import LogoMark from "@/components/LogoMark";
 import { SHARE_COLORS, type ShareColor } from "@/lib/share";
 import type { ShareCard } from "@/lib/shareCard";
 import WIDTHS from "./record.widths.json";
-import { contrast, lum, mix, rgba, smartApostrophes, svgSrc } from "./shared";
+import {
+    contrast,
+    cutLines,
+    keepsParts,
+    keptSplit,
+    lineCuts,
+    lum,
+    mix,
+    rgba,
+    smartApostrophes,
+    svgSrc,
+} from "./shared";
 import type { StoryCardDesign } from "./types";
 
 // the Record picture: linen in a light wash of the color, the two heading lines, the logo and link, a vinyl
@@ -170,7 +181,8 @@ const textW = (s: string, f: Face, size: number, ls = 0): number => {
 // spare room, so a renderer that rounds a little differently never wraps a line we built
 const SAFE = 0.96;
 
-type Lines = { lines: string[]; widest: number };
+// breaksPart: the lines break inside a part of the text in ( ), [ ] or quotes (see keepsParts)
+type Lines = { lines: string[]; widest: number; breaksPart?: boolean };
 type Fit = Lines & { size: number; wrapped?: boolean; overflow?: boolean };
 
 // the fewest lines that fit, then the most even split for that many lines, so no lone word hangs at the end
@@ -204,10 +216,19 @@ function breakLines(text: string, f: Face, size: number, ls: number, maxW: numbe
                 lines.unshift(words.slice(i, j).join(" "));
                 j = i;
             }
-            return { lines, widest: best[k][n] };
+            const breaksPart = !keepsParts(words, lineCuts(lines), (a, b) => width(a, b) <= lim);
+            return { lines, widest: best[k][n], breaksPart };
         }
     }
     return null;
+}
+
+// the fewest lines, up to maxLines, that keep the text's parts in ( ), [ ] or quotes whole. null if none do
+function keptLines(text: string, f: Face, size: number, ls: number, maxW: number, maxLines: number): Lines | null {
+    const words = text.split(/\s+/).filter(Boolean);
+    const width = (i: number, j: number) => textW(words.slice(i, j).join(" "), f, size, ls);
+    const r = keptSplit(words, maxLines, width, maxW * SAFE);
+    return r && { lines: cutLines(words, r.cuts), widest: r.max };
 }
 
 // one line at the biggest step that fits. past the last step it wraps at the smallest size rather than cut
@@ -295,15 +316,29 @@ function fitText(title: string, artist: string): { title: Fit; artist: Fit; used
     const aH = (a: Fit) => a.lines.length * Math.round(a.size * LH.artist);
     // the artist stays 38 px or more if any title size allows it, then 34, then 30: a long credit costs the title a
     // step or two before the artist gets too small to read on a phone
-    for (const floor of [38, 34, 30, 0]) {
-        for (const t of titles) {
-            for (const a of artists) {
-                if (a.size < floor) continue;
-                const used = tH(t) + GAP.artist + aH(a);
-                if (used <= box) return { title: t, artist: a, used };
+    const pick = (choices: Fit[]) => {
+        for (const floor of [38, 34, 30, 0]) {
+            for (const t of choices) {
+                for (const a of artists) {
+                    if (a.size < floor) continue;
+                    const used = tH(t) + GAP.artist + aH(a);
+                    if (used <= box) return { title: t, artist: a, used };
+                }
             }
         }
+        return null;
+    };
+    const fit = pick(titles);
+    // a title that breaks inside a part in ( ), [ ] or quotes takes the biggest step that keeps its parts whole
+    if (fit?.title.breaksPart) {
+        const kept: Fit[] = [];
+        for (const [s, n] of TITLE_STEPS) {
+            const r = keptLines(title, FONTS.pixel, s, titleLS(s), w - titleShadow(s), n);
+            if (r) kept.push({ size: s, ...r });
+        }
+        return pick(kept) ?? fit;
     }
+    if (fit) return fit;
     const t = titles[titles.length - 1];
     const a = artists[artists.length - 1];
     return { title: t, artist: a, used: tH(t) + GAP.artist + aH(a) };
