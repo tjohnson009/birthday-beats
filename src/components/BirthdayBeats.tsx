@@ -390,7 +390,6 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
                                 <BirthdaySwitch
                                     view={view}
                                     check={seventeenthCheck}
-                                    turnsYear={Number(seventeenth.slice(0, 4))}
                                     bornHasChart={birthday >= FIRST_CHART_DATE}
                                     busy={loading}
                                     onToggle={toggleView}
