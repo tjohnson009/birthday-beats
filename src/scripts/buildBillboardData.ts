@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import { fixTitle } from "./chartTitleFixes.ts";
 
 type ChartEntry = {
     song: string;
@@ -32,7 +33,7 @@ export const extractNumberOneSongs = (charts: ChartWeek[]) => {
 
         return {
             date: weekOfData.date,
-            song: topSong.song,
+            song: fixTitle(topSong.song, topSong.artist),
             artist: topSong.artist,
         };
     });
