@@ -75,6 +75,7 @@ const setNavigator = (name: string, value: unknown) =>
     Object.defineProperty(navigator, name, { value, configurable: true });
 
 let share: jest.Mock;
+let canShare: jest.Mock;
 let writeText: jest.Mock;
 let onClose: jest.Mock;
 
@@ -85,7 +86,8 @@ const openSheet = async (phone: Phone, song = { title: TITLE, artist: ARTIST }, 
     setNavigator("maxTouchPoints", phone.maxTouchPoints);
     share = jest.fn(async () => {});
     setNavigator("share", phone.share ? share : undefined);
-    setNavigator("canShare", phone.share ? (data: ShareData) => !data.files || phone.files : undefined);
+    canShare = jest.fn((data: ShareData) => !data.files || phone.files);
+    setNavigator("canShare", phone.share ? canShare : undefined);
     writeText = jest.fn(async () => {});
     setNavigator("clipboard", { writeText });
     onClose = jest.fn();
@@ -122,7 +124,7 @@ beforeEach(() => {
     // the story picture, fetched ahead of the tap for Share picture
     global.fetch = jest.fn(async () => ({
         ok: true,
-        blob: async () => new Blob(["png"], { type: "image/png" }),
+        blob: async () => new Blob(["jpeg"], { type: "image/jpeg" }),
     })) as unknown as typeof fetch;
 });
 
@@ -325,7 +327,7 @@ describe("ShareSheet screens", () => {
 
         expect(noButton("Share picture")).toBeNull();
         const save = link("Save picture");
-        expect(save.getAttribute("download")).toBe("my-2027-song.png");
+        expect(save.getAttribute("download")).toBe("my-2027-song.jpg");
         expect(save.getAttribute("href")).toBe(
             "/api/share-image?week=2001-06-09&year=2001&kind=seventeen&style=now-playing&color=blue",
         );
@@ -338,7 +340,7 @@ describe("ShareSheet screens", () => {
         await openSheet(PHONES.D);
 
         expect(noButton("Share picture")).toBeNull();
-        expect(link("Save picture").getAttribute("download")).toBe("my-2027-song.png");
+        expect(link("Save picture").getAttribute("download")).toBe("my-2027-song.jpg");
     });
 
     it("E (a computer): Save picture, the computer line, and no Share picture even when it could", async () => {
@@ -346,7 +348,7 @@ describe("ShareSheet screens", () => {
 
         expect(screen.getByText(COMPUTER_LINE)).toBeTruthy();
         expect(hasText(STORY_LINE)).toBe(false);
-        expect(link("Save picture").getAttribute("download")).toBe("my-2027-song.png");
+        expect(link("Save picture").getAttribute("download")).toBe("my-2027-song.jpg");
         expect(noButton("Share picture")).toBeNull();
         expect(hasText(HOLD_LINE)).toBe(false);
         expect(hasText("Open in your browser")).toBe(false);
@@ -527,7 +529,7 @@ describe("ShareSheet share menu", () => {
         expect(Object.keys(data)).toEqual(["files"]);
         expect(data.files).toHaveLength(1);
         expect(data.files[0]).toBeInstanceOf(File);
-        expect([data.files[0].name, data.files[0].type]).toEqual(["my-2027-song.png", "image/png"]);
+        expect([data.files[0].name, data.files[0].type]).toEqual(["my-2027-song.jpg", "image/jpeg"]);
         await act(async () => {});
     });
 
@@ -537,7 +539,7 @@ describe("ShareSheet share menu", () => {
         global.fetch = jest.fn(
             () =>
                 new Promise((resolve) => {
-                    arrive = () => resolve({ ok: true, blob: async () => new Blob(["png"], { type: "image/png" }) });
+                    arrive = () => resolve({ ok: true, blob: async () => new Blob(["jpeg"], { type: "image/jpeg" }) });
                 }),
         ) as unknown as typeof fetch;
         await openSheet(PHONES.B);
@@ -557,6 +559,27 @@ describe("ShareSheet share menu", () => {
         expect(ready.className).toMatch(/hover:bg-brand-blue/);
         fireEvent.click(ready);
         expect(share).toHaveBeenCalledTimes(1);
+        await act(async () => {});
+    });
+
+    // the empty file the sheet asks about on open has to match the real picture, or a phone could say yes to one
+    // and no to the other
+    it("asks whether it can share a JPEG, the same kind of file it sends", async () => {
+        await openSheet(PHONES.D);
+
+        const probe: File = canShare.mock.calls[0][0].files[0];
+        expect([probe.name, probe.type, probe.size]).toEqual(["my-2027-song.jpg", "image/jpeg", 0]);
+    });
+
+    it("the birthday picture is a JPEG too, saved or shared", async () => {
+        await openSheet(PHONES.E, undefined, "born");
+        expect(link("Save picture").getAttribute("download")).toBe("my-birthday-song.jpg");
+        cleanup();
+
+        await openSheet(PHONES.D, undefined, "born");
+        fireEvent.click(button("Share picture"));
+        const sent: File = share.mock.calls[0][0].files[0];
+        expect([sent.name, sent.type]).toEqual(["my-birthday-song.jpg", "image/jpeg"]);
         await act(async () => {});
     });
 
@@ -624,7 +647,7 @@ describe("ShareSheet look picker", () => {
             expect(radio("Style", "Record").checked).toBe(true);
             expect(picture().getAttribute("src")).toBe(`${IMAGE}&style=record&color=pink`);
             expect(link("Save picture").getAttribute("href")).toBe(`${IMAGE}&style=record&color=pink`);
-            expect(link("Save picture").getAttribute("download")).toBe("my-2027-song.png");
+            expect(link("Save picture").getAttribute("download")).toBe("my-2027-song.jpg");
         },
     );
 
@@ -636,7 +659,7 @@ describe("ShareSheet look picker", () => {
             (url: string) =>
                 new Promise((resolve) => {
                     waiting.set(url, (body) =>
-                        resolve({ ok: true, blob: async () => new Blob([body], { type: "image/png" }) }),
+                        resolve({ ok: true, blob: async () => new Blob([body], { type: "image/jpeg" }) }),
                     );
                 }),
         ) as unknown as typeof fetch;
@@ -675,7 +698,7 @@ describe("ShareSheet look picker", () => {
         await answer(`${IMAGE}&style=cassette&color=blue`, "cassette, blue");
 
         expect(button("Share picture").getAttribute("aria-disabled")).toBeNull();
-        expect(await sharedPicture()).toEqual(["my-2027-song.png", "cassette, blue"]);
+        expect(await sharedPicture()).toEqual(["my-2027-song.jpg", "cassette, blue"]);
     });
 
     it("slow answers for older looks never replace the newest picture", async () => {
@@ -691,7 +714,7 @@ describe("ShareSheet look picker", () => {
         await answer(`${IMAGE}&style=now-playing&color=blue`, "now playing, blue");
 
         expect(button("Share picture").getAttribute("aria-disabled")).toBeNull();
-        expect(await sharedPicture()).toEqual(["my-2027-song.png", "record, purple"]);
+        expect(await sharedPicture()).toEqual(["my-2027-song.jpg", "record, purple"]);
     });
 
     // the same image element gets the new address, so the browser keeps showing the old picture in the same
