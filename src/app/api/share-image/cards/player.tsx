@@ -2,7 +2,7 @@ import type { CSSProperties, ReactElement } from "react";
 import LogoMark from "@/components/LogoMark";
 import { SHARE_COLORS, type ShareColor } from "@/lib/share";
 import widthTable from "./player.widths.json";
-import { contrast, GOOD_BREAK_BEFORE, mix, rgba, splitLines, tableWidth } from "./shared";
+import { contrast, GOOD_BREAK_BEFORE, keepsParts, keptSplit, mix, rgba, splitLines, tableWidth } from "./shared";
 import type { StoryCardDesign } from "./types";
 
 // the Player picture: a music player card in the picked color, with a record peeking out behind it, on a white
@@ -112,15 +112,13 @@ const tokens = (text: string): Token[] =>
         .filter(Boolean)
         .flatMap((w, i) => w.split(/(?<=\/|\.\.\.)(?=.)/).map((t, j) => ({ t, sp: i > 0 && j === 0 })));
 
-type Broken = { lines: string[]; n: number; widest: number; awk: number };
+// breaksPart: the lines break inside a part of the text in ( ), [ ] or quotes (see keepsParts)
+type Broken = { lines: string[]; n: number; widest: number; awk: number; breaksPart?: boolean };
 
-// the lines at this size (see splitLines). a good break comes after a comma, ")" or "/", or before "(",
-// "Featuring", "&"... null if one word alone is too wide
-function breakLines(text: string, f: Face, size: number, maxW: number, ls = 0): Broken | null {
+// a text's pieces at this size: a run of them as one line, its width, and how awkward a break before piece j is. a
+// good break comes after a comma, ")" or "/", or before "(", "Featuring", "&"...
+function pieces(text: string, f: Face, size: number, ls: number) {
     const tk = tokens(text);
-    const N = tk.length;
-    const lim = maxW * SAFE;
-    if (N === 0) return { lines: [""], n: 1, widest: 0, awk: 0 };
     const join = (a: number, b: number): string =>
         show(
             tk
@@ -131,15 +129,26 @@ function breakLines(text: string, f: Face, size: number, maxW: number, ls = 0): 
     const wd = (a: number, b: number): number => measure(f, join(a, b), size, ls);
     const awkward = (j: number): number =>
         !tk[j].sp || /[,)/]$/.test(tk[j - 1].t) || GOOD_BREAK_BEFORE.test(tk[j].t) ? 0 : 1;
-    const b = splitLines(N, wd, awkward, lim);
+    const lines = (cuts: number[]): string[] => [0, ...cuts].map((a, m) => join(a, cuts[m] ?? tk.length));
+    return { words: tk.map((x) => x.t), wd, awkward, lines };
+}
+
+// the lines at this size (see splitLines). null if one word alone is too wide
+function breakLines(text: string, f: Face, size: number, maxW: number, ls = 0): Broken | null {
+    const { words, wd, awkward, lines } = pieces(text, f, size, ls);
+    const lim = maxW * SAFE;
+    if (words.length === 0) return { lines: [""], n: 1, widest: 0, awk: 0 };
+    const b = splitLines(words.length, wd, awkward, lim);
     if (!b) return null;
-    const lines: string[] = [];
-    let s0 = 0;
-    for (const c of [...b.cuts, N]) {
-        lines.push(join(s0, c));
-        s0 = c;
-    }
-    return { lines, n: b.n, widest: b.max, awk: b.bad };
+    const breaksPart = !keepsParts(words, b.cuts, (i, j) => wd(i, j) <= lim);
+    return { lines: lines(b.cuts), n: b.n, widest: b.max, awk: b.bad, breaksPart };
+}
+
+// the fewest lines, up to max, that keep the text's parts in ( ), [ ] or quotes whole. null if none do
+function keptLines(text: string, f: Face, size: number, maxW: number, ls: number, max: number): Broken | null {
+    const { words, wd, awkward, lines } = pieces(text, f, size, ls);
+    const r = keptSplit(words, max, wd, maxW * SAFE, awkward);
+    return r && { lines: lines(r.cuts), n: r.n, widest: r.max, awk: r.bad };
 }
 
 // layout in px at 1080 x 1920, after the player draft: 800 wide, the logo as the big art centered at the top, the
@@ -214,37 +223,51 @@ function fitUrl(link: string): number {
     return URL_SIZES[URL_SIZES.length - 1];
 }
 
-type TitleFit = { size: number; ls: number; lines: string[]; h: number; score: number };
+type TitleFit = { size: number; ls: number; lines: string[]; h: number; score: number; breaksPart?: boolean };
 type ArtistFit = { size: number; lines: string[]; h: number };
 
 // the title is the hero. each size is scored (bigger is better, an awkward break or an extra line costs a little),
 // and the best title that leaves the artist line readable wins. the floors relax only when nothing fits
 function fitSong(s: { title: string; artistLine: string }, room: number): { title: TitleFit; artist: ArtistFit } {
-    const titles: TitleFit[] = [];
-    for (const z of TITLE_SIZES) {
-        const ls = -z * 0.01;
-        const r = breakLines(s.title, F.bold, z, TEXT_W, ls);
-        if (r && r.n <= titleMaxLines(z))
-            titles.push({
-                size: z,
-                ls,
-                lines: r.lines,
-                h: Math.round(r.n * z * TITLE_LH),
-                score: z - 10 * r.awk - 4 * (r.n - 1),
-            });
-    }
-    titles.sort((a, b) => b.score - a.score || b.size - a.size);
+    // keep: only lines that keep the title's parts in ( ), [ ] or quotes whole
+    const fitTitles = (keep: boolean): TitleFit[] => {
+        const out: TitleFit[] = [];
+        for (const z of TITLE_SIZES) {
+            const ls = -z * 0.01;
+            const r = keep
+                ? keptLines(s.title, F.bold, z, TEXT_W, ls, titleMaxLines(z))
+                : breakLines(s.title, F.bold, z, TEXT_W, ls);
+            if (r && r.n <= titleMaxLines(z))
+                out.push({
+                    size: z,
+                    ls,
+                    lines: r.lines,
+                    h: Math.round(r.n * z * TITLE_LH),
+                    score: z - 10 * r.awk - 4 * (r.n - 1),
+                    breaksPart: r.breaksPart,
+                });
+        }
+        return out.sort((a, b) => b.score - a.score || b.size - a.size);
+    };
+    const titles = fitTitles(false);
     const artists: ArtistFit[] = [];
     for (const [z, max] of ARTIST_STEPS) {
         const r = breakLines(s.artistLine, F.semi, z, TEXT_W);
         if (r && r.n <= max) artists.push({ size: z, lines: r.lines, h: Math.round(r.n * z * ARTIST_LH) });
     }
-    for (const floor of [44, 38, 0])
-        for (const t of titles)
-            for (const a of artists) {
-                if (a.size < floor) continue;
-                if (t.h + L.titleArtistGap + a.h <= room) return { title: t, artist: a };
-            }
+    const pick = (choices: TitleFit[]) => {
+        for (const floor of [44, 38, 0])
+            for (const t of choices)
+                for (const a of artists) {
+                    if (a.size < floor) continue;
+                    if (t.h + L.titleArtistGap + a.h <= room) return { title: t, artist: a };
+                }
+        return null;
+    };
+    const fit = pick(titles);
+    // a title that breaks inside a part in ( ), [ ] or quotes takes the best size that keeps its parts whole
+    if (fit?.title.breaksPart) return pick(fitTitles(true)) ?? fit;
+    if (fit) return fit;
     // last resort (no chart song lands here): the smallest of everything
     const z = TITLE_SIZES[TITLE_SIZES.length - 1];
     const t = titles.length
