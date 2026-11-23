@@ -95,6 +95,14 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
     // the home page's link fills in the birthday here, but the person still presses Go
     const linkedBirthday = trend ? parseTrendBirthday(addressSearch, earliestDate, today) : null;
     const selectedDate = date ?? linkedBirthday ?? today;
+
+    // the linked birthday moves into the picker (set while rendering, as React suggests for state that follows
+    // something outside it), then leaves the address, so a copied address never carries anyone's birthday
+    // (share links don't either)
+    if (linkedBirthday && date === null) setDate(linkedBirthday);
+    useEffect(() => {
+        if (linkedBirthday) window.history.replaceState(null, "", window.location.pathname);
+    }, [linkedBirthday]);
     const seventeenth = birthday && nthBirthday(birthday, TREND_AGE);
     const seventeenthCheck = birthday && today ? checkNthBirthday(birthday, TREND_AGE, today) : "future";
     const futureNote = trend && view === "born" && seventeenthCheck === "future";

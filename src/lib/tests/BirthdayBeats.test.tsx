@@ -160,6 +160,18 @@ describe("the 17th birthday from the home page", () => {
         expect(screen.getByRole("button", { name: "Back to the day you were born" })).toBeTruthy();
     });
 
+    it("takes the birthday out of the address once it's in the picker, so a copied address doesn't carry it", async () => {
+        window.history.replaceState(null, "", "/17?birthday=1968-07-15");
+        await renderPage(true);
+
+        expect(pickerSays()).toBe("7/15/1968");
+        expect(window.location.pathname + window.location.search).toBe("/17");
+
+        go();
+        expect(await song("A View To A Kill")).toBeTruthy();
+        expect(songRequests).toEqual(["/api/song?date=1985-07-15"]);
+    });
+
     it("ignores a birthday on /17 that isn't a real date in the picker's range", async () => {
         const [year, month, day] = new Date().toLocaleDateString("en-CA").split("-").map(Number);
         for (const birthday of ["1968-02-30", "1930-01-01", "not-a-date"]) {
