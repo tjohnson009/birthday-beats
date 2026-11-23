@@ -17,6 +17,7 @@ import {
     TREND_AGE,
     checkNthBirthday,
     clampIsoDate,
+    formatLongDate,
     formatShortDate,
     nthBirthday,
     randomIsoDateBetween,
@@ -76,6 +77,8 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
     const [birthday, setBirthday] = useState<string | null>(null);
     const [view, setView] = useState<BirthdayView>("born");
     const [sharing, setSharing] = useState(false);
+    // the person changed the picker by hand since the last Go or strip move
+    const [datePicked, setDatePicked] = useState(false);
     // the share sheet's escape buttons reopen this page with ?week=&year=&kind=&share=1: that week's song,
     // with the sheet open. read in the browser, so the page itself stays static
     const addressSearch = useSyncExternalStore(subscribe, getAddressSearch, getServerAddressSearch);
@@ -108,6 +111,9 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
     const futureNote = trend && view === "born" && seventeenthCheck === "future";
     // the switch and Share belong to the birthday on screen; once the picker moves to another date, they wait for Go
     const pickerMatchesResult = birthday !== null && selectedDate === birthday;
+    // the strip's text still names the old song, which would read as the picked date's #1
+    const pressGoNote =
+        datePicked && !pickerMatchesResult ? `Press Go to see the #1 for ${formatLongDate(selectedDate)}` : undefined;
     const searched = hasSearched || shared !== null;
     const sharedLoading = shared !== null && !songData && !error;
     // a shared link counts as the first search, once its song is on screen
@@ -208,6 +214,7 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
     const search = (searchDate: string) => {
         leaveSharedResult();
         setDate(searchDate);
+        setDatePicked(false);
         setBirthday(searchDate);
         savedResults.current = {};
         if (trend && today && checkNthBirthday(searchDate, TREND_AGE, today) === "ok")
@@ -293,6 +300,12 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
         setStripDate(stripData!.dates[week]);
         // chart weeks are dated ahead, so the newest one can be after today
         setDate(clampIsoDate(stripData!.dates[week], FIRST_CHART_DATE, today));
+        setDatePicked(false);
+    };
+
+    const pickDate = (value: string) => {
+        setDate(value);
+        setDatePicked(true);
     };
 
     const surprise = () => search(randomIsoDateBetween(FIRST_CHART_DATE, today));
@@ -361,7 +374,7 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
                                 value={selectedDate}
                                 min={earliestDate}
                                 max={today}
-                                onChange={setDate}
+                                onChange={pickDate}
                                 className="text-base sm:text-lg"
                             />
                             {/* off until the page is ready: before that, a tap would only reload the page */}
@@ -381,6 +394,7 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
                             week={weekForDate(stripData.dates, stripAt)}
                             onMove={moveStrip}
                             onRest={loadFromStrip}
+                            note={pressGoNote}
                         />
                     )}
                     {/* the picks are dates, not birthdays, so the trend page leaves them out */}

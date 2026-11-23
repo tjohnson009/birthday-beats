@@ -8,6 +8,7 @@ type ChartStripProps = {
     week: number; // changes from outside (Go, a chip, the switch) slide the strip there quietly
     onMove: (week: number) => void; // the person is moving the strip
     onRest: (week: number) => void; // the person moved the strip and let it come to rest on a week
+    note?: string; // shown in place of the week's text, which would otherwise read as the answer for it
 };
 
 const WEEK_PX = 4;
@@ -18,7 +19,7 @@ const FAR_WEEKS = 600; // jumps farther than this land instantly instead of slid
 
 // every #1 since 1958 as a strip of blocks, one per run at #1, that slides under a fixed needle.
 // a mouse fling keeps gliding and slows down like a wheel; every kind of scroll then eases onto a week
-export default function ChartStrip({ data, week, onMove, onRest }: ChartStripProps): ReactElement {
+export default function ChartStrip({ data, week, onMove, onRest, note }: ChartStripProps): ReactElement {
     const { dates, weekRun, runs } = data;
     const weeks = dates.length;
     const trackRef = useRef<HTMLDivElement>(null);
@@ -248,12 +249,21 @@ export default function ChartStrip({ data, week, onMove, onRest }: ChartStripPro
         <div className="flex w-full max-w-4xl flex-col gap-2">
             {/* room is kept for a two-line title on phones, and the text sits on the strip's top edge,
                 so changing titles don't nudge the strip up and down mid-drag */}
-            <div className="flex min-h-21 flex-col items-center justify-end gap-0.5 text-center text-sm text-muted sm:min-h-16">
-                <p>#1 the week of {formatLongDate(dates[shown])}</p>
-                <p className="font-medium text-foreground text-balance">
-                    {song} · {artist}
+            <div className="flex min-h-21 flex-col items-center justify-end text-center text-sm text-muted sm:min-h-16">
+                {/* always there, so the note is read out when it shows up. the week's text isn't read
+                    out, or every step of a drag would be */}
+                <p role="status" className="text-balance">
+                    {note}
                 </p>
-                <p className="text-xs">{weekLine}</p>
+                {!note && (
+                    <div className="flex flex-col items-center gap-0.5">
+                        <p>#1 the week of {formatLongDate(dates[shown])}</p>
+                        <p className="font-medium text-foreground text-balance">
+                            {song} · {artist}
+                        </p>
+                        <p className="text-xs">{weekLine}</p>
+                    </div>
+                )}
             </div>
             <div className="relative">
                 <div
