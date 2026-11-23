@@ -85,6 +85,16 @@ export const parseSharedResult = (search: string): SharedResult | null => {
     return { week, year, kind };
 };
 
+// the home page's link to /17 with the birthday already in the picker. its own name, so it's never a shared result
+export const trendPageLink = (birthday: string): string => `/${TREND_AGE}?birthday=${birthday}`;
+
+// reads trendPageLink back: a real date inside the /17 picker's range, or null. a shared result wins over it
+export const parseTrendBirthday = (search: string, min: string, max: string): string | null => {
+    if (parseSharedResult(search)) return null;
+    const birthday = new URLSearchParams(search).get("birthday") ?? "";
+    return isRealDate(birthday) && birthday >= min && birthday <= max ? birthday : null;
+};
+
 export const friendShareText = (kind: ShareKind): string =>
     kind === "seventeen" ? `What was #1 on your ${TREND_AGE}th birthday?` : "What was #1 the week you were born?";
 
