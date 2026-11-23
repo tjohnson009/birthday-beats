@@ -240,10 +240,18 @@ export default function ChartStrip({ data, week, onMove, onRest, note }: ChartSt
         };
     }, [weeks]);
 
-    const [song, artist] = runs[weekRun[shown]];
-    const total = counts.total[shown];
-    const weekLine = total === 1 ? "1 week at #1" : `Week ${counts.nth[shown]} of ${total} at #1`;
-    const label = `${formatLongDate(dates[shown])}: ${song} by ${artist}, ${weekLine}`;
+    const describe = (i: number) => {
+        const [song, artist] = runs[weekRun[i]];
+        const total = counts.total[i];
+        const weekLine = total === 1 ? "1 week at #1" : `Week ${counts.nth[i]} of ${total} at #1`;
+        return { date: formatLongDate(dates[i]), song, artist, weekLine };
+    };
+    const needle = describe(shown);
+    const label = `${needle.date}: ${needle.song} by ${needle.artist}, ${needle.weekLine}`;
+    // the text names the week the strip is headed to. that's the needle's week while the person moves it, but
+    // when the page moves it (Go, the switch) the needle gets there a frame or a slide later, and the old
+    // week's song would flash up first
+    const { date, song, artist, weekLine } = describe(week);
 
     return (
         <div className="flex w-full max-w-4xl flex-col gap-2">
@@ -257,7 +265,7 @@ export default function ChartStrip({ data, week, onMove, onRest, note }: ChartSt
                 </p>
                 {!note && (
                     <div className="flex flex-col items-center gap-0.5">
-                        <p>#1 the week of {formatLongDate(dates[shown])}</p>
+                        <p>#1 the week of {date}</p>
                         <p className="font-medium text-foreground text-balance">
                             {song} · {artist}
                         </p>
