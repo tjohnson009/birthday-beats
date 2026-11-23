@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import Loading from "@/components/Loading";
 import React, { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import ErrorMessage, { type SearchError } from "@/components/ErrorMessage";
@@ -22,7 +23,7 @@ import {
 } from "@/lib/dates";
 import { weekForDate, type StripData } from "@/lib/chartStrip";
 import type { SongResult } from "@/lib/songResult";
-import { parseSharedResult } from "@/lib/share";
+import { parseSharedResult, parseTrendBirthday, trendPageLink } from "@/lib/share";
 
 type BirthdayBeatsProps = {
     heroTitles: string[];
@@ -89,12 +90,22 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
     const scrollToResult = useRef(false);
     const resultTopRef = useRef<HTMLDivElement | null>(null);
     const detailsTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
-    const selectedDate = date ?? today;
+    // /17 takes birthdays from 17 years before the first chart, whose 17th birthday does have one
+    const earliestDate = trend ? nthBirthday(FIRST_CHART_DATE, -TREND_AGE) : FIRST_CHART_DATE;
+    // the home page's link fills in the birthday here, but the person still presses Go
+    const linkedBirthday = trend ? parseTrendBirthday(addressSearch, earliestDate, today) : null;
+    const selectedDate = date ?? linkedBirthday ?? today;
+
+    // the linked birthday moves into the picker (set while rendering, as React suggests for state that follows
+    // something outside it), then leaves the address, so a copied address never carries anyone's birthday
+    // (share links don't either)
+    if (linkedBirthday && date === null) setDate(linkedBirthday);
+    useEffect(() => {
+        if (linkedBirthday) window.history.replaceState(null, "", window.location.pathname);
+    }, [linkedBirthday]);
     const seventeenth = birthday && nthBirthday(birthday, TREND_AGE);
     const seventeenthCheck = birthday && today ? checkNthBirthday(birthday, TREND_AGE, today) : "future";
     const futureNote = trend && view === "born" && seventeenthCheck === "future";
-    // /17 takes birthdays from 17 years before the first chart, whose 17th birthday does have one
-    const earliestDate = trend ? nthBirthday(FIRST_CHART_DATE, -TREND_AGE) : FIRST_CHART_DATE;
     // the switch and Share belong to the birthday on screen; once the picker moves to another date, they wait for Go
     const pickerMatchesResult = birthday !== null && selectedDate === birthday;
     const searched = hasSearched || shared !== null;
@@ -382,12 +393,11 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
                         className={`${roboto.className} flex scroll-mt-4 flex-col items-center gap-3 px-4 text-center`}
                     >
                         <div className="flex flex-wrap justify-center gap-2">
-                            {/* on /17 the note below already says when they turn 17 */}
-                            {!futureNote && (
+                            {/* home links to /17 instead (below). on /17 the note below says when they turn 17 */}
+                            {trend && !futureNote && (
                                 <BirthdaySwitch
                                     view={view}
                                     check={seventeenthCheck}
-                                    turnsYear={Number(seventeenth.slice(0, 4))}
                                     bornHasChart={birthday >= FIRST_CHART_DATE}
                                     busy={loading}
                                     onToggle={toggleView}
@@ -413,6 +423,16 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
                                 You turn {TREND_AGE} in {seventeenth.slice(0, 4)}. Here&apos;s the #1 from the day you
                                 were born.
                             </p>
+                        )}
+                        {/* only when that birthday has a chart, so the link never ends at "no chart yet". the padding
+                            makes a taller tap target, and the negative margin keeps the layout the same */}
+                        {!trend && songData && seventeenthCheck === "ok" && (
+                            <Link
+                                href={trendPageLink(birthday)}
+                                className="-my-2.5 py-2.5 text-sm font-medium text-foreground underline decoration-brand-blue/50 decoration-2 underline-offset-4 text-balance hover:decoration-brand-blue focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue"
+                            >
+                                What was #1 on your {TREND_AGE}th birthday?<span aria-hidden="true"> →</span>
+                            </Link>
                         )}
                     </div>
                 )}

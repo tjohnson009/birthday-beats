@@ -104,6 +104,85 @@ afterEach(() => {
     window.history.replaceState(null, "", "/");
 });
 
+// the home page links to /17 with the date filled in, where the switch used to be. /17 keeps its switch
+describe("the 17th birthday from the home page", () => {
+    const invitation = () => screen.queryByRole("link", { name: "What was #1 on your 17th birthday?" });
+    // the picker as month/day/year: "7/15/1968"
+    const pickerSays = () =>
+        ["Month", "Day", "Year"]
+            .map((name) => (screen.getByRole("combobox", { name }) as HTMLSelectElement).value)
+            .join("/");
+
+    it("links to /17 with the date filled in, instead of the switch", async () => {
+        await renderPage();
+        pickDate("1968-07-15");
+        go();
+        await song("This Guy's In Love With You");
+
+        expect(invitation()?.getAttribute("href")).toBe("/17?birthday=1968-07-15");
+        expect(screen.queryByRole("button", { name: /17th birthday/ })).toBeNull();
+    });
+
+    it("leaves the link out when the 17th birthday has no chart yet", async () => {
+        await renderPage();
+        pickDate("2015-06-14");
+        go();
+        await song("If You Had My Love");
+
+        expect(invitation()).toBeNull();
+    });
+
+    it("shares the date's own card", async () => {
+        await renderPage();
+        pickDate("1968-07-15");
+        go();
+        await song("This Guy's In Love With You");
+
+        fireEvent.click(screen.getByRole("button", { name: "Share to your Story" }));
+
+        expect(screen.getByRole("img", { name: "Your song as a Story picture" }).getAttribute("src")).toBe(
+            "/api/share-image?week=1968-07-13&year=1968&kind=born",
+        );
+    });
+
+    it("lands on /17 with the birthday in the picker, and waits for Go", async () => {
+        window.history.replaceState(null, "", "/17?birthday=1968-07-15");
+        await renderPage(true);
+
+        expect(pickerSays()).toBe("7/15/1968");
+        await waitForStripToSettle();
+        expect(songRequests).toEqual([]);
+
+        go();
+
+        expect(await song("A View To A Kill")).toBeTruthy();
+        expect(songRequests).toEqual(["/api/song?date=1985-07-15"]);
+        expect(screen.getByRole("button", { name: "Back to the day you were born" })).toBeTruthy();
+    });
+
+    it("takes the birthday out of the address once it's in the picker, so a copied address doesn't carry it", async () => {
+        window.history.replaceState(null, "", "/17?birthday=1968-07-15");
+        await renderPage(true);
+
+        expect(pickerSays()).toBe("7/15/1968");
+        expect(window.location.pathname + window.location.search).toBe("/17");
+
+        go();
+        expect(await song("A View To A Kill")).toBeTruthy();
+        expect(songRequests).toEqual(["/api/song?date=1985-07-15"]);
+    });
+
+    it("ignores a birthday on /17 that isn't a real date in the picker's range", async () => {
+        const [year, month, day] = new Date().toLocaleDateString("en-CA").split("-").map(Number);
+        for (const birthday of ["1968-02-30", "1930-01-01", "not-a-date"]) {
+            window.history.replaceState(null, "", `/17?birthday=${birthday}`);
+            await renderPage(true);
+            expect(pickerSays()).toBe(`${month}/${day}/${year}`);
+            cleanup();
+        }
+    });
+});
+
 describe("the chart strip waits for Go", () => {
     it("is hidden before the first search, then sits on the week of the result", async () => {
         await renderPage();
