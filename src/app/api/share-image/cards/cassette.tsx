@@ -3,7 +3,17 @@ import LogoMark from "@/components/LogoMark";
 import { SHARE_COLORS, type ShareColor } from "@/lib/share";
 import type { ShareCard } from "@/lib/shareCard";
 import TABLES from "./cassette.widths.json";
-import { contrast, GOOD_BREAK_BEFORE, mix, smartApostrophes, splitLines, svgSrc } from "./shared";
+import {
+    contrast,
+    cutLines,
+    GOOD_BREAK_BEFORE,
+    keepsParts,
+    keptSplit,
+    mix,
+    smartApostrophes,
+    splitLines,
+    svgSrc,
+} from "./shared";
 import type { StoryCardDesign } from "./types";
 
 // the Cassette picture: linen in a light wash of the color (navy for ink), the logo on its tile with the link beside
@@ -57,18 +67,23 @@ const measure = (f: Font, text: string, size: number): number => {
 // spare room, so renderer rounding never pushes a line past its box
 const SAFE = 0.97;
 
-type Lines = { lines: string[]; widest: number };
+// breaksPart: the lines break inside a part of the text in ( ), [ ] or quotes (see keepsParts)
+type Lines = { lines: string[]; widest: number; breaksPart?: boolean };
 
-// the lines at this size (see splitLines). a good break comes after a comma, ")" or "/", or before "(",
-// "Featuring", "&", "With"
+// a good break comes after a comma, ")" or "/", or before "(", "Featuring", "&", "With"
+const awkwardIn =
+    (words: string[]) =>
+    (j: number): number =>
+        /[,)/]$/.test(words[j - 1]) || GOOD_BREAK_BEFORE.test(words[j]) ? 0 : 1;
+
+// the lines at this size (see splitLines)
 function breakLines(text: string, f: Font, size: number, maxW: number): Lines | null {
     const words = text.split(" ").filter(Boolean);
     if (!words.length) return { lines: [], widest: 0 };
     const lim = maxW * SAFE;
     const N = words.length;
     const wd = (a: number, b: number): number => measure(f, words.slice(a, b).join(" "), size);
-    const awkward = (j: number): number => (/[,)/]$/.test(words[j - 1]) || GOOD_BREAK_BEFORE.test(words[j]) ? 0 : 1);
-    const b = splitLines(N, wd, awkward, lim);
+    const b = splitLines(N, wd, awkwardIn(words), lim);
     if (!b) return null;
     const lines: string[] = [];
     let s0 = 0;
@@ -76,7 +91,15 @@ function breakLines(text: string, f: Font, size: number, maxW: number): Lines | 
         lines.push(words.slice(s0, c).join(" "));
         s0 = c;
     }
-    return { lines, widest: b.max };
+    return { lines, widest: b.max, breaksPart: !keepsParts(words, b.cuts, (i, j) => wd(i, j) <= lim) };
+}
+
+// the fewest lines, up to max, that keep the text's parts in ( ), [ ] or quotes whole. null if none do
+function keptLines(text: string, f: Font, size: number, maxW: number, max: number): Lines | null {
+    const words = text.split(" ").filter(Boolean);
+    const wd = (a: number, b: number): number => measure(f, words.slice(a, b).join(" "), size);
+    const r = keptSplit(words, max, wd, maxW * SAFE, awkwardIn(words));
+    return r && { lines: cutLines(words, r.cuts), widest: r.max };
 }
 
 // where the baseline of a line sits inside its line box (both renderers center the font's hhea box in it)
@@ -475,14 +498,15 @@ const RULE_UNDER = 6; // a drawn line under the title and under the artist
 const RULE_H = 2;
 const AFTER_RULE = 12;
 
-type Fit = { size: number; lh: number; lines: string[]; widest?: number; overflow?: boolean };
+type Fit = { size: number; lh: number; lines: string[]; widest?: number; overflow?: boolean; breaksPart?: boolean };
 
 function fitLabel(titleText: string, artistText: string) {
     const title = smartApostrophes(titleText).trim();
     const artist = smartApostrophes(artistText).trim();
     const avail = LBL.y1 - LBL.y0 - 2 * LBL.padY;
-    const tryTitle = (size: number, max: number): Fit | null => {
-        const r = breakLines(title, FONT.serifB, size, COL_W);
+    // keep: only lines that keep the title's parts in ( ), [ ] or quotes whole
+    const tryTitle = (size: number, max: number, keep = false): Fit | null => {
+        const r = keep ? keptLines(title, FONT.serifB, size, COL_W, max) : breakLines(title, FONT.serifB, size, COL_W);
         return r && r.lines.length <= max ? { size, lh: Math.round(size * T_LH), ...r } : null;
     };
     const tryArtist = (size: number, max: number): Fit | null => {
@@ -493,26 +517,33 @@ function fitLabel(titleText: string, artistText: string) {
         T.lines.length * T.lh + RULE_UNDER + RULE_H + AFTER_RULE + A.lines.length * A.lh + RULE_UNDER + RULE_H;
     // the artist keeps its biggest step that still leaves the title 56 px or more, then the title takes the
     // biggest size that fits; only a very long title and artist go below that
-    for (const floor of [56, 0]) {
-        for (const [as, amax] of A_STEPS) {
-            const A = tryArtist(as, amax);
-            if (!A) continue;
-            for (const ts of T_SIZES) {
-                if (ts < floor) break;
-                const T = tryTitle(ts, tMaxLines(ts));
-                if (!T || height(T, A) > avail) continue;
-                // a title that wraps keeps one line instead when that costs it 14 percent of its size or less
-                if (T.lines.length > 1) {
-                    for (const s1 of T_SIZES) {
-                        if (s1 >= ts || s1 < Math.max(floor, ts * 0.86)) continue;
-                        const T1 = tryTitle(s1, 1);
-                        if (T1 && height(T1, A) <= avail) return { T: T1, A, h: height(T1, A), avail };
+    const search = (keep: boolean) => {
+        for (const floor of [56, 0]) {
+            for (const [as, amax] of A_STEPS) {
+                const A = tryArtist(as, amax);
+                if (!A) continue;
+                for (const ts of T_SIZES) {
+                    if (ts < floor) break;
+                    const T = tryTitle(ts, tMaxLines(ts), keep);
+                    if (!T || height(T, A) > avail) continue;
+                    // a title that wraps keeps one line instead when that costs it 14 percent of its size or less
+                    if (T.lines.length > 1) {
+                        for (const s1 of T_SIZES) {
+                            if (s1 >= ts || s1 < Math.max(floor, ts * 0.86)) continue;
+                            const T1 = tryTitle(s1, 1);
+                            if (T1 && height(T1, A) <= avail) return { T: T1, A, h: height(T1, A), avail };
+                        }
                     }
+                    return { T, A, h: height(T, A), avail };
                 }
-                return { T, A, h: height(T, A), avail };
             }
         }
-    }
+        return null;
+    };
+    const fit = search(false);
+    // a title that breaks inside a part in ( ), [ ] or quotes takes the biggest size that keeps its parts whole
+    if (fit?.T.breaksPart) return search(true) ?? fit;
+    if (fit) return fit;
     // nothing fits: smallest steps, as many lines as it takes
     const ts = T_SIZES[T_SIZES.length - 1];
     const [as] = A_STEPS[A_STEPS.length - 1];

@@ -109,3 +109,98 @@ export function splitLines(
     };
     return { n, ...best(0, n) };
 }
+
+// the lines words make with a new line at each cut, and the cuts lines make
+export const cutLines = (words: string[], cuts: number[]): string[] =>
+    [0, ...cuts].map((a, m) => words.slice(a, cuts[m]).join(" "));
+export const lineCuts = (lines: string[]): number[] => {
+    let n = 0;
+    return lines.slice(0, -1).map((l) => (n += l.split(" ").length));
+};
+
+// the parts of a title in ( ), [ ] or quotes, as the first and last word each one spans. one never closed runs to
+// the last word, and one inside a single word can't break, so it's left out
+type Part = { a: number; b: number };
+function titleParts(words: string[]): Part[] {
+    const open: { quote: boolean; a: number }[] = [];
+    const parts: Part[] = [];
+    // closes the latest open part of this kind, and any part still open inside it
+    const close = (quote: boolean, b: number): boolean => {
+        for (let k = open.length - 1; k >= 0; k--)
+            if (open[k].quote === quote) {
+                for (const p of open.splice(k)) parts.push({ a: p.a, b });
+                return true;
+            }
+        return false;
+    };
+    words.forEach((w, i) => {
+        for (const ch of w) {
+            if (ch === "(" || ch === "[") open.push({ quote: false, a: i });
+            else if (ch === ")" || ch === "]") close(false, i);
+            else if (ch === "“") open.push({ quote: true, a: i });
+            else if (ch === "”") close(true, i);
+            // a straight quote closes an open one, or else opens one
+            else if (ch === '"' && !close(true, i)) open.push({ quote: true, a: i });
+        }
+    });
+    for (const p of open) parts.push({ a: p.a, b: words.length - 1 });
+    return parts.filter((p) => p.b > p.a);
+}
+
+// whether lines that start at these cuts keep the parts whole. a part breaks only when it's too wide for a line of
+// its own (fits(a, b) says whether words a to b - 1 fit on one line), and then it gets lines of its own: the first
+// break comes right before it and the last right after it
+const keeps = (parts: Part[], count: number, cuts: number[], fits: (a: number, b: number) => boolean): boolean => {
+    const starts = new Set([0, count, ...cuts]);
+    return parts.every(
+        (p) =>
+            !cuts.some((j) => p.a < j && j <= p.b) || (!fits(p.a, p.b + 1) && starts.has(p.a) && starts.has(p.b + 1)),
+    );
+};
+
+// whether lines that start at these cuts keep every part of the title in ( ), [ ] or quotes whole (see keeps)
+export const keepsParts = (words: string[], cuts: number[], fits: (a: number, b: number) => boolean): boolean =>
+    keeps(titleParts(words), words.length, cuts, fits);
+
+// a break right before a part or a quote reads well
+const OPENS_PART = /^[([“"]/;
+
+// the fewest lines, up to max, that keep every part of the title whole (see keeps). then the fewest awkward breaks,
+// the most even split, and the most even of the other lines when a part sets the widest one. width(a, b) measures
+// words a to b - 1 as one line. null if no split into max lines or fewer does
+export function keptSplit(
+    words: string[],
+    max: number,
+    width: (a: number, b: number) => number,
+    lim: number,
+    awkward: (j: number) => number = () => 0,
+): (Split & { n: number }) | null {
+    const parts = titleParts(words);
+    const fits = (a: number, b: number): boolean => width(a, b) <= lim;
+    const awk = (j: number): number => (OPENS_PART.test(words[j]) ? 0 : awkward(j));
+    type Try = Split & { sq: number };
+    const better = (x: Try, y: Try): boolean =>
+        x.bad < y.bad || (x.bad === y.bad && (x.max < y.max - 0.01 || (x.max <= y.max + 0.01 && x.sq < y.sq - 0.01)));
+    // every way to set words i onward on k lines. titles are a few words, so trying them all is cheap
+    const splits = (i: number, k: number): Try[] => {
+        if (k === 1) {
+            const w = width(i, words.length);
+            return w <= lim ? [{ bad: 0, max: w, sq: w * w, cuts: [] }] : [];
+        }
+        const out: Try[] = [];
+        for (let j = i + 1; j <= words.length - k + 1; j++) {
+            const w = width(i, j);
+            if (w > lim) break;
+            for (const r of splits(j, k - 1))
+                out.push({ bad: r.bad + awk(j), max: Math.max(w, r.max), sq: r.sq + w * w, cuts: [j, ...r.cuts] });
+        }
+        return out;
+    };
+    for (let n = 1; n <= max; n++) {
+        const all = splits(0, n).filter((s) => keeps(parts, words.length, s.cuts, fits));
+        if (!all.length) continue;
+        const { bad, max: widest, cuts } = all.reduce((x, y) => (better(y, x) ? y : x));
+        return { bad, max: widest, cuts, n };
+    }
+    return null;
+}

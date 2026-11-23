@@ -54,10 +54,9 @@ const fakeFetch = async (input: RequestInfo | URL) => {
 const strip = () => screen.queryByRole("slider", { name: "Browse every #1 by week" });
 // what the strip is showing, as its screen reader text: "July 13, 1985: A View To A Kill by Duran Duran, ..."
 const stripSays = () => strip()?.getAttribute("aria-valuetext");
-const song = (title: string) => screen.findByRole("heading", { name: title, level: 2 });
-// the song line in the text above the strip, as opposed to the result's own heading
 const stripLine = (title: string, artist: string) => screen.queryByText(`${title} · ${artist}`);
 const pressGoNote = () => screen.queryByText(/^Press Go to see the #1 for /);
+const song = (title: string) => screen.findByRole("heading", { name: title, level: 2 });
 
 // the strip's chart data comes back right after the first render
 const renderPage = async (trend = false) => {
@@ -76,6 +75,18 @@ const go = () => fireEvent.click(screen.getByRole("button", { name: "Go!" }));
 
 // long enough for the strip to settle (150ms) and ask for a song, if it was going to
 const waitForStripToSettle = () => act(() => new Promise((resolve) => setTimeout(resolve, 400)));
+
+// the person touches the strip (a wheel marks the scroll as theirs) and it scrolls to the given week.
+// jsdom leaves the track at the far left, so scrolling to the week it shows is a tap that moves nothing
+const scrollStripTo = (week: number) => {
+    const track = strip()!;
+    fireEvent.wheel(track);
+    track.scrollLeft = week * WEEK_PX + WEEK_PX / 2;
+    fireEvent.scroll(track);
+};
+
+const pickerSays = () =>
+    ["Year", "Month", "Day"].map((name) => (screen.getByRole("combobox", { name }) as HTMLSelectElement).value);
 
 beforeAll(() => {
     // jsdom does no layout: the strip never gets a size, and scrolling only moves when told to
@@ -105,6 +116,85 @@ beforeEach(() => {
 afterEach(() => {
     cleanup();
     window.history.replaceState(null, "", "/");
+});
+
+// the home page links to /17 with the date filled in, where the switch used to be. /17 keeps its switch
+describe("the 17th birthday from the home page", () => {
+    const invitation = () => screen.queryByRole("link", { name: "What was #1 on your 17th birthday?" });
+    // the picker as month/day/year: "7/15/1968"
+    const pickerSays = () =>
+        ["Month", "Day", "Year"]
+            .map((name) => (screen.getByRole("combobox", { name }) as HTMLSelectElement).value)
+            .join("/");
+
+    it("links to /17 with the date filled in, instead of the switch", async () => {
+        await renderPage();
+        pickDate("1968-07-15");
+        go();
+        await song("This Guy's In Love With You");
+
+        expect(invitation()?.getAttribute("href")).toBe("/17?birthday=1968-07-15");
+        expect(screen.queryByRole("button", { name: /17th birthday/ })).toBeNull();
+    });
+
+    it("leaves the link out when the 17th birthday has no chart yet", async () => {
+        await renderPage();
+        pickDate("2015-06-14");
+        go();
+        await song("If You Had My Love");
+
+        expect(invitation()).toBeNull();
+    });
+
+    it("shares the date's own card", async () => {
+        await renderPage();
+        pickDate("1968-07-15");
+        go();
+        await song("This Guy's In Love With You");
+
+        fireEvent.click(screen.getByRole("button", { name: "Share to your Story" }));
+
+        expect(screen.getByRole("img", { name: "Your song as a Story picture" }).getAttribute("src")).toBe(
+            "/api/share-image?week=1968-07-13&year=1968&kind=born",
+        );
+    });
+
+    it("lands on /17 with the birthday in the picker, and waits for Go", async () => {
+        window.history.replaceState(null, "", "/17?birthday=1968-07-15");
+        await renderPage(true);
+
+        expect(pickerSays()).toBe("7/15/1968");
+        await waitForStripToSettle();
+        expect(songRequests).toEqual([]);
+
+        go();
+
+        expect(await song("A View To A Kill")).toBeTruthy();
+        expect(songRequests).toEqual(["/api/song?date=1985-07-15"]);
+        expect(screen.getByRole("button", { name: "Back to the day you were born" })).toBeTruthy();
+    });
+
+    it("takes the birthday out of the address once it's in the picker, so a copied address doesn't carry it", async () => {
+        window.history.replaceState(null, "", "/17?birthday=1968-07-15");
+        await renderPage(true);
+
+        expect(pickerSays()).toBe("7/15/1968");
+        expect(window.location.pathname + window.location.search).toBe("/17");
+
+        go();
+        expect(await song("A View To A Kill")).toBeTruthy();
+        expect(songRequests).toEqual(["/api/song?date=1985-07-15"]);
+    });
+
+    it("ignores a birthday on /17 that isn't a real date in the picker's range", async () => {
+        const [year, month, day] = new Date().toLocaleDateString("en-CA").split("-").map(Number);
+        for (const birthday of ["1968-02-30", "1930-01-01", "not-a-date"]) {
+            window.history.replaceState(null, "", `/17?birthday=${birthday}`);
+            await renderPage(true);
+            expect(pickerSays()).toBe(`${month}/${day}/${year}`);
+            cleanup();
+        }
+    });
 });
 
 describe("the chart strip waits for Go", () => {
@@ -218,20 +308,20 @@ describe("the chart strip waits for Go", () => {
         expect(stripSays()).toMatch(/^July 13, 1985: A View To A Kill/);
     });
 
-    it("stays up when the person lets go of it on a shared result without moving it", async () => {
+    it("leaves a shared result alone when the person lets go of the strip without moving it", async () => {
         window.history.replaceState(null, "", "/?week=1985-07-13&year=1985&kind=born&share=1");
         await renderPage();
         await song("A View To A Kill");
+        const requestsBefore = songRequests.length;
 
         // a click or a tiny nudge: the person touches the strip, but it stays on the shared week
-        const track = strip()!;
-        fireEvent.wheel(track);
-        track.scrollLeft = 4 * WEEK_PX + WEEK_PX / 2;
-        fireEvent.scroll(track);
-
-        await waitFor(() => expect(songRequests.at(-1)).toBe("/api/song?date=1985-07-13&source=strip&mode=peek"));
+        scrollStripTo(4);
         await waitForStripToSettle();
+
+        expect(songRequests).toHaveLength(requestsBefore);
         expect(stripSays()).toMatch(/^July 13, 1985: A View To A Kill/);
+        expect(screen.getByText("#1 the week you were born · 1985")).toBeTruthy();
+        expect(screen.getByRole("button", { name: "Share to your Story" })).toBeTruthy();
     });
 
     it("on /17, sits on the 17th birthday's week and follows the switch back to the birthday", async () => {
@@ -263,6 +353,79 @@ describe("the chart strip waits for Go", () => {
         await waitFor(() => expect(songRequests.at(-1)).toBe("/api/song?date=1985-07-27&source=strip&mode=peek"));
         expect(await song("Everytime You Go Away")).toBeTruthy();
         expect(stripSays()).toMatch(/^July 27, 1985: Everytime You Go Away/);
+    });
+});
+
+describe("a tap on the strip's week already showing", () => {
+    it("asks for nothing and keeps the birthday, the picker, the link to /17 and Share", async () => {
+        await renderPage();
+        // a Monday: the result is the chart week of Saturday, July 13
+        pickDate("1985-07-15");
+        go();
+        await song("A View To A Kill");
+        const requestsAfterGo = songRequests.length;
+
+        scrollStripTo(4);
+        await waitForStripToSettle();
+
+        expect(songRequests).toHaveLength(requestsAfterGo);
+        expect(stripSays()).toMatch(/^July 13, 1985: A View To A Kill/);
+        expect(pickerSays()).toEqual(["1985", "7", "15"]);
+        expect(screen.getByRole("link", { name: "What was #1 on your 17th birthday?" })).toBeTruthy();
+        expect(screen.getByRole("button", { name: "Share to your Story" })).toBeTruthy();
+    });
+
+    it("on /17, keeps the 17th birthday's result", async () => {
+        await renderPage(true);
+        pickDate("1968-07-15");
+        go();
+        await song("A View To A Kill");
+        const requestsAfterGo = songRequests.length;
+
+        // the strip sits on the 17th birthday's week while the picker shows the birthday
+        scrollStripTo(4);
+        await waitForStripToSettle();
+
+        expect(songRequests).toHaveLength(requestsAfterGo);
+        expect(pickerSays()).toEqual(["1968", "7", "15"]);
+        expect(screen.getByText("#1 on your 17th birthday · Jul 15, 1985")).toBeTruthy();
+        expect(screen.getByRole("button", { name: "Back to the day you were born" })).toBeTruthy();
+    });
+
+    it("asks for nothing after Go lands while a move hadn't come to rest", async () => {
+        await renderPage();
+        pickDate("1985-07-15");
+        go();
+        await song("A View To A Kill");
+
+        // the person moves the strip, then picks a date and presses Go before the strip settles
+        scrollStripTo(6);
+        pickDate("1999-06-14");
+        go();
+        await song("If You Had My Love");
+        await waitForStripToSettle();
+        const requestsAfterGo = songRequests.length;
+
+        scrollStripTo(8);
+        await waitForStripToSettle();
+
+        expect(songRequests).toHaveLength(requestsAfterGo);
+        expect(songRequests.at(-1)).toBe("/api/song?date=1999-06-14");
+        expect(screen.getByRole("button", { name: "Share to your Story" })).toBeTruthy();
+    });
+
+    it("still loads it when the person moves the strip away and back", async () => {
+        await renderPage();
+        pickDate("1985-07-15");
+        go();
+        await song("A View To A Kill");
+
+        scrollStripTo(6);
+        scrollStripTo(4);
+
+        await waitFor(() => expect(songRequests.at(-1)).toBe("/api/song?date=1985-07-13&source=strip&mode=peek"));
+        await waitForStripToSettle();
+        expect(stripSays()).toMatch(/^July 13, 1985: A View To A Kill/);
     });
 });
 
