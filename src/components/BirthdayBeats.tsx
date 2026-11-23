@@ -236,7 +236,7 @@ export default function BirthdayBeats({ heroTitles, trend = false }: BirthdayBea
         cancelSongLoad();
         leaveSharedResult();
         const stopDate = stripData.dates[week];
-        // a stop with no move first (a click on a shared result) still needs this, or the strip goes away
+        // keeps the strip on this stop once a shared result's week is dropped from the address
         setStripDate(stopDate);
         const controller = new AbortController();
         songRequest.current = controller;

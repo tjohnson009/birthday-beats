@@ -7,7 +7,7 @@ type ChartStripProps = {
     data: StripData;
     week: number; // changes from outside (Go, a chip, the switch) slide the strip there quietly
     onMove: (week: number) => void; // the person is moving the strip
-    onRest: (week: number) => void; // the person let the strip come to rest on a week
+    onRest: (week: number) => void; // the person moved the strip and let it come to rest on a week
 };
 
 const WEEK_PX = 4;
@@ -26,8 +26,9 @@ export default function ChartStrip({ data, week, onMove, onRest }: ChartStripPro
     const [shown, setShown] = useState(week);
 
     // the latest props and position, for event handlers that are bound once.
-    // agreed is the last week the strip and its parent both know about
-    const latest = useRef({ onMove, onRest, shown, agreed: week, quiet: true });
+    // agreed is the last week the strip and its parent both know about; moved is set once the person
+    // moves it off that week, so a tap that ends where it started isn't a new stop
+    const latest = useRef({ onMove, onRest, shown, agreed: week, quiet: true, moved: false });
     useLayoutEffect(() => {
         latest.current.onMove = onMove;
         latest.current.onRest = onRest;
@@ -86,6 +87,7 @@ export default function ChartStrip({ data, week, onMove, onRest }: ChartStripPro
         const track = trackRef.current!;
         if (week === latest.current.agreed) return;
         latest.current.agreed = week;
+        latest.current.moved = false; // the parent's week wins over a move that hadn't come to rest yet
         if (week === latest.current.shown) return;
         latest.current.quiet = true;
         const far = Math.abs(week - latest.current.shown) > FAR_WEEKS;
@@ -115,6 +117,9 @@ export default function ChartStrip({ data, week, onMove, onRest }: ChartStripPro
                 latest.current.quiet = false;
                 return;
             }
+            // a tap or a nudge that never left the week: nothing new to load
+            if (!latest.current.moved) return;
+            latest.current.moved = false;
             latest.current.onRest(weekAt());
         };
         const snap = () => {
@@ -162,6 +167,7 @@ export default function ChartStrip({ data, week, onMove, onRest }: ChartStripPro
                 setShown(current);
                 if (!latest.current.quiet) {
                     latest.current.agreed = current;
+                    latest.current.moved = true;
                     latest.current.onMove(current);
                 }
             }
