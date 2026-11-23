@@ -55,6 +55,9 @@ const strip = () => screen.queryByRole("slider", { name: "Browse every #1 by wee
 // what the strip is showing, as its screen reader text: "July 13, 1985: A View To A Kill by Duran Duran, ..."
 const stripSays = () => strip()?.getAttribute("aria-valuetext");
 const song = (title: string) => screen.findByRole("heading", { name: title, level: 2 });
+// the song line in the text above the strip, as opposed to the result's own heading
+const stripLine = (title: string, artist: string) => screen.queryByText(`${title} · ${artist}`);
+const pressGoNote = () => screen.queryByText(/^Press Go to see the #1 for /);
 
 // the strip's chart data comes back right after the first render
 const renderPage = async (trend = false) => {
@@ -260,5 +263,86 @@ describe("the chart strip waits for Go", () => {
         await waitFor(() => expect(songRequests.at(-1)).toBe("/api/song?date=1985-07-27&source=strip&mode=peek"));
         expect(await song("Everytime You Go Away")).toBeTruthy();
         expect(stripSays()).toMatch(/^July 27, 1985: Everytime You Go Away/);
+    });
+});
+
+// after a result, a new date in the picker leaves the strip on the old song. its text would then read as
+// that date's #1, so a note asking for Go takes its place until Go or a strip move
+describe("the text above the strip after a new date is picked", () => {
+    it("becomes a Press Go note for that date, while the strip stays on the old song", async () => {
+        await renderPage();
+        pickDate("1985-07-15");
+        go();
+        await song("A View To A Kill");
+        expect(stripLine("A View To A Kill", "Duran Duran")).toBeTruthy();
+        expect(pressGoNote()).toBeNull();
+
+        pickDate("1999-06-14");
+
+        expect(pressGoNote()?.textContent).toBe("Press Go to see the #1 for June 14, 1999");
+        expect(pressGoNote()?.closest('[role="status"]')).toBeTruthy();
+        expect(stripLine("A View To A Kill", "Duran Duran")).toBeNull();
+        expect(screen.queryByText("#1 the week of July 13, 1985")).toBeNull();
+        expect(screen.queryByText("Week 1 of 2 at #1")).toBeNull();
+        expect(stripSays()).toMatch(/^July 13, 1985: A View To A Kill/);
+    });
+
+    it("gives way to the new song's text once Go is pressed", async () => {
+        await renderPage();
+        pickDate("1985-07-15");
+        go();
+        await song("A View To A Kill");
+        pickDate("1999-06-14");
+
+        go();
+
+        expect(pressGoNote()).toBeNull();
+        expect(await song("If You Had My Love")).toBeTruthy();
+        await waitFor(() => expect(stripLine("If You Had My Love", "Jennifer Lopez")).toBeTruthy());
+    });
+
+    it("gives way to the strip's own text as soon as the person moves the strip", async () => {
+        await renderPage();
+        pickDate("1985-07-15");
+        go();
+        await song("A View To A Kill");
+        pickDate("1999-06-14");
+        expect(pressGoNote()).toBeTruthy();
+
+        const track = strip()!;
+        fireEvent.wheel(track);
+        track.scrollLeft = 6 * WEEK_PX + WEEK_PX / 2;
+        fireEvent.scroll(track);
+
+        // mid-move, before the strip comes to rest on July 27 and loads its song
+        expect(pressGoNote()).toBeNull();
+        expect(stripLine("Everytime You Go Away", "Paul Young")).toBeTruthy();
+
+        await waitForStripToSettle();
+        expect(pressGoNote()).toBeNull();
+        expect(stripLine("Everytime You Go Away", "Paul Young")).toBeTruthy();
+    });
+
+    it("on /17, names the picked birthday, not its 17th", async () => {
+        await renderPage(true);
+        pickDate("1968-07-15");
+        go();
+        await song("A View To A Kill");
+
+        pickDate("1982-06-14");
+
+        expect(pressGoNote()?.textContent).toBe("Press Go to see the #1 for June 14, 1982");
+    });
+
+    it("stays away on a shared result until a date is picked", async () => {
+        window.history.replaceState(null, "", "/?week=1985-07-13&year=1985&kind=born&share=1");
+        await renderPage();
+        await song("A View To A Kill");
+        expect(pressGoNote()).toBeNull();
+        expect(stripLine("A View To A Kill", "Duran Duran")).toBeTruthy();
+
+        pickDate("1999-06-14");
+
+        expect(pressGoNote()?.textContent).toBe("Press Go to see the #1 for June 14, 1999");
     });
 });
